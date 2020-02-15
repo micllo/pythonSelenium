@@ -1,0 +1,24 @@
+[2020-02-14 23:51:57,668] run_suite2.py -> show_result_custom line:64 [INFO]  
+test_01 (TestCases.train_test.TrainTest) ++++++++当前用例执行完毕+++++++
+
+[2020-02-14 23:51:57,895] run_suite2.py -> show_result_custom line:64 [INFO]  
+test_02 (TestCases.train_test.TrainTest) ++++++++当前用例执行完毕+++++++
+
+[2020-02-14 23:52:06,157] base.py -> find_ele line:45 [INFO]  通过id定位，元素是 kw
+[2020-02-14 23:52:06,193] base.py -> find_ele line:45 [INFO]  通过id定位，元素是 kw
+[2020-02-14 23:52:06,742] base.py -> find_ele line:45 [INFO]  通过id定位，元素是 notice011111
+[2020-02-14 23:52:08,395] base.py -> find_ele line:45 [INFO]  通过id定位，元素是 su
+[2020-02-14 23:52:11,776] base.py -> find_ele line:48 [ERROR]  定位元素失败!
+[2020-02-14 23:52:11,862] run_suite2.py -> show_result_custom line:64 [INFO]  
+test_ctrip (TestCases.train_test.TrainTest) ++++++++当前用例执行完毕+++++++
+
+[2020-02-14 23:52:12,560] run_suite2.py -> show_result_custom line:64 [INFO]  
+test_baidu (TestCases.train_test.TrainTest) ++++++++当前用例执行完毕+++++++
+
+[2020-02-14 23:52:17,294] run_suite2.py -> show_result_custom line:64 [INFO]  
+test_demo_01 (TestCases.demo_test.DemoTest) ++++++++当前用例执行完毕+++++++
+
+[2020-02-14 23:52:18,278] run_suite2.py -> show_result_custom line:64 [INFO]  
+test_demo_02 (TestCases.demo_test.DemoTest) ++++++++当前用例执行完毕+++++++
+
+[2020-02-14 23:52:18,280] base.py -> run_job line:144 [INFO]  Job "sync_run_case (trigger: interval[0:01:00], next run at: 2020-02-14 23:52:52 CST)" executed successfully
