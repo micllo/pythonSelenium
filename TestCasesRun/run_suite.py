@@ -66,6 +66,7 @@ def sync_run_case(test_class_list, thread_num=5):
 
 if __name__ == "__main__":
 
+    gl.USE_REMOTE = False
     gl.BROWSER_NAME = "Chrome"
     # gl.BROWSER_NAME = "Firefox"
     sync_run_case(test_class_list=[TrainTest], thread_num=2)

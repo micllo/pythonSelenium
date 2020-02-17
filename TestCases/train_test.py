@@ -2,9 +2,8 @@ import os, sys
 # 将项目根路径添加入path
 sys.path.append(os.path.split(os.getcwd())[0])
 import unittest, time
-from Common.function import config_url, project_path
+from Common.function import get_config_ini, project_path
 from Common.excel_data import read_excel
-from HTMLTestRunnerCN import HTMLTestRunner
 from selenium import webdriver
 from PageObject.book_page import BookPage
 from PageObject.order_page import OrderPage
@@ -33,7 +32,7 @@ class TrainTest(ParaCase):
 
     def test_01(self):
         """ 携 程 订 票 测 试 用 例 test_01  """
-        self.driver.get(config_url("baidu_url"))
+        self.driver.get(get_config_ini("test_url", "baidu_url"))
         self.driver.find_element_by_id("kw").send_keys("test_01")
         self.driver.find_element_by_id("su").click()
         time.sleep(2)
@@ -41,7 +40,7 @@ class TrainTest(ParaCase):
 
     def test_02(self):
         """ 携 程 订 票 测 试 用 例 test_02  """
-        self.driver.get(config_url("baidu_url"))
+        self.driver.get(get_config_ini("test_url", "baidu_url"))
         self.driver.find_element_by_id("kw").send_keys("test_01")
         self.driver.find_element_by_id("su").click()
         time.sleep(2)
@@ -49,7 +48,7 @@ class TrainTest(ParaCase):
 
     def test_ctrip(self):
         """ 携 程 订 票 测 试 用 例 test_ctrip  """
-        self.driver.get(config_url("ctrip_url"))
+        self.driver.get(get_config_ini("test_url", "ctrip_url"))
         search_page = SearchPage(self.driver)
         res_url = search_page.search_train(self.data.get(1)[0], self.data.get(1)[1], self.data.get(1)[2])
         # print(res_url)
@@ -59,7 +58,7 @@ class TrainTest(ParaCase):
 
     def test_baidu(self):
         """ 携 程 订 票 测 试 用 例 test_baidu  """
-        self.driver.get(config_url("baidu_url"))
+        self.driver.get(get_config_ini("test_url", "baidu_url"))
         search_page = BaiduPage(self.driver)
         res_url = search_page.search_func("selenium")
         time.sleep(2)

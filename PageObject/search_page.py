@@ -31,6 +31,9 @@ class SearchPage(Base):
         self.js(js_value)
 
     def search_train(self, leave, arrive, leave_date):
+
+        self.screenshot("携程页面.png")
+
         # 输入'出发城市'
         self.search_leave().clear()
         self.search_leave().send_keys(leave)

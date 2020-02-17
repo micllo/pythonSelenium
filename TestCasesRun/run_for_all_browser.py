@@ -54,7 +54,7 @@ def run_suite(driver, test_class_list):
         print("++++++++++")
 
 
-def run_all_case_for_all_browser(browser_list, test_class_list):
+def run_all_case_for_all_browser(browser_list, test_class_list, remote=False):
     """
     使用不同浏览器分别同时执行所有用例（目的：浏览器兼容性测试）
     :param test_class_list: 需要执行的'测试类'列表
@@ -76,7 +76,7 @@ def run_all_case_for_all_browser(browser_list, test_class_list):
     delattr(ParaCase, "tearDown")
 
     # 获取浏览器驱动列表（ 同时开启浏览器 ）
-    driver_list = get_browser_driver_list(browser_list)
+    driver_list = get_browser_driver_list(browser_list, remote)
 
     # 执行测试
     th_list = []
@@ -98,7 +98,7 @@ def run_all_case_for_all_browser(browser_list, test_class_list):
 
 if __name__ == "__main__":
 
-    # run_all_case_for_all_browser(browser_list=["Firefox"], test_class_list=[TrainTest, DemoTest])
-    run_all_case_for_all_browser(browser_list=["Chrome"], test_class_list=[TrainTest, DemoTest])
-    # run_all_case_for_all_browser(browser_list=["Firefox", "Chrome"], test_class_list=[TrainTest, DemoTest])
+    # run_all_case_for_all_browser(browser_list=["Firefox"], test_class_list=[TrainTest, DemoTest], remote=False)
+    run_all_case_for_all_browser(browser_list=["Chrome"], test_class_list=[TrainTest, DemoTest], remote=False)
+    # run_all_case_for_all_browser(browser_list=["Firefox", "Chrome"], test_class_list=[TrainTest, DemoTest], remote=False)
 

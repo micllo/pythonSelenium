@@ -104,17 +104,17 @@ def new_run(self, result, debug=False):
     return result
 
 
-def sync_run_case2(browser_name, thread_num=5):
+def sync_run_case2(browser_name, thread_num=5, remote=False):
     """
     同时执行不同用例（ 通过动态修改'suite.py'文件中'TestSuite'类中的'run'方法，使得每个线程中的结果都可以记录到测试报告中 ）
     :param browser_name: 浏览器名称
     :param thread_num: 线程数
-
+    :param remote: 是否远程执行
     【 备 注 】
      开启浏览器操作（每个用例执行一次）：在每个'测试类'的 setUp 方法中执行 ( 继承 ParaCase 父类 )
      关闭浏览器操作（每个用例执行一次）：在每个'测试类'的 tearDown 方法中执行 ( 继承 ParaCase 父类 )
     """
-
+    gl.USE_REMOTE = remote
     gl.BROWSER_NAME = browser_name
     gl.THREAD_NUM = thread_num
 
@@ -139,10 +139,6 @@ def sync_run_case2(browser_name, thread_num=5):
     print(suite.__class__.__base__)
     print("+++++++++++++++++++++++++++++++++++")
 
-    # 运行内容再控制台显示(verbosity:表示控制台显示内容的等级，大于1时显示的内容更具体)
-    # runner = unittest.TextTestRunner(verbosity=1)
-    # test_result = runner.run(suite)
-
     # 运行内容在报告中显示
     now = time.strftime("%Y-%m-%d_%H_%M_%S", time.localtime(time.time()))
     report_path = project_path() + "Reports/" + now + '.html'
@@ -166,6 +162,6 @@ def sync_run_case2(browser_name, thread_num=5):
 if __name__ == "__main__":
 
     # "Firefox"、"Chrome"
-    sync_run_case2(browser_name="Chrome", thread_num=2)
+    sync_run_case2(browser_name="Chrome", thread_num=2, remote=True)
     pass
 

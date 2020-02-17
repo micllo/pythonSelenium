@@ -16,7 +16,7 @@ class ParaCase(unittest.TestCase):
         self.log = FrameLog().log()
 
     def setUp(self):
-        driver_func = get_driver_func(gl.BROWSER_NAME)
+        driver_func = get_driver_func(browser_name=gl.BROWSER_NAME, remote=gl.USE_REMOTE)
         self.driver = driver_func()
         self.driver.implicitly_wait(5)
         # self.driver.maximize_window()

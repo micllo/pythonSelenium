@@ -2,7 +2,7 @@
 """
 api 服务接口
 """
-from api import *
+from api import flask_app
 import json
 from Config.error_mapping import *
 from api.api_services.api_template import interface_template
@@ -25,6 +25,3 @@ def sync_run_case(browser_name):
     re_dict = interface_template(error_msg, result_dict)
     return json.dumps(re_dict, ensure_ascii=False)
 
-
-if __name__ == '__main__':
-    flask_app.run(host="0.0.0.0", port=8899, debug=False)
