@@ -1,4 +1,3 @@
-import time
 from TestCases.train_test import TrainTest
 from TestCases.demo_test import DemoTest
 from Base.base_unit import ParaCase
@@ -6,10 +5,9 @@ from concurrent.futures import ThreadPoolExecutor
 from Common import global_var as gl
 from unittest.suite import _isnotsuite
 from types import MethodType
-from Common.function import project_path
-import unittest
 from Common.log import FrameLog
-from Common.genReport import HTMLTestRunner
+from Common.report import generate_report
+
 
 
 """
@@ -131,37 +129,13 @@ def sync_run_case2(browser_name, thread_num=5, remote=False):
     # 为实例对象'suite'<TestSuite>动态修改实例方法'run'（ 目的：启用多线程来执行case ）
     suite.run = MethodType(new_run, suite)
 
-    print("实例对象suite是否存在'run_test_custom'方法：" + str(hasattr(suite, "run_test_custom")))
-    print("实例对象suite是否存在'show_result_custom'方法：" + str(hasattr(suite, "show_result_custom")))
-    print("实例对象suite是否存在'run'方法：" + str(hasattr(suite, "run")))
-    print(suite)
-    print(suite.__class__)
-    print(suite.__class__.__base__)
-    print("+++++++++++++++++++++++++++++++++++")
-
-    # 运行内容在报告中显示
-    now = time.strftime("%Y-%m-%d_%H_%M_%S", time.localtime(time.time()))
-    report_path = project_path() + "Reports/" + now + '.html'
-    with open(report_path, 'wb') as fp:
-        runner = HTMLTestRunner(stream=fp, title='UI自动化测试报告', description='详细测试用例结果', tester="费晓春", verbosity=2)
-        test_result = runner.run(suite)
-
-    # log_console = FrameLog().log()
-    # log_console.info(test_result)
-    # log_console.info("执行总数：" + str(test_result.error_count + test_result.success_count + test_result.failure_count))
-    # log_console.info("执行的用例列表：" + str(test_result.result))
-    # log_console.info("错误数：" + str(test_result.error_count))
-    # log_console.info("错误的用例列表：" + str(test_result.errors))
-    # log_console.info("失败数：" + str(test_result.failure_count))
-    # log_console.info("失败的用例列表：" + str(test_result.failures))
-    # log_console.info("成功数：" + str(test_result.success_count))
-    # log_console.info("成功的用例列表：" + str([success[1] for success in test_result.result if success[0] == 0]))
-    # log_console.info("每个用例的时间：开始时间、结束时间、运行时间：")
+    # 生成测试报告
+    generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果', tester="费晓春", verbosity=2)
 
 
 if __name__ == "__main__":
 
     # "Firefox"、"Chrome"
-    sync_run_case2(browser_name="Chrome", thread_num=2, remote=True)
+    sync_run_case2(browser_name="Chrome", thread_num=2, remote=False)
     pass
 

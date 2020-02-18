@@ -1,12 +1,11 @@
 import unittest
-from Common.genReport import HTMLTestRunner
 import time
 from Common.function import project_path, MyThread
 from TestCases.train_test import TrainTest
 from TestCases.demo_test import DemoTest
 from Base.base_unit import ParaCase
 from Base.base import get_browser_driver_list
-from Common.log import FrameLog
+from Common.report import generate_report
 
 
 def run_suite(driver, test_class_list):
@@ -31,27 +30,9 @@ def run_suite(driver, test_class_list):
     # print("每个用例的时间：开始时间、结束时间、运行时间：")
     # print()
 
-    # 运行内容再报告中显示
-    now = time.strftime("%Y-%m-%d_%H_%M_%S", time.localtime(time.time()))
-    report_path = project_path() + "Reports/" + now + '.html'
-    with open(report_path, 'wb') as fp:
-        runner = HTMLTestRunner(stream=fp, title='自动化测试报告', description='详细测试用例结果', tester="费晓春", verbosity=2)
-        test_result = runner.run(suite)
+    # 生成测试报告
+    generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果', tester="费晓春", verbosity=2)
 
-    print(test_result)
-    print("执行总数：" + str(test_result.error_count + test_result.success_count + test_result.failure_count))
-    print("执行的用例列表：" + str(test_result.result))
-    print("错误数：" + str(test_result.error_count))
-    print("错误的用例列表：" + str(test_result.errors))
-    print("失败数：" + str(test_result.failure_count))
-    print("失败的用例列表：" + str(test_result.failures))
-    print("成功数：" + str(test_result.success_count))
-    print("成功的用例列表：" + str([success[1] for success in test_result.result if success[0] == 0]))
-    print("每个用例的时间：开始时间、结束时间、运行时间：")
-
-    for n, t, o, e in test_result.result:
-        print(o)
-        print("++++++++++")
 
 
 def run_all_case_for_all_browser(browser_list, test_class_list, remote=False):
@@ -99,6 +80,6 @@ def run_all_case_for_all_browser(browser_list, test_class_list, remote=False):
 if __name__ == "__main__":
 
     # run_all_case_for_all_browser(browser_list=["Firefox"], test_class_list=[TrainTest, DemoTest], remote=False)
-    run_all_case_for_all_browser(browser_list=["Chrome"], test_class_list=[TrainTest, DemoTest], remote=False)
-    # run_all_case_for_all_browser(browser_list=["Firefox", "Chrome"], test_class_list=[TrainTest, DemoTest], remote=False)
+    # run_all_case_for_all_browser(browser_list=["Chrome"], test_class_list=[TrainTest, DemoTest], remote=False)
+    run_all_case_for_all_browser(browser_list=["Firefox", "Chrome"], test_class_list=[TrainTest, DemoTest], remote=False)
 
