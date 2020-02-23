@@ -11,6 +11,8 @@ out
 gen
 node_modules
 .DS_Store
+Screenshot
 Logs
 Reports
+vassals_local
 venv

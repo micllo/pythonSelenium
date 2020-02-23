@@ -1,8 +1,9 @@
+# -*- coding:utf-8 -*-
 import unittest
 import time
 from Common import global_var as gl
 from Base.base import get_driver_func
-from Common.log import FrameLog
+from Common.function import log
 
 
 class ParaCase(unittest.TestCase):
@@ -13,7 +14,7 @@ class ParaCase(unittest.TestCase):
     def __init__(self, test_method="test_", driver=None):
         super(ParaCase, self).__init__(test_method)
         self.driver = driver
-        self.log = FrameLog().log()
+        self.log = log
 
     def setUp(self):
         driver_func = get_driver_func(browser_name=gl.BROWSER_NAME, remote=gl.USE_REMOTE)

@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from Base.base import Base
 from selenium.webdriver.common.by import By
 import time

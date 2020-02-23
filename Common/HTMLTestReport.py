@@ -1,5 +1,5 @@
-#coding=utf-8
-# URL: http://tungwaiyip.info/software/HTMLTestRunner.html
+# -*- coding:utf-8 -*-
+#  URL: http://tungwaiyip.info/software/HTMLTestRunner.html
 
 __author__ = "Wai Yip Tung,  Findyou"
 __version__ = "0.8.2.2"

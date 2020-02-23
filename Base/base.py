@@ -1,13 +1,9 @@
-from Common.log import FrameLog
+# -*- coding:utf-8 -*-
 from selenium import webdriver
-from Common.function import project_path
+from Common.function import project_path, get_config_ini, log
 from selenium.webdriver import DesiredCapabilities
 import time
 import os
-from Common.function import get_config_ini
-from Common.log import FrameLog
-
-log = FrameLog().log()
 
 
 # 获取浏览器驱动列表（ 同时开启浏览器 ）
@@ -30,22 +26,22 @@ def get_browser_driver_list(browser_list, remote=False):
     return driver_list
 
 
-# 获取浏览器驱动
-def get_browser_driver(browser_name, remote=False):
-    if remote:
-        if browser_name == "Firefox":
-            return webdriver.Remote(command_executor='http://' + get_config_ini("remote_ip", "ip_port") + '/wd/hub',
-                                    desired_capabilities=DesiredCapabilities.FIREFOX)
-        if browser_name == "Chrome":
-            return webdriver.Remote(command_executor='http://' + get_config_ini("remote_ip", "ip_port") + '/wd/hub',
-                                    desired_capabilities=DesiredCapabilities.CHROME)
-    else:
-        if browser_name == "Firefox":
-            return webdriver.Firefox(service_log_path=None)
-        if browser_name == "Chrome":
-            return webdriver.Chrome()
-    return print("浏览器驱动名称不正确")
-
+# # 获取浏览器驱动
+# def get_browser_driver(browser_name, remote=False):
+#     if remote:
+#         if browser_name == "Firefox":
+#             return webdriver.Remote(command_executor='http://' + get_config_ini("remote_ip", "ip_port") + '/wd/hub',
+#                                     desired_capabilities=DesiredCapabilities.FIREFOX)
+#         if browser_name == "Chrome":
+#             return webdriver.Remote(command_executor='http://' + get_config_ini("remote_ip", "ip_port") + '/wd/hub',
+#                                     desired_capabilities=DesiredCapabilities.CHROME)
+#     else:
+#         if browser_name == "Firefox":
+#             return webdriver.Firefox(service_log_path=None)
+#         if browser_name == "Chrome":
+#             return webdriver.Chrome()
+#     return print("浏览器驱动名称不正确")
+#
 
 # 获取 浏览器驱动函数（闭包）目的：延迟执行该函数
 def get_driver_func(browser_name, remote=False):
@@ -53,11 +49,13 @@ def get_driver_func(browser_name, remote=False):
         try:
             if remote:
                 if browser_name == "Firefox":
-                    return webdriver.Remote(command_executor='http://' + get_config_ini("remote_ip", "ip_port") + '/wd/hub',
-                                      desired_capabilities=DesiredCapabilities.FIREFOX)
+                    return webdriver.Remote(
+                        command_executor='http://' + get_config_ini("remote_ip", "ip_port") + '/wd/hub',
+                        desired_capabilities=DesiredCapabilities.FIREFOX)
                 if browser_name == "Chrome":
-                    return webdriver.Remote(command_executor='http://' + get_config_ini("remote_ip", "ip_port") + '/wd/hub',
-                                      desired_capabilities=DesiredCapabilities.CHROME)
+                    return webdriver.Remote(
+                        command_executor='http://' + get_config_ini("remote_ip", "ip_port") + '/wd/hub',
+                        desired_capabilities=DesiredCapabilities.CHROME)
             else:
                 if browser_name == "Firefox":
                     return webdriver.Firefox(service_log_path=None)
@@ -67,7 +65,6 @@ def get_driver_func(browser_name, remote=False):
             log.error(("显示异常：" + str(e)))
             log.error("远程浏览器监听未开启！！！")
             raise Exception("远程浏览器监听未开启")
-
     return browser_driver
 
 
@@ -75,7 +72,7 @@ class Base(object):
 
     def __init__(self, driver):
         self.driver = driver
-        self.log = FrameLog().log()
+        self.log = log
 
     def find_ele(self, *args):
         try:

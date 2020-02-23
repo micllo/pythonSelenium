@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from TestCases.train_test import TrainTest
 from TestCases.demo_test import DemoTest
 from Base.base_unit import ParaCase
@@ -130,7 +131,7 @@ def sync_run_case2(browser_name, thread_num=5, remote=False):
     suite.run = MethodType(new_run, suite)
 
     # 生成测试报告
-    generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果', tester="费晓春", verbosity=2)
+    generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果', tester="测试人员", verbosity=2)
 
 
 if __name__ == "__main__":

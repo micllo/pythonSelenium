@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import unittest
 import time
 from Common.function import project_path, MyThread
@@ -31,7 +32,7 @@ def run_suite(driver, test_class_list):
     # print()
 
     # 生成测试报告
-    generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果', tester="费晓春", verbosity=2)
+    generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果', tester="测试人员", verbosity=2)
 
 
 

@@ -1,5 +1,5 @@
+# -*- coding:utf-8 -*-
 import logging,time
-from Common.function import project_path
 from Config import config as cfg
 
 

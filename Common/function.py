@@ -1,5 +1,9 @@
+# -*- coding:utf-8 -*-
 import os, configparser
 import threading
+from Common.log import FrameLog
+
+log = FrameLog().log()
 
 
 # 获取项目路径
@@ -12,6 +16,21 @@ def get_config_ini(key, value):
     config = configparser.ConfigParser()
     config.read(project_path() + "config.ini")
     return config.get(key, value)
+
+
+# 递归创建目录
+def mkdir(path):
+    path = path.strip()  # 去除首位空格
+    path = path.rstrip("//")  # 去除尾部 / 符号
+    is_exists = os.path.exists(path)  # 判断路径是否存在(True存在，False不存在)
+    # 判断结果
+    if not is_exists:
+        os.makedirs(path)
+        log.info(path + ' 目录创建成功')
+        return True
+    else:
+        log.info(path + ' 目录已存在')
+        return False
 
 
 # 多线程重载 run 方法

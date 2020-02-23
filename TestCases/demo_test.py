@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import os, sys
 # 将项目根路径添加入path
 sys.path.append(os.path.split(os.getcwd())[0])

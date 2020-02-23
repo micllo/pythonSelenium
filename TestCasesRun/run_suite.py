@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import unittest
 import time
 from TestCases.train_test import TrainTest
