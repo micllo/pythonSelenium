@@ -17,4 +17,4 @@ def sync_run_case_exec(browser_name, thread_num):
     :return:
     """
     pool = ThreadPoolExecutor(1)
-    pool.submit(sync_run_case2, browser_name=browser_name, thread_num=thread_num, remote=False)
+    pool.submit(sync_run_case2, browser_name=browser_name, thread_num=thread_num, remote=True)

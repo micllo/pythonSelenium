@@ -33,7 +33,7 @@ class SearchPage(Base):
 
     def search_train(self, leave, arrive, leave_date):
 
-        self.screenshot("携程页面.png")
+        self.screenshot("train_page.png")
 
         # 输入'出发城市'
         self.search_leave().clear()

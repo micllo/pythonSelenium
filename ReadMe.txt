@@ -77,4 +77,6 @@
             sh /Users/micllo/Documents/works/expect-deploy/docker_python/deploy.sh pythonSelenium 127.0.0.1 1022
 
 
-
+11.关于 Selenium Grid Console
+（1）http://localhost:5555/grid/console
+（2）http://192.168.3.102:5555/grid/console

@@ -38,7 +38,6 @@ def local_action():
         local("rm -rf Screenshots")
         local("rm -rf vassals_local")
         local("rm -rf venv")
-        local("rm -rf Deploy")
         local("ls")
     # 归档压缩 临时文件夹中的项目（ 可以不进入目录，直接执行 ）
     with lcd(tmp_path):

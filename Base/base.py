@@ -2,6 +2,7 @@
 from selenium import webdriver
 from Common.function import project_path, get_config_ini, log
 from selenium.webdriver import DesiredCapabilities
+from Config import config as cfg
 import time
 import os
 
@@ -104,7 +105,7 @@ class Base(object):
         self.driver.quit()
 
     def screenshot(self, image_name):
-        self.driver.save_screenshot(project_path() + "Screenshots/" + image_name)
+        self.driver.save_screenshot(cfg.SCREENSHOTS_PATH + image_name)
 
     def test(self):
         print("hi")
