@@ -4,15 +4,16 @@
 
 # IntelliJ project files
 .idea
+.DS_Store
 *.iml
 *.log
 *.pyc
 out
 gen
 node_modules
-.DS_Store
 Screenshots
 Logs
 Reports
 vassals_local
 venv
+
