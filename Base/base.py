@@ -104,7 +104,7 @@ class Base(object):
         self.driver.quit()
 
     def screenshot(self, image_name):
-        self.driver.save_screenshot(project_path() + "Screenshot/" + image_name)
+        self.driver.save_screenshot(project_path() + "Screenshots/" + image_name)
 
     def test(self):
         print("hi")

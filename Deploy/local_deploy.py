@@ -35,7 +35,7 @@ def local_action():
         local("rm -rf .idea")
         local("rm -rf Logs")
         local("rm -rf Reports")
-        local("rm -rf Screenshot")
+        local("rm -rf Screenshots")
         local("rm -rf vassals_local")
         local("rm -rf venv")
         local("rm -rf Deploy")
