@@ -20,7 +20,6 @@
              http://127.0.0.1:8081/api/UI/sync_run_case/Chrome
 
 
-
 ##################################################################################3
 
 
@@ -59,20 +58,23 @@
 （6）清空临时文件
 
 
-8.部署 docker-centos7 命令：
-sh /Users/micllo/Documents/works/expect-deploy/docker_python/deploy.sh pythonSelenium 127.0.0.1 1022
-
-
-9.访问地址（Docker内部）：
+8.访问地址（Docker内部）：
 （1）静态文件（测试报告）-> http://127.0.0.1:80/test_report/report.html
 （2）接口 - > http://127.0.0.1:80/api/
              http://127.0.0.1:80/api/UI/sync_run_case/Chrome
     ( 备注：nginx 配置 80 反向代理 8081 )
 
-10.访问地址（外部访问）：
+9.访问地址（外部访问）：
 （1）静态文件（测试报告）-> http://127.0.0.1:1080/test_report/report.html
 （2）接口 - > http://127.0.0.1:1080/api/
              http://127.0.0.1:1080/api/UI/sync_run_case/Chrome
     ( 备注：docker 配置 1080 映射 80 )
+
+
+10.关于部署
+（1）方式一：通过'fabric'工具进行部署 -> ./Deploy/local_deploy.py
+（2）方式二：通过'shell'脚本命令进行部署
+            sh /Users/micllo/Documents/works/expect-deploy/docker_python/deploy.sh pythonSelenium 127.0.0.1 1022
+
 
 

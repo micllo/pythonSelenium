@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # import sys
 # sys.path.append("./")
-from api.api_services.api_interface import *
+from Api.api_services.api_interface import *
 
 
 @flask_app.route("/")

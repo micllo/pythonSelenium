@@ -2,11 +2,11 @@
 """
 api 服务接口
 """
-from api import flask_app
+from Api import flask_app
 import json
 from Config.error_mapping import *
-from api.api_services.api_template import interface_template
-from api.api_services.api_calculate import sync_run_case_exec
+from Api.api_services.api_template import interface_template
+from Api.api_services.api_calculate import sync_run_case_exec
 
 
 @flask_app.route("/UI/sync_run_case/<browser_name>", methods=["GET"])
