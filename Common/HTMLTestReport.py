@@ -642,9 +642,6 @@ class HTMLTestRunner(Template_mixin):
         :param e: 错误信息、失败的信息
         :return:
         """
-        # 都为空时，才返回'False'
-        has_output = bool(o or e)
-
         # 'pt1_1', 'et1_1', 'ft1_1', 支持Bootstrap折叠展开特效
         tid = (n == 0 and "p" or (n == 1 and "f" or "e")) + 't%s_%s' % (cid+1, tid+1)
 
@@ -656,8 +653,8 @@ class HTMLTestRunner(Template_mixin):
         doc = t.shortDescription() or ""
         desc = doc and ('%s: %s' % (name, doc)) or name
 
-        # 若无错误或失败的信息，则使用'通过'的样式，否则使用'失败'或'错误'的样式
-        tmpl = has_output and self.REPORT_TEST_FOR_EF_TMPL or self.REPORT_TEST_FOR_PASS_TMPL
+        # 若n==0表示通过，则使用'通过'的样式，否则使用'失败'或'错误'的样式
+        tmpl = n == 0 and self.REPORT_TEST_FOR_PASS_TMPL or self.REPORT_TEST_FOR_EF_TMPL
 
         # utf-8 支持中文 - Findyou
         # o and e should be byte string because they are collected from stdout and stderr?
@@ -691,14 +688,10 @@ class HTMLTestRunner(Template_mixin):
             style=(n == 2 and 'errorCase' or (n == 1 and 'failCase' or 'passCase')),
             desc=desc,
             script=script,
-            btn_color=(n == 1 and "danger" or "warning"),
+            btn_color=(n == 2 and 'warning' or (n == 1 and 'danger' or 'success')),
             status=self.STATUS[n],
         )
         rows.append(row)
-
-        # 当 o,e 都为空时，才会通过这个判断
-        if not has_output:
-            return
 
     def _generate_ending(self):
         return self.ENDING_TMPL

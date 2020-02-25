@@ -138,6 +138,6 @@ def sync_run_case2(browser_name, thread_num=2, remote=False):
 if __name__ == "__main__":
 
     # "Firefox"、"Chrome"
-    sync_run_case2(browser_name="Chrome", thread_num=2, remote=True)
+    sync_run_case2(browser_name="Chrome", thread_num=3, remote=True)
 
 

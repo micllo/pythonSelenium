@@ -78,5 +78,8 @@
 
 
 11.关于 Selenium Grid Console
-（1）http://localhost:5555/grid/console
-（2）http://192.168.3.102:5555/grid/console
+（1）Hub 界面地址
+    http://localhost:5555/grid/console
+    http://192.168.3.102:5555/grid/console
+（2）使用mac自带的远程桌面工具进入debug模式的界面
+    在Finder图标右键选择'连接服务器' -> vnc://192.168.3.102:5911 -> 默认密码：secret
