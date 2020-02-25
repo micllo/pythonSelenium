@@ -35,12 +35,12 @@ def run_suite(driver, test_class_list):
     generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果', tester="测试人员", verbosity=2)
 
 
-
 def run_all_case_for_all_browser(browser_list, test_class_list, remote=False):
     """
     使用不同浏览器分别同时执行所有用例（目的：浏览器兼容性测试）
     :param test_class_list: 需要执行的'测试类'列表
     :param browser_list: 需要执行的浏览器
+    :param remote: 是否远程执行
     :return:
 
     【 备 注 】

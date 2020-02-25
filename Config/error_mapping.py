@@ -36,7 +36,9 @@ REQUEST_TIMEOUT = u"请求数据超时"
 CONNECT_DB_TIMEOUT = u"链接数据库超时"
 
 # 204
+PARAMS_NOT_NONE = u"参数不能为空"
 BROWSER_NAME_ERROR = u"浏览器名错误"
+THREAD_NUM_ERROR = u"线程数量必须控制在1~5之间"
 NO_SUCH_USER = u"没有该用户数据"
 
 # 404
@@ -84,7 +86,9 @@ def get_error_code(code_msg):
         VERSION_WRONG:31400,
 
         # 204
+        PARAMS_NOT_NONE: 31204,
         BROWSER_NAME_ERROR: 31204,
+        THREAD_NUM_ERROR: 31204,
         NO_SUCH_USER: 31204,
 
         # 404

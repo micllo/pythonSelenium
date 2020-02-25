@@ -74,7 +74,7 @@ def new_run(self, result, debug=False):
         result._testRunEntered = topLevel = True
 
     # 多线程执行测试
-    pool = ThreadPoolExecutor(gl.THREAD_NUM)
+    pool = ThreadPoolExecutor(self.thread_num)
     for index, test in enumerate(self):
         if result.shouldStop:
             break
@@ -103,25 +103,26 @@ def new_run(self, result, debug=False):
     return result
 
 
-def sync_run_case2(browser_name, thread_num=5, remote=False):
+def sync_run_case2(browser_name, thread_num=2, remote=False):
     """
     同时执行不同用例（ 通过动态修改'suite.py'文件中'TestSuite'类中的'run'方法，使得每个线程中的结果都可以记录到测试报告中 ）
     :param browser_name: 浏览器名称
     :param thread_num: 线程数
     :param remote: 是否远程执行
     【 备 注 】
+     suite 实例对象（包含了所有的测试用例实例，即继承了'unittest.TestCase'的子类的实例对象 test_instance ）
      开启浏览器操作（每个用例执行一次）：在每个'测试类'的 setUp 方法中执行 ( 继承 ParaCase 父类 )
      关闭浏览器操作（每个用例执行一次）：在每个'测试类'的 tearDown 方法中执行 ( 继承 ParaCase 父类 )
     """
-    gl.USE_REMOTE = remote
-    gl.BROWSER_NAME = browser_name
-    gl.THREAD_NUM = thread_num
 
     # 配置需要执行的'测试类'列表
     test_class_list = [TrainTest, DemoTest]
 
     # 将'测试类'中的所有'测试方法'添加到 suite 对象中
-    suite = ParaCase.parametrize(test_class_list=test_class_list)
+    suite = ParaCase.parametrize(test_class_list=test_class_list, browser_name=browser_name, remote=remote)
+
+    # 为实例对象'suite'<TestSuite>动态添加一个属性'thread_num'（目的：控制多线程数量）
+    setattr(suite, "thread_num", thread_num)
 
     # 为实例对象'suite'<TestSuite>动态添加两个方法'run_test_custom'、'show_result_custom'（ 目的：供多线程中调用 ）
     suite.run_test_custom = MethodType(run_test_custom, suite)
@@ -137,6 +138,6 @@ def sync_run_case2(browser_name, thread_num=5, remote=False):
 if __name__ == "__main__":
 
     # "Firefox"、"Chrome"
-    sync_run_case2(browser_name="Chrome", thread_num=2, remote=True)
-    pass
+    sync_run_case2(browser_name="Chrome", thread_num=2, remote=False)
+
 

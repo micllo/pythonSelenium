@@ -2,8 +2,26 @@
 import os, configparser
 import threading
 from Common.log import FrameLog
+import pandas as pd
+import numpy as np
 
 log = FrameLog().log()
+
+NULL_LIST = [np.nan, np.NaN, " ", "", None, "nan", "NaN", "None", "null", []]
+
+
+def is_null(tgt):
+    """
+    查看输入的是不是null
+    :param tgt: 输入的string或者unicode
+    :return: boolean
+    """
+    if tgt not in NULL_LIST and not pd.isnull(tgt):
+        isnull_res = False
+    else:
+        isnull_res = True
+
+    return isnull_res
 
 
 # 获取项目路径
@@ -31,6 +49,8 @@ def mkdir(path):
     else:
         log.info(path + ' 目录已存在')
         return False
+
+
 
 
 # 多线程重载 run 方法

@@ -11,4 +11,4 @@ def server_index():
 
 
 if __name__ == '__main__':
-    flask_app.run(host="0.0.0.0", port=7788, debug=False)
+    flask_app.run(host="0.0.0.0", port=8081, debug=False)
