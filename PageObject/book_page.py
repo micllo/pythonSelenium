@@ -6,9 +6,17 @@ import time
 
 class BookPage(Base):
 
+    """
+        【 元 素 定 位 】
+    """
+
     # G104车次的 '预订'按钮
     def booking_btn_for_g104(self):
         return self.find_ele(By.XPATH, "//*[starts-with(@id,'tbody-01-G1040')]/div[1]/div[6]/div[1]/a")
+
+    """
+        【 页 面 功 能 】
+    """
 
     def booking(self):
         try:

@@ -3,7 +3,6 @@ from TestCases.train_test import TrainTest
 from TestCases.demo_test import DemoTest
 from Base.base_unit import ParaCase
 from concurrent.futures import ThreadPoolExecutor
-from Common import global_var as gl
 from unittest.suite import _isnotsuite
 from types import MethodType
 from Common.log import FrameLog
@@ -116,6 +115,7 @@ def sync_run_case2(browser_name, thread_num=2, remote=False):
     """
 
     # 配置需要执行的'测试类'列表
+    # test_class_list = [DemoTest]
     test_class_list = [TrainTest, DemoTest]
 
     # 将'测试类'中的所有'测试方法'添加到 suite 对象中
@@ -132,12 +132,13 @@ def sync_run_case2(browser_name, thread_num=2, remote=False):
     suite.run = MethodType(new_run, suite)
 
     # 生成测试报告
-    generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果', tester="测试人员", verbosity=2)
+    generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果', tester="测试", verbosity=2)
 
 
 if __name__ == "__main__":
 
     # "Firefox"、"Chrome"
-    sync_run_case2(browser_name="Chrome", thread_num=3, remote=True)
+    sync_run_case2(browser_name="Chrome", thread_num=3, remote=False)
+    # sync_run_case2(browser_name="Firefox", thread_num=3, remote=True)
 
 

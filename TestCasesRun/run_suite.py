@@ -4,7 +4,6 @@ import time
 from TestCases.train_test import TrainTest
 from Base.base_unit import ParaCase
 from concurrent.futures import ThreadPoolExecutor
-from Common import global_var as gl
 from Common.log import FrameLog
 
 

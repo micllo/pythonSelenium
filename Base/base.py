@@ -2,9 +2,13 @@
 from selenium import webdriver
 from Common.function import project_path, get_config_ini, log
 from selenium.webdriver import DesiredCapabilities
+from selenium.webdriver.support.ui import WebDriverWait
 from Config import config as cfg
+from Common.function import mkdir
+from selenium.common.exceptions import TimeoutException
+from Config import global_var as gv
 import time
-import os
+import os, sys
 
 
 # 获取浏览器驱动列表（ 同时开启浏览器 ）
@@ -75,13 +79,18 @@ class Base(object):
         self.driver = driver
         self.log = log
 
+    def high_light(self, ele):
+        self.driver.execute_script("arguments[0].setAttribute('style',arguments[1]);", ele, "border:2px solid red;")
+
     def find_ele(self, *args):
         try:
-            # print(args)
             self.log.info("通过" + args[0] + "定位，元素是 " + args[1])
-            return self.driver.find_element(*args)
+            ele = self.driver.find_element(*args)
+            # ele = WebDriverWait(self.driver, time_out).until(self.driver.find_element(*args))
+            self.high_light(ele)
+            return ele
         except:
-            self.log.error("定位元素失败!")
+            raise Exception(args[1] + " 元素定位失败！")
 
     def click(self, *args):
         self.find_ele(*args).click()
@@ -101,14 +110,66 @@ class Base(object):
     def forward(self):
         self.driver.forward()
 
+    # 关闭所有窗口
     def quit(self):
         self.driver.quit()
 
-    def screenshot(self, image_name):
-        self.driver.save_screenshot(cfg.SCREENSHOTS_PATH + image_name)
+    # 关闭当前窗口
+    def close(self):
+        self.driver.close()
 
-    def test(self):
-        print("hi")
+    def screenshot(self, class_method_path, image_name):
+        # log.info(self)
+        # log.info(self.__class__)
+        current_test_path = cfg.SCREENSHOTS_PATH + class_method_path
+        mkdir(current_test_path)
+        self.driver.save_screenshot(current_test_path + image_name)
+
+    # 打开一个新窗口，并将句柄切到新窗口，返回原窗口句柄
+    def open_new_window(self):
+        old_handle = self.driver.current_window_handle
+        self.driver.execute_script('window.open("https://www.baidu.com");')
+        for handle in self.driver.window_handles:
+            if handle != old_handle:
+                self.driver.switch_to.window(handle)
+        return old_handle
+
+    # 当页面加载超时后，停止加载（为了可以继续后续driver操作）
+    def get_page_with_time_out(self, url, time_out):
+        try:
+            self.driver.set_page_load_timeout(time_out)
+            self.driver.get(url)
+        except TimeoutException:
+            log.error("页面'" + url + "'加载 " + str(time_out) + " 秒超时了!")
+            self.driver.execute_script('window.stop()')
+        finally:
+            self.driver.set_page_load_timeout(gv.PAGE_LOAD_TIME)  # 还原默认的加载页面超时时间
+
+    # 判断页面内容是否存在
+    def content_is_exist(self, content, time_out):
+        time_init = 1   # 初始化时间
+        polling_interval = 1  # 轮询间隔时间
+        while content not in self.driver.page_source:
+            time.sleep(polling_interval)
+            time_init = time_init + 1
+            if time_init >= time_out:
+                return False
+        return True
+
+    # 判断页面内容是否存在，同时截屏
+    def content_is_exist_with_screenshot(self, content, time_out, class_method_path, image_name):
+        is_exist = True
+        time_init = 1   # 初始化时间
+        polling_interval = 1  # 轮询间隔时间
+        while content not in self.driver.page_source:
+            time.sleep(polling_interval)
+            time_init = time_init + 1
+            if time_init >= time_out:
+                is_exist = False
+                break
+        self.screenshot(class_method_path, image_name)
+        return is_exist
+
 
 
 if __name__ == "__main__":

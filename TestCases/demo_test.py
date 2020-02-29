@@ -5,6 +5,8 @@ sys.path.append(os.path.split(os.getcwd())[0])
 import time
 from Common.function import get_config_ini, project_path
 from Base.base_unit import ParaCase
+from Common.function import get_current_function_name
+from Base.base import Base
 
 
 class DemoTest(ParaCase):
@@ -17,13 +19,15 @@ class DemoTest(ParaCase):
         self.driver.find_element_by_id("kw").send_keys("test_demo_01")
         self.driver.find_element_by_id("su").click()
         time.sleep(2)
-        self.assertIn('1', "1")
+        self.assertIn('1', "1", "test_demo_01用例测试失败")
 
     def test_demo_02(self):
+        class_method_path = get_current_function_name(self)
         """ demo 测 试 用 例 test_demo_02  """
         self.driver.get(get_config_ini("test_url", "baidu_url"))
         self.driver.find_element_by_id("kw").send_keys("test_demo_02")
         self.driver.find_element_by_id("su").click()
+        Base.screenshot(self, class_method_path, "test_demo_02.png")  # 类调用实例方法
         time.sleep(2)
-        self.assertIn('1', "2")
+        self.assertIn('test_demo_02', "2", "test_demo_02用例测试失败")
 

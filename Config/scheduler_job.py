@@ -24,9 +24,9 @@ class Config(object):
             # 执行时间段：周一到周六，10点30-31分之间，每隔10秒 执行一次
         },
         {
-            'id': 'job_test2',
-            'func': 'Config.scheduler_job:job_test',
-            'args': (3, 4),
+            'id': 'clear_reports_logs',
+            'func': 'Api.api_services.api_calculate:clear_reports_logs',
+            'args': [10],
             'trigger': 'interval',
             'seconds': 5
         }
@@ -36,9 +36,9 @@ class Config(object):
     #     {
     #         'id': 'sync_run_case',
     #         'func': 'TestCasesRun.run_suite2:sync_run_case2',
-    #         'args': ("Chrome", 2, True),
+    #         'args': ("Chrome", 3, True),
     #         'trigger': 'interval',
-    #         'seconds': 10
+    #         'seconds': 90
     #     }
     # ]
 

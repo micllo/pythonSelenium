@@ -1,9 +1,8 @@
 # -*- coding:utf-8 -*-
 import unittest
-import time
-from Common import global_var as gl
 from Base.base import get_driver_func
 from Common.function import log
+from Config import global_var as gv
 
 
 class ParaCase(unittest.TestCase):
@@ -21,8 +20,11 @@ class ParaCase(unittest.TestCase):
     def setUp(self):
         driver_func = get_driver_func(browser_name=self.browser_name, remote=self.remote)
         self.driver = driver_func()
-        self.driver.implicitly_wait(5)
+        self.driver.implicitly_wait(gv.IMPLICITY_WAIT)
+        self.driver.set_page_load_timeout(gv.PAGE_LOAD_TIME)  # 页面加载超时
         # self.driver.maximize_window()
+        # self.driver.set_window_size(width=2000, height=1300)
+        # self.driver.set_script_timeout()  # 页面异步js执行超时
 
     def tearDown(self):
         self.driver.quit()
