@@ -6,7 +6,7 @@ from TestCases.train_test import TrainTest
 from TestCases.demo_test import DemoTest
 from Base.base_unit import ParaCase
 from Base.base import get_browser_driver_list
-from Common.report import generate_report
+from Common.test_func import generate_report
 
 
 def run_suite(driver, test_class_list):

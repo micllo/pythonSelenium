@@ -38,7 +38,7 @@ class Config(object):
     #         'func': 'TestCasesRun.run_suite2:sync_run_case2',
     #         'args': ("Chrome", 3, True),
     #         'trigger': 'interval',
-    #         'seconds': 90
+    #         'seconds': 60
     #     }
     # ]
 

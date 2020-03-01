@@ -47,7 +47,7 @@ class TrainTest(ParaCase):
         self.driver.find_element_by_id("kw").send_keys("test_01")
         self.driver.find_element_by_id("su").click()
         time.sleep(2)
-        self.assertIn('test_02', "2", "test_02用例测试失败")
+        self.assertIn('test_02', "test_02", "test_02用例测试失败")
 
     def test_ctrip(self):
         """ 携 程 订 票 测 试 用 例 test_ctrip  """
@@ -81,4 +81,4 @@ class TrainTest(ParaCase):
 
         self.driver.find_element_by_xpath("//*[@id='app_list']/li[1]/a").click()
         time.sleep(3)
-        self.assertTrue(Base.content_is_exist(self, "世界眼中的中国战123", 5), "test_page_load 页面内容没有找到！")
+        self.assertTrue(Base.content_is_exist(self, "网易新闻", 5), "test_page_load 页面内容没有找到！")

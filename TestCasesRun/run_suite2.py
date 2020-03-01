@@ -6,8 +6,8 @@ from concurrent.futures import ThreadPoolExecutor
 from unittest.suite import _isnotsuite
 from types import MethodType
 from Common.log import FrameLog
-from Common.report import generate_report
-
+from Common.test_func import generate_report
+from Common.test_func import send_warning_after_test
 
 
 """
@@ -132,7 +132,10 @@ def sync_run_case2(browser_name, thread_num=2, remote=False):
     suite.run = MethodType(new_run, suite)
 
     # 生成测试报告
-    generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果', tester="测试", verbosity=2)
+    test_result, history_report_file = generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果',
+                                                       tester="FXC", verbosity=2)
+    # 测试后发送预警
+    send_warning_after_test(test_result, history_report_file)
 
 
 if __name__ == "__main__":

@@ -29,5 +29,5 @@ class DemoTest(ParaCase):
         self.driver.find_element_by_id("su").click()
         Base.screenshot(self, class_method_path, "test_demo_02.png")  # 类调用实例方法
         time.sleep(2)
-        self.assertIn('test_demo_02', "2", "test_demo_02用例测试失败")
+        self.assertIn('test_demo_01', "2", "test_demo_02用例测试失败")
 

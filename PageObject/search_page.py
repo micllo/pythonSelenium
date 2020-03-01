@@ -12,7 +12,7 @@ class SearchPage(Base):
 
     # '出发城市'输入框
     def search_leave(self):
-        return self.find_ele(By.ID, "notice01")
+        return self.find_ele(By.ID, "notice01111")
 
     # '到达城市'输入框
     def search_arrive(self):
