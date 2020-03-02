@@ -15,6 +15,7 @@ UPDATE_SUCCESS = u"更新成功"
 PENDING_TASK = u"数据计算中"
 
 # 500
+NO_SUCH_FILE = u"该文件不存在"
 INTERNAL_SERVER_ERROR = u"内部错误:服务器正在维护中"
 REQUEST_FAILED = u"内部错误:请求失败"
 SEARCH_FAILED = u"查询数据失败"
@@ -32,6 +33,7 @@ PENDING_WRONG = u"任务还在计算中"
 VERSION_WRONG = u"版本错误"
 
 # 504
+MONGO_CONNECT_FAIL = u"mongo数据库连接失败"
 REQUEST_TIMEOUT = u"请求数据超时"
 CONNECT_DB_TIMEOUT = u"链接数据库超时"
 
@@ -66,6 +68,7 @@ def get_error_code(code_msg):
         PENDING_TASK: 31200,
 
         # 500
+        NO_SUCH_FILE: 31500,
         INTERNAL_SERVER_ERROR: 31500,
         REQUEST_FAILED: 31500,
         SEARCH_FAILED: 31500,
@@ -73,6 +76,7 @@ def get_error_code(code_msg):
         CALCULATE_FAILED: 31500,
 
         # 504
+        MONGO_CONNECT_FAIL: 31504,
         REQUEST_TIMEOUT: 31504,
         CONNECT_DB_TIMEOUT: 31504,
 

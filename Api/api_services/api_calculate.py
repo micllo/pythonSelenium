@@ -38,6 +38,7 @@ def clear_reports_logs(clear_time):
     os.system(rm_report_cmd)
 
 
+
 if __name__ == "__main__":
     pass
     clear_reports_logs(10)

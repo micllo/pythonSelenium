@@ -11,6 +11,9 @@ from email.utils import formataddr
 import smtplib
 import traceback
 from Config import config as cfg
+from Config import global_var as gv
+import requests
+import json
 
 
 log = FrameLog().log()
@@ -113,6 +116,47 @@ def send_mail(subject, content, to_list, attach_file=None):
         print(str(e))
         print(traceback.format_exc())
         log.error("邮件发送失败！")
+
+
+def send_DD(dd_group_id, title, text, at_phones, is_at_all=False):
+    """
+    发 送 钉 钉
+    :param dd_group_id: 发送的钉钉消息群
+    :param title: 消息title
+    :param text:  消息内容
+    :param at_phones: 需要@的手机号
+    :param is_at_all: 是否@所有人
+    :return:
+      备注：若要@某个人，则需要在'text'中@其手机号
+           at_text -> \n\n@138xxxxxx @139xxxxxx
+      注意：
+         钉钉机器人设置了关键字过滤
+         title 或 text 中必须包含 "监控" 两字
+    """
+    at_all = "true"
+    at_mobiles = []
+    at_text = ""
+    if not is_at_all:
+        at_all = "false"
+        at_mobiles = at_phones.split(",")
+        at_text += "\n\n"
+        at_mobile_text = ""
+        for mobile in at_mobiles:
+            at_mobile_text += "@" + mobile + " "
+        at_text += at_mobile_text
+    data = {"msgtype": "markdown"}
+    data["markdown"] = {"title": title, "text": text + at_text}
+    data["at"] = {"atMobiles": at_mobiles, "isAtAll": at_all}
+    dd_url = gv.DD_BASE_URL + dd_group_id
+    log.info(data)
+    headers = {'Content-Type': 'application/json'}
+    try:
+        requests.post(url=dd_url, data=json.dumps(data), headers=headers)
+        log.info("钉钉发送成功")
+    except Exception as e:
+        log.error("钉钉发送失败")
+        log.error(e)
+
 
 
 if __name__ == "__main__":

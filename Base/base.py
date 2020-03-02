@@ -1,13 +1,14 @@
 # -*- coding:utf-8 -*-
 from selenium import webdriver
-from Common.function import project_path, get_config_ini, log
+from Common.function import project_path, get_config_ini, log, mkdir, send_DD
 from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.support.ui import WebDriverWait
 from Config import config as cfg
-from Common.function import mkdir
 from selenium.common.exceptions import TimeoutException
 from Config import global_var as gv
 import time
+from Common.mongodb import MongoGridFS
+
 import os, sys
 
 
@@ -118,12 +119,16 @@ class Base(object):
     def close(self):
         self.driver.close()
 
+    # 截图并保存入mongo
     def screenshot(self, class_method_path, image_name):
         # log.info(self)
         # log.info(self.__class__)
         current_test_path = cfg.SCREENSHOTS_PATH + class_method_path
         mkdir(current_test_path)
         self.driver.save_screenshot(current_test_path + image_name)
+        mgf = MongoGridFS()
+        files_id = mgf.upload_file(img_file_full=current_test_path + image_name)
+        return files_id
 
     # 打开一个新窗口，并将句柄切到新窗口，返回原窗口句柄
     def open_new_window(self):

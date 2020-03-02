@@ -1,13 +1,10 @@
 # -*- coding:utf-8 -*-
 from Common.HTMLTestReport import HTMLTestRunner
-from Config import config as cfg
 import time
 import os
-from Common.function import mkdir, log
-from Common.function import log, send_mail
-from Config import global_var as gv
-import requests
-import json
+from Common.function import send_mail, mkdir, log
+
+from Common.mongodb import *
 
 
 def generate_report(suite, title, description, tester, verbosity=1):
@@ -59,20 +56,20 @@ def generate_report(suite, title, description, tester, verbosity=1):
 
 def send_warning_after_test(test_result, report_file):
     """
-        测 试 后 发 送 预 警 （ 邮件、钉钉 ）
-        (1)有'失败'的，则标记为'失败'
-        (2)无'失败'、有'错误'的，则标记为'错误'
-        (3)无'失败'、无'错误'的，则标记为'None'
-        :param test_result:
-        :param report_file:
-        :return:
+       测 试 后 发 送 预 警 （ 邮件、钉钉 ）
+       :param test_result:
+       :param report_file:
+       :return:
+       error_type 标识：
+         (1)有'失败'的，则标记为'失败'
+         (2)无'失败'、有'错误'的，则标记为'错误'
+         (3)无'失败'、无'错误'的，则标记为'None'
     """
     report_name = report_file.split("/")[-1]
     error_type = (test_result.failure_count > 0 and "失败" or (test_result.error_count > 0 and "错误" or None))
     if error_type:
         send_mail_after_test(error_type=error_type, report_name=report_name, report_file=report_file)
-        is_at_all = (error_type == "失败" and True or False)
-        send_DD_after_test(error_type=error_type, report_name=report_name, is_at_all=is_at_all)
+        send_DD_after_test(error_type=error_type, report_name=report_name, is_at_all=(error_type == "失败" and True or False))
 
 
 def send_mail_after_test(error_type, report_name, report_file):
@@ -96,37 +93,14 @@ def send_DD_after_test(error_type, report_name, is_at_all=False):
     :param is_at_all:
     :return:
 
-    备注：若要@某个人，则需要在'text'中@其手机号
-    （1）at_text -> \n\n@138xxxxxx @139xxxxxx
     """
-
-    at_all = "true"
-    at_mobiles = []
-    at_text = ""
-    if not is_at_all:
-        at_all = "false"
-        at_mobiles = cfg.DD_AT_PHONE.split(",")
-        at_text += "\n\n"
-        at_mobile_text = ""
-        for mobile in at_mobiles:
-            at_mobile_text += "@" + mobile + " "
-        at_text += at_mobile_text
-
-    text_msg = {"title": "UI自动化监控"}
-    text_msg["text"] = "#### 在'" + report_name + "'测试报告中 存在'" + error_type + \
-                       "'的用例\n\n ***测试报告地址***\n" + cfg.TEST_REPORT_URL + at_text
-    data = {"msgtype": "markdown"}
-    data["markdown"] = text_msg
-    data["at"] = {"atMobiles": at_mobiles, "isAtAll": at_all}
-    dd_url = gv.DD_BASE_URL + cfg.DD_MONITOR
-    log.info(data)
-    headers = {'Content-Type': 'application/json'}
-    try:
-        requests.post(url=dd_url, data=json.dumps(data), headers=headers)
-    except Exception as e:
-        log.error("钉钉发送失败")
-        log.error(e)
+    title = "[监控]UI自动化"
+    text = "#### 在'" + report_name + "'测试报告中 存在'" + error_type + "'的用例\n\n ***测试报告地址***\n" + cfg.TEST_REPORT_URL
+    send_DD(dd_group_id=cfg.DD_MONITOR_GROUP, title=title, text=text, at_phones=cfg.DD_AT_PHONES, is_at_all=is_at_all)
 
 
 if __name__ == "__main__":
     send_DD_after_test("失败", "报告名称", False)
+
+
+
