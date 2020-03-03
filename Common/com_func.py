@@ -1,13 +1,12 @@
 # -*- coding:utf-8 -*-
 import os, configparser
 import threading
-from Common.log import FrameLog
+from Tools.log import FrameLog
 import pandas as pd
 import numpy as np
 import inspect
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from email.utils import formataddr
 import smtplib
 import traceback
 from Config import config as cfg

@@ -4,7 +4,7 @@
 接口的输出模板处理
 """
 from Config.error_mapping import *
-from Common.date_helper import current_date
+from Tools.date_helper import current_date
 
 
 def interface_template(error_msg, result_dict):

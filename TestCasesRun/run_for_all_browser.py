@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
 import unittest
 import time
-from Common.function import project_path, MyThread
+from Common.com_func import project_path, MyThread
 from TestCases.train_test import TrainTest
 from TestCases.demo_test import DemoTest
-from Base.base_unit import ParaCase
-from Base.base import get_browser_driver_list
+from Base.test_case_unit import ParaCase
+from Base.browser_action import get_browser_driver_list
 from Common.test_func import generate_report
 
 

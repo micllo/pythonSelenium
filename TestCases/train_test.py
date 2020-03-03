@@ -2,17 +2,13 @@
 import os, sys
 # 将项目根路径添加入path
 sys.path.append(os.path.split(os.getcwd())[0])
-import unittest, time
-from Common.function import get_config_ini, project_path
-from Common.excel_data import read_excel
-from selenium import webdriver
-from PageObject.book_page import BookPage
-from PageObject.order_page import OrderPage
+import time
+from Common.com_func import get_config_ini, project_path, log
+from Tools.excel_data import read_excel
 from PageObject.search_page import SearchPage
 from PageObject.baidu_page import BaiduPage
-from Base.base_unit import ParaCase
-from Common.function import get_current_function_name
-from Base.base import Base
+from Base.test_case_unit import ParaCase
+from Base.browser_action import Base
 
 
 class TrainTest(ParaCase):
@@ -51,26 +47,21 @@ class TrainTest(ParaCase):
 
     def test_ctrip(self):
         """ 携 程 订 票 测 试 用 例 test_ctrip  """
-
-        # 获取当前的'类名/方法名/'(提供截屏路径)
-        class_method_path = get_current_function_name(self)
-
         # 根据不同用例特定自定义设置（也可以不设置）
         self.driver.set_window_size(width=2000, height=1300)
         self.driver.implicitly_wait(5)
 
         # 打开测试页面(设置浏览器大小)
         self.driver.get(get_config_ini("test_url", "ctrip_url"))
-
         search_page = SearchPage(self.driver)
-        search_page.search_train(self.data.get(1)[0], self.data.get(1)[1], self.data.get(1)[2], class_method_path, self)
+        search_page.search_train(self.data.get(1)[0], self.data.get(1)[1], self.data.get(1)[2], self)
+        log.info("screen_shot_id_list: " + str(self.screen_shot_id_list))
 
     def test_baidu(self):
         """ 测 试 用 例 test_baidu  """
-        class_method_path = get_current_function_name(self)
         self.driver.get(get_config_ini("test_url", "baidu_url"))
         search_page = BaiduPage(self.driver)
-        res_url = search_page.search_func("selenium", class_method_path)
+        res_url = search_page.search_func("selenium", self)
         time.sleep(2)
         self.assertIn("wd=selenium", res_url, "test_baidu用例测试失败")
 

@@ -7,9 +7,9 @@ import json
 from Config.error_mapping import *
 from Api.api_services.api_template import interface_template
 from Api.api_services.api_calculate import sync_run_case_exec
-from Common.function import is_null, send_DD
+from Common.com_func import is_null
 from flask import request, make_response
-from Common.mongodb import MongoGridFS
+from Tools.mongodb import MongoGridFS
 
 
 @flask_app.route("/UI/sync_run_case", methods=["POST"])

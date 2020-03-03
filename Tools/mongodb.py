@@ -7,7 +7,7 @@ from pymongo.write_concern import WriteConcern
 from Config import config as cfg
 from gridfs import GridFS
 from bson.objectid import ObjectId
-from Common.function import log, send_DD
+from Common.com_func import log, send_DD
 import base64
 
 db_pool = {}

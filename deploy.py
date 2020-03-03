@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from fabric.api import *
-from Common.function import mkdir
+from Common.com_func import mkdir
 import time
 
 

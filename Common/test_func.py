@@ -2,9 +2,9 @@
 from Common.HTMLTestReport import HTMLTestRunner
 import time
 import os
-from Common.function import send_mail, mkdir, log
+from Common.com_func import send_mail, mkdir
 
-from Common.mongodb import *
+from Tools.mongodb import *
 
 
 def generate_report(suite, title, description, tester, verbosity=1):
@@ -30,13 +30,13 @@ def generate_report(suite, title, description, tester, verbosity=1):
     current_report_name = now + ".html"
     history_report_path = cfg.REPORTS_PATH + "history/"
     mkdir(history_report_path)
-    history_report_file = history_report_path + current_report_name
-    with open(history_report_file, 'wb') as fp:
+    current_report_file = history_report_path + current_report_name
+    with open(current_report_file, 'wb') as fp:
         runner = HTMLTestRunner(stream=fp, title=title, description=description, tester=tester, verbosity=verbosity)
         test_result = runner.run(suite)
 
     # 将最新报告替换../logs/下的report.html
-    res = os.system("cp " + history_report_file + " " + cfg.REPORTS_PATH + " && "
+    res = os.system("cp " + current_report_file + " " + cfg.REPORTS_PATH + " && "
                     "mv " + cfg.REPORTS_PATH + current_report_name + " " + cfg.REPORTS_PATH + "report.html")
     if res != 0:
         log.error("测试报告替换操作有误！")
@@ -51,7 +51,7 @@ def generate_report(suite, title, description, tester, verbosity=1):
     # log_console.info("失败的用例列表：" + str(test_result.failures))
     # log_console.info("成功数：" + str(test_result.success_count))
     # log_console.info("成功的用例列表：" + str([success[1] for success in test_result.result if success[0] == 0]))
-    return test_result, history_report_file
+    return test_result, current_report_file
 
 
 def send_warning_after_test(test_result, report_file):

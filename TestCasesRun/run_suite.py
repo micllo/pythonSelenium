@@ -2,9 +2,9 @@
 import unittest
 import time
 from TestCases.train_test import TrainTest
-from Base.base_unit import ParaCase
+from Base.test_case_unit import ParaCase
 from concurrent.futures import ThreadPoolExecutor
-from Common.log import FrameLog
+from Tools.log import FrameLog
 
 
 def run_test(test_instence):

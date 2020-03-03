@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from Base.base import Base
+from Base.browser_action import Base
 from selenium.webdriver.common.by import By
 import time
 
@@ -12,7 +12,7 @@ class SearchPage(Base):
 
     # '出发城市'输入框
     def search_leave(self):
-        return self.find_ele(By.ID, "notice01111")
+        return self.find_ele(By.ID, "notice01")
 
     # '到达城市'输入框
     def search_arrive(self):
@@ -39,9 +39,11 @@ class SearchPage(Base):
         【 页 面 功 能 】
     """
 
-    def search_train(self, leave, arrive, leave_date, class_method_path, case_instance):
+    def search_train(self, leave, arrive, leave_date, case_instance):
 
-        self.screenshot(class_method_path, "search_train_1.png")
+        # 判断页面内容是否存在，同时截屏、然后断言
+        self.assert_content_and_screenshot(image_name="train_search_1.png", case_instance=case_instance,
+                                           content="首页", time_out=20, error_msg="页面跳转失败！- 找不到'首页'内容")
 
         old_handle = self.open_new_window()
         time.sleep(2)
@@ -66,14 +68,13 @@ class SearchPage(Base):
         self.search_current().click()
 
         # 单击'开始搜索'按钮
-        self.screenshot(class_method_path, "search_train_2.png")
+        self.screenshot("train_search_2.png", case_instance)
         self.search_btn().click()
         time.sleep(4)
 
         # 判断页面内容是否存在，同时截屏、然后断言
-        is_exist = self.content_is_exist_with_screenshot("高级软卧", 20, class_method_path, "search_train_3.png")
-        case_instance.assertTrue(is_exist, "页面跳转失败！- 找不到'高级软卧'内容")
-
+        self.assert_content_and_screenshot(image_name="train_search_3.png", case_instance=case_instance,
+                                           content="高级软卧", time_out=20, error_msg="页面跳转失败！- 找不到'高级软卧'内容")
 
 
 

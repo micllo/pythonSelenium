@@ -1,15 +1,12 @@
 # -*- coding:utf-8 -*-
 from selenium import webdriver
-from Common.function import project_path, get_config_ini, log, mkdir, send_DD
+from Common.com_func import project_path, get_config_ini, log, mkdir
 from selenium.webdriver import DesiredCapabilities
-from selenium.webdriver.support.ui import WebDriverWait
 from Config import config as cfg
 from selenium.common.exceptions import TimeoutException
 from Config import global_var as gv
 import time
-from Common.mongodb import MongoGridFS
-
-import os, sys
+from Tools.mongodb import MongoGridFS
 
 
 # 获取浏览器驱动列表（ 同时开启浏览器 ）
@@ -119,17 +116,6 @@ class Base(object):
     def close(self):
         self.driver.close()
 
-    # 截图并保存入mongo
-    def screenshot(self, class_method_path, image_name):
-        # log.info(self)
-        # log.info(self.__class__)
-        current_test_path = cfg.SCREENSHOTS_PATH + class_method_path
-        mkdir(current_test_path)
-        self.driver.save_screenshot(current_test_path + image_name)
-        mgf = MongoGridFS()
-        files_id = mgf.upload_file(img_file_full=current_test_path + image_name)
-        return files_id
-
     # 打开一个新窗口，并将句柄切到新窗口，返回原窗口句柄
     def open_new_window(self):
         old_handle = self.driver.current_window_handle
@@ -161,8 +147,30 @@ class Base(object):
                 return False
         return True
 
-    # 判断页面内容是否存在，同时截屏
-    def content_is_exist_with_screenshot(self, content, time_out, class_method_path, image_name):
+    def screenshot(self, image_name, case_instance):
+        """
+         截 图、保 存 mongo、记录图片ID
+        :param image_name: 图片名称
+        :param case_instance: 测试类实例对象
+        :return:
+        """
+        current_test_path = cfg.SCREENSHOTS_PATH + case_instance.class_method_path  # ../类名/方法名/
+        mkdir(current_test_path)
+        self.driver.save_screenshot(current_test_path + image_name)
+        mgf = MongoGridFS()
+        files_id = mgf.upload_file(img_file_full=current_test_path + image_name)
+        case_instance.screen_shot_id_list.append(files_id)
+
+    def assert_content_and_screenshot(self, image_name, case_instance, content, time_out, error_msg):
+        """
+        断言内容是否存在、同时截屏
+        :param image_name: 图片名称
+        :param case_instance: 测试类实例对象
+        :param content: 需要轮询的内容
+        :param time_out: 轮询内容的超时时间
+        :param error_msg: 断言失败后的 错误提示
+        :return:
+        """
         is_exist = True
         time_init = 1   # 初始化时间
         polling_interval = 1  # 轮询间隔时间
@@ -172,9 +180,8 @@ class Base(object):
             if time_init >= time_out:
                 is_exist = False
                 break
-        self.screenshot(class_method_path, image_name)
-        return is_exist
-
+        self.screenshot(image_name, case_instance)
+        case_instance.assertTrue(is_exist, error_msg)
 
 
 if __name__ == "__main__":
