@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
-from TestCasesRun.run_suite2 import sync_run_case2
+from TestCasesRunType.sync_run_suite2 import sync_run_case2
 from concurrent.futures import ThreadPoolExecutor
+from TestCases.demo_test import DemoTest
+from TestCases.train_test import TrainTest
 from Config import config as cfg
 import sys, os
 sys.path.append("./")
@@ -18,7 +20,8 @@ def sync_run_case_exec(browser_name, thread_num):
     :return:
     """
     pool = ThreadPoolExecutor(1)
-    pool.submit(sync_run_case2, browser_name=browser_name, thread_num=thread_num, remote=True)
+    pool.submit(sync_run_case2, browser_name=browser_name, test_class_list=[TrainTest, DemoTest],
+                thread_num=thread_num, remote=True)
 
 
 def clear_reports_logs(clear_time):
@@ -36,7 +39,6 @@ def clear_reports_logs(clear_time):
     print(rm_report_cmd)
     os.system(rm_log_cmd)
     os.system(rm_report_cmd)
-
 
 
 if __name__ == "__main__":

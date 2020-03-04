@@ -17,13 +17,16 @@ class ParaCase(unittest.TestCase):
         self.test_method = test_method
         self.browser_name = browser_name
         self.remote = remote
-        self.screen_shot_id_list = []
 
     def setUp(self):
         driver_func = get_driver_func(browser_name=self.browser_name, remote=self.remote)
         self.driver = driver_func()
         self.driver.implicitly_wait(gv.IMPLICITY_WAIT)
         self.driver.set_page_load_timeout(gv.PAGE_LOAD_TIME)  # 页面加载超时
+        # 截图ID列表
+        self.screen_shot_id_list = []
+        # 截图ID列表名称
+        self.screen_shot_id_list_name = self.__class__.__name__ + "." + self.test_method
         # 获取当前的'类名/方法名/'(提供截屏路径)
         self.class_method_path = self.__class__.__name__ + "/" + self.test_method + "/"
         # self.driver.maximize_window()

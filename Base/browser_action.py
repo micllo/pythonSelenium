@@ -15,11 +15,11 @@ def get_browser_driver_list(browser_list, remote=False):
     if remote:
         for browser_name in browser_list:
             if browser_name == "Firefox":
-                driver_list.append(webdriver.Remote(command_executor='http://' + get_config_ini("remote_ip", "ip_port")
-                                  + '/wd/hub', desired_capabilities=DesiredCapabilities.FIREFOX))
+                driver_list.append(webdriver.Remote(command_executor='http://' + cfg.REMOTE_IP_PORT + '/wd/hub',
+                                                    desired_capabilities=DesiredCapabilities.FIREFOX))
             if browser_name == "Chrome":
-                driver_list.append(webdriver.Remote(command_executor='http://' + get_config_ini("remote_ip", "ip_port")
-                                    + '/wd/hub', desired_capabilities=DesiredCapabilities.CHROME))
+                driver_list.append(webdriver.Remote(command_executor='http://' + cfg.REMOTE_IP_PORT + '/wd/hub',
+                                                    desired_capabilities=DesiredCapabilities.CHROME))
     else:
         for browser_name in browser_list:
             if browser_name == "Firefox":
@@ -33,10 +33,10 @@ def get_browser_driver_list(browser_list, remote=False):
 # def get_browser_driver(browser_name, remote=False):
 #     if remote:
 #         if browser_name == "Firefox":
-#             return webdriver.Remote(command_executor='http://' + get_config_ini("remote_ip", "ip_port") + '/wd/hub',
+#             return webdriver.Remote(command_executor='http://' + cfg.REMOTE_IP_PORT + '/wd/hub',
 #                                     desired_capabilities=DesiredCapabilities.FIREFOX)
 #         if browser_name == "Chrome":
-#             return webdriver.Remote(command_executor='http://' + get_config_ini("remote_ip", "ip_port") + '/wd/hub',
+#             return webdriver.Remote(command_executor='http://' + cfg.REMOTE_IP_PORT + '/wd/hub',
 #                                     desired_capabilities=DesiredCapabilities.CHROME)
 #     else:
 #         if browser_name == "Firefox":
@@ -52,13 +52,11 @@ def get_driver_func(browser_name, remote=False):
         try:
             if remote:
                 if browser_name == "Firefox":
-                    return webdriver.Remote(
-                        command_executor='http://' + get_config_ini("remote_ip", "ip_port") + '/wd/hub',
-                        desired_capabilities=DesiredCapabilities.FIREFOX)
+                    return webdriver.Remote(command_executor='http://' + cfg.REMOTE_IP_PORT + '/wd/hub',
+                                            desired_capabilities=DesiredCapabilities.FIREFOX)
                 if browser_name == "Chrome":
-                    return webdriver.Remote(
-                        command_executor='http://' + get_config_ini("remote_ip", "ip_port") + '/wd/hub',
-                        desired_capabilities=DesiredCapabilities.CHROME)
+                    return webdriver.Remote(command_executor='http://' + cfg.REMOTE_IP_PORT + '/wd/hub',
+                                            desired_capabilities=DesiredCapabilities.CHROME)
             else:
                 if browser_name == "Firefox":
                     return webdriver.Firefox(service_log_path=None)

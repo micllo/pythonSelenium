@@ -2,7 +2,7 @@
 from Common.HTMLTestReport import HTMLTestRunner
 import time
 import os
-from Common.com_func import send_mail, mkdir
+from Common.com_func import send_mail, mkdir, log
 
 from Tools.mongodb import *
 
@@ -18,6 +18,8 @@ def generate_report(suite, title, description, tester, verbosity=1):
     :param verbosity: 结果显示的详细程度
     :return:
     """
+    print("实例对象suite是否存在'thread_num'属性：" + str(hasattr(suite, "thread_num")))
+    print("实例对象suite是否存在'screen_shot_id_dict'属性：" + str(hasattr(suite, "screen_shot_id_dict")))
     print("实例对象suite是否存在'run_test_custom'方法：" + str(hasattr(suite, "run_test_custom")))
     print("实例对象suite是否存在'show_result_custom'方法：" + str(hasattr(suite, "show_result_custom")))
     print("实例对象suite是否存在'run'方法：" + str(hasattr(suite, "run")))
@@ -41,16 +43,16 @@ def generate_report(suite, title, description, tester, verbosity=1):
     if res != 0:
         log.error("测试报告替换操作有误！")
 
-    # log_console = FrameLog().log()
-    # log_console.info(test_result)
-    # log_console.info("执行总数：" + str(test_result.error_count + test_result.success_count + test_result.failure_count))
-    # log_console.info("执行的用例列表：" + str(test_result.result))
-    # log_console.info("错误数：" + str(test_result.error_count))
-    # log_console.info("错误的用例列表：" + str(test_result.errors))
-    # log_console.info("失败数：" + str(test_result.failure_count))
-    # log_console.info("失败的用例列表：" + str(test_result.failures))
-    # log_console.info("成功数：" + str(test_result.success_count))
-    # log_console.info("成功的用例列表：" + str([success[1] for success in test_result.result if success[0] == 0]))
+    # log.info(test_result)
+    # log.info("执行总数：" + str(test_result.error_count + test_result.success_count + test_result.failure_count))
+    # log.info("执行的用例列表：" + str(test_result.result))
+    # log.info("错误数：" + str(test_result.error_count))
+    # log.info("错误的用例列表：" + str(test_result.errors))
+    # log.info("失败数：" + str(test_result.failure_count))
+    # log.info("失败的用例列表：" + str(test_result.failures))
+    # log.info("成功数：" + str(test_result.success_count))
+    # log.info("成功的用例列表：" + str([success[1] for success in test_result.result if success[0] == 0]))
+    # log.info(suite.screen_shot_id_dict)
     return test_result, current_report_file
 
 

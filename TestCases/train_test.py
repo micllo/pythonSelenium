@@ -55,13 +55,12 @@ class TrainTest(ParaCase):
         self.driver.get(get_config_ini("test_url", "ctrip_url"))
         search_page = SearchPage(self.driver)
         search_page.search_train(self.data.get(1)[0], self.data.get(1)[1], self.data.get(1)[2], self)
-        log.info("screen_shot_id_list: " + str(self.screen_shot_id_list))
 
     def test_baidu(self):
         """ 测 试 用 例 test_baidu  """
         self.driver.get(get_config_ini("test_url", "baidu_url"))
-        search_page = BaiduPage(self.driver)
-        res_url = search_page.search_func("selenium", self)
+        baidu_page = BaiduPage(self.driver)
+        res_url = baidu_page.search_func("selenium", self)
         time.sleep(2)
         self.assertIn("wd=selenium", res_url, "test_baidu用例测试失败")
 

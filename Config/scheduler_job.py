@@ -26,16 +26,16 @@ class Config(object):
         {
             'id': 'clear_reports_logs',
             'func': 'Api.api_services.api_calculate:clear_reports_logs',
-            'args': [10],
+            'args': [60],
             'trigger': 'interval',
-            'seconds': 5
+            'seconds': 60
         }
     ]
 
     # JOBS = [
     #     {
     #         'id': 'sync_run_case',
-    #         'func': 'TestCasesRun.run_suite2:sync_run_case2',
+    #         'func': 'TestCasesRunType.sync_run_case2:sync_run_case2',
     #         'args': ("Chrome", 3, True),
     #         'trigger': 'interval',
     #         'seconds': 60

@@ -105,7 +105,8 @@ class MongoGridFS(object):
         files_id = None
         try:
             with open(img_file_full, 'rb') as file_r:
-                files_id = gridfs_col.put(data=file_r, content_type=img_tpye, filename=img_name)  # 上传到gridfs
+                object_id = gridfs_col.put(data=file_r, content_type=img_tpye, filename=img_name)  # 上传到gridfs
+                files_id = str(object_id)
         except Exception as e:
             self.find_exception_send_DD(e=e, msg="上传图片")
         finally:
@@ -130,7 +131,7 @@ class MongoGridFS(object):
             if "Connection refused" not in str(e):
                 img_binary = "no such file"
         finally:
-            log.info("img_binary : " + str(img_binary))
+            # log.info("img_binary : " + str(img_binary))
             return img_binary
 
     def download_file_by_name(self, file_name, out_name):
@@ -161,6 +162,9 @@ if __name__ == '__main__':
     # mgf.upload_file(img_file_full)
     # mgf.get_binary_by_id("5e5cac9188121299450740b3")
     # mgf.download_file_by_name("search_train_3", "/Users/micllo/Downloads/test2.png")
+
+    id = ObjectId('5e5e4996d1e04aa9de885ef9')
+    print(str(id))
 
 
 

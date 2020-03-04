@@ -17,7 +17,8 @@
 
 5.访问地址：
 （1）接口 - > http://127.0.0.1:8081/api/
-             http://127.0.0.1:8081/api/UI/sync_run_case/Chrome
+             http://127.0.0.1:8081/api/UI/sync_run_case
+             http://127.0.0.1:8081/UI/get_img/5e5cac9188121299450740b3
 
 
 ##################################################################################3
@@ -61,13 +62,14 @@
 8.访问地址（Docker内部）：
 （1）静态文件（测试报告）-> http://127.0.0.1:80/test_report/report.html
 （2）接口 - > http://127.0.0.1:80/api/
-             http://127.0.0.1:80/api/UI/sync_run_case/Chrome
+             http://127.0.0.1:80/api/UI/sync_run_case
     ( 备注：nginx 配置 80 反向代理 8081 )
 
 9.访问地址（外部访问）：
 （1）静态文件（测试报告）-> http://127.0.0.1:1080/test_report/report.html
 （2）接口 - > http://127.0.0.1:1080/api/
-             http://127.0.0.1:1080/api/UI/sync_run_case/Chrome
+             http://127.0.0.1:1080/api/UI/sync_run_case
+             http://127.0.0.1:1080/api/UI/get_img/5e5cac9188121299450740b3
     ( 备注：docker 配置 1080 映射 80 )
 
 

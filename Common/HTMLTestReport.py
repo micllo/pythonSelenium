@@ -14,6 +14,8 @@ import time
 import unittest
 from xml.sax import saxutils
 import sys
+from Common.com_func import log
+from Config import config as cfg
 
 
 class OutputRedirector(object):
@@ -94,6 +96,7 @@ class Template_mixin(object):
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>%(title)s</title>
+    <meta charset="utf-8" />
     <meta name="generator" content="%(generator)s"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
@@ -259,7 +262,7 @@ table       { font-size: 100%; }
     # ------------------------------------------------------------------------
     # Report
     #
-    # 汉化,加美化效果 --Findyou
+    # variables: (test_list, count, Pass, fail, error ,passrate)
     REPORT_TMPL = """
 <p id='show_detail_line'>
 <a class="btn btn-primary" href='javascript:showCase(0)'>概要{ %(passrate)s }</a>
@@ -295,8 +298,9 @@ table       { font-size: 100%; }
     <td>通过率：%(passrate)s</td>
 </tr>
 </table>
-"""  # variables: (test_list, count, Pass, fail, error ,passrate)
+"""
 
+    # variables: (style, desc, count, Pass, fail, error, cid)
     REPORT_CLASS_TMPL = r"""
 <tr class='%(style)s warning'>
     <td style="font-weight: bold;font-size: 13px;">%(desc)s</td>
@@ -306,38 +310,64 @@ table       { font-size: 100%; }
     <td class="text-center">%(error)s</td>
     <td class="text-center"><a href="javascript:showClassDetail('%(cid)s',%(count)s)" class="detail" id='%(cid)s'>详细</a></td>
 </tr>
-"""  # variables: (style, desc, count, Pass, fail, error, cid)
+"""
 
-    # '失败'或'错误'的样式
+    # '失败'或'错误'的样式 (tid, Class, style, desc, status, script, btn_color, screen_shot_btn_tmpl, show_img_div_tmpl)
     REPORT_TEST_FOR_EF_TMPL = r"""
 <tr id='%(tid)s' class='%(Class)s'>
     <td class='%(style)s'><div class='testcase'>%(desc)s</div></td>
     <td colspan='5' align='center'>
-    <!--默认收起错误信息 -->
-    <!-- <button id='btn_%(tid)s' type="button"  class="btn btn-danger btn-xs collapsed" data-toggle="collapse" data-target='#div_%(tid)s'>%(status)s</button>
+    
+    <!-- 默认收起错误信息 --> 
+    <!-- <button id='btn_%(tid)s' type="button"  class="btn btn-%(btn_color)s btn-xs collapsed" data-toggle="collapse" data-target='#div_%(tid)s'>%(status)s</button>
     <div id='div_%(tid)s' class="collapse">  -->
-    <!-- 默认展开错误信息 -Findyou -->
+    
+    <!-- 默认展开错误信息  -->
     <button id='btn_%(tid)s' type="button"  class="btn btn-%(btn_color)s btn-xs" data-toggle="collapse" data-target='#div_%(tid)s'>%(status)s</button>
-    <div id='div_%(tid)s' class="collapse in">
-    <pre>
-    %(script)s
-    </pre>
-    </div>
+    %(screen_shot_btn_tmpl)s
+    <div id='div_%(tid)s' class="collapse in"><pre>%(script)s</pre></div>
+    %(show_img_div_tmpl)s
     </td>
 </tr>
-"""  # variables: (tid, Class, style, desc, status, script, btn_color)
+"""
 
-    # '通过'的样式
+    # '通过'的样式 (tid, Class, style, desc, status, screen_shot_btn_tmpl, show_img_div_tmpl)
     REPORT_TEST_FOR_PASS_TMPL = r"""
 <tr id='%(tid)s' class='%(Class)s'>
     <td class='%(style)s'><div class='testcase'>%(desc)s</div></td>
-    <td colspan='5' align='center'><span class="label label-success success">%(status)s</span></td>
+    <td colspan='5' align='center'>
+    <span class="label label-success success">%(status)s</span>
+    %(screen_shot_btn_tmpl)s
+    
+    %(show_img_div_tmpl)s
+    
+    </td>
 </tr>
-"""  # variables: (tid, Class, style, desc, status)
+"""
 
-    REPORT_TEST_OUTPUT_TMPL = r"""
-%(id)s: %(output)s
-"""  # variables: (id, output)
+    # '无图'span 样式
+    SCREENSHOT_SPAN_TMPL = r"""<span class="label label-info" style="float:right">无图</span>"""
+
+    # '截图'btn 样式 (tid)
+    SCREENSHOT_BTN_TMPL = r"""<button id='btn_%(tid)s_screenshot' type="button" class="btn btn-primary btn-xs" 
+    data-toggle="collapse" data-target='#div_%(tid)s_screenshot' style="float:right">截图</button>"""
+
+    # 展示'图片'的div ( tid、get_screenshot_tmpl_list )
+    SHOW_SCREENSHOT_DIV_TMPL = r"""<div id='div_%(tid)s_screenshot' class="collapse">
+    %(get_screenshot_tmpl_list)s
+    </div>
+    """
+
+    # 获取'图片' ( id、server_ip_port、img_id )
+    GET_SCREENSHOT_TMPL = r"""
+    <div>
+    <br><HR align=center width=300color=#987cb9 SIZE=1><br>
+    <img id='screenshot_%(id)s' style='width:1200px; height:800px' src='http://%(server_ip_port)s/UI/get_img/%(img_id)s'>
+    </div>
+    """
+
+    # variables: (id, output)
+    REPORT_TEST_OUTPUT_TMPL = r"""%(id)s: %(output)s"""
 
     # ------------------------------------------------------------------------
     # ENDING
@@ -489,12 +519,12 @@ class HTMLTestRunner(Template_mixin):
 
         self.startTime = datetime.datetime.now()
 
-    def run(self, test):  # test 表示 suite 实例对象
-        """Run the given test case or test suite."""
+    def run(self, suite):
+        """ Run the given test case or test suite. """
         result = _TestResult(self.verbosity)  # 初始化'测试结果'变量
-        test(result)  # 执行测试并记录测试结果
+        suite(result)  # 执行测试并记录测试结果
         self.stopTime = datetime.datetime.now()
-        self.generateReport(test, result)  # 通过测试结果生成测试报告
+        self.generateReport(suite, result)  # 通过测试结果生成测试报告
         print('\nTime Elapsed: %s' % (self.stopTime-self.startTime), file=sys.stderr)
         return result
 
@@ -521,7 +551,7 @@ class HTMLTestRunner(Template_mixin):
         r = [(cls, rmap[cls]) for cls in classes]
         return r
 
-    # 替换测试结果status为通过率 --Findyou
+    # 替换测试结果status为通过率
     def getReportAttributes(self, result):
         """
         Return report attributes as a list of (name, value).
@@ -546,12 +576,13 @@ class HTMLTestRunner(Template_mixin):
             ('测试结果', status + "，通过率= "+self.passrate),
         ]
 
-    def generateReport(self, test, result):
+    def generateReport(self, suite, result):
+        screen_shot_id_dict = suite.screen_shot_id_dict  # 获取截图ID字典
         report_attrs = self.getReportAttributes(result)
         generator = 'HTMLTestRunner %s' % __version__
         stylesheet = self._generate_stylesheet()
         heading = self._generate_heading(report_attrs)
-        report = self._generate_report(result)
+        report = self._generate_report(result, screen_shot_id_dict)
         ending = self._generate_ending()
         output = self.HTML_TMPL % dict(
             title=saxutils.escape(self.title),  # 将内容转义后替换入HTML（举例："<"/">"/"&" 对应"&lt;"/"&gt;"/"&amp;"）
@@ -584,13 +615,20 @@ class HTMLTestRunner(Template_mixin):
         return heading
 
     # 生成报告
-    def _generate_report(self, result):
+    def _generate_report(self, result, screen_shot_id_dict):
+        """
+        :param result:
+        :param screen_shot_id_dict: 截图ID字典 -> { "测试类名.测试方法名":['aaa', 'bbb'], "测试类名.测试方法名":['ccc'] }
+        :return:
+        【 截 图 ID 传 递 逻 辑 】
+         根据'测试类名'取出该类下的所有'测试方法'对应的'截图ID列表'的字典 -> { "测试方法名":['aaa', 'bbb'], "测试方法名":['ccc'] }
+        """
         rows = []
         sortedResult = self.sortResult(result.result)
-        for cid, (cls, cls_results) in enumerate(sortedResult):
+        for cid, (cls, cls_results) in enumerate(sortedResult):  # 遍历'测试类'
             # subtotal for a class
             np = nf = ne = 0
-            for n,t,o,e in cls_results:
+            for n, t, o, e in cls_results:
                 if n == 0: np += 1
                 elif n == 1: nf += 1
                 else: ne += 1
@@ -617,9 +655,15 @@ class HTMLTestRunner(Template_mixin):
             )
             rows.append(row)
 
-            # 为每个'测试用例类'循环添加'测试用例执行结果'样式模板 保存在'rows'列表中
+            # 根据'测试类名'取出该类下的所有'测试方法'对应的'截图ID列表'的字典
+            screen_shot_id_dict_with_test_method = {}
+            for key, value in screen_shot_id_dict.items():
+                if key.split(".")[0] == cls.__name__:
+                    screen_shot_id_dict_with_test_method[key.split(".")[1]] = value
+
+            # 为每个'测试用例类'循环添加'测试用例执行结果'模板样式 保存在'rows'列表中
             for tid, (n, t, o, e) in enumerate(cls_results):
-                self._generate_report_test(rows, cid, tid, n, t, o, e)
+                self._generate_report_test(rows, cid, tid, n, t, o, e, screen_shot_id_dict_with_test_method)
 
         report = self.REPORT_TMPL % dict(
             test_list=''.join(rows),
@@ -631,7 +675,7 @@ class HTMLTestRunner(Template_mixin):
         )
         return report
 
-    def _generate_report_test(self, rows, cid, tid, n, t, o, e):
+    def _generate_report_test(self, rows, cid, tid, n, t, o, e, screen_shot_id_dict_with_test_method):
         """
         :param rows:
         :param cid:
@@ -640,14 +684,34 @@ class HTMLTestRunner(Template_mixin):
         :param t: 测试实例对象
         :param o: 测试过程中输出的内容（一般都是空的）
         :param e: 错误信息、失败的信息
+        :param screen_shot_id_dict_with_test_method: { "测试方法名":['aaa', 'bbb'], "测试方法名":['ccc'] }
         :return:
         """
         # 'pt1_1', 'et1_1', 'ft1_1', 支持Bootstrap折叠展开特效
         tid = (n == 0 and "p" or (n == 1 and "f" or "e")) + 't%s_%s' % (cid+1, tid+1)
 
         # t.id() 是unittest.TestCase中的实例方法，返回自定义测试类中的测试方法的全路径
-        # 举例：TestCases.train_test.TrainTest.test_01
+        # t.id() -> TestCases.train_test.TrainTest.test_01
+        # name -> test_01
         name = t.id().split('.')[-1]
+
+        # 获取该'测试方法'的'截图ID列表'
+        screen_shot_list = screen_shot_id_dict_with_test_method[name]
+
+        # 获取'截图按钮'样式
+        if screen_shot_list:
+            screen_shot_btn_tmpl = self.SCREENSHOT_BTN_TMPL % dict(tid=tid)
+        else:
+            screen_shot_btn_tmpl = self.SCREENSHOT_SPAN_TMPL
+
+        # 获取'展示图片'的样式
+        show_img_div_tmpl = ""
+        if screen_shot_list:
+            get_screenshot_tmpl_list = ""
+            for id, screen_shot_id in enumerate(screen_shot_list):
+                get_screenshot_tmpl_list += self.GET_SCREENSHOT_TMPL % dict(id=id + 1, img_id=screen_shot_id,
+                                                                            server_ip_port=cfg.SERVER_IP_PORT)
+            show_img_div_tmpl = self.SHOW_SCREENSHOT_DIV_TMPL % dict(tid=tid, get_screenshot_tmpl_list=get_screenshot_tmpl_list)
 
         # 获取测试方法中的 __doc__
         doc = t.shortDescription() or ""
@@ -690,8 +754,13 @@ class HTMLTestRunner(Template_mixin):
             script=script,
             btn_color=(n == 2 and 'warning' or (n == 1 and 'danger' or 'success')),
             status=self.STATUS[n],
+            screen_shot_btn_tmpl=screen_shot_btn_tmpl,
+            show_img_div_tmpl=show_img_div_tmpl
         )
         rows.append(row)
 
     def _generate_ending(self):
         return self.ENDING_TMPL
+
+
+
