@@ -10,8 +10,21 @@ from dateutil.rrule import *
 from dateutil.parser import parse
 from collections import OrderedDict
 from itertools import islice
-
+from datetime import timedelta
 tz = pytz.timezone(pytz.country_timezones('cn')[0])
+
+
+def get_date_by_days(days=1, time_type="%Y-%m-%dT H:%M:%S"):
+    """
+    获取 多少天 之前 的日期
+    :param days:
+    :param time_type:
+    :return:
+    """
+    # 格式化为 年 月 日
+    # return (datetime.date.today() - timedelta(days=days)).strftime(time_type)
+    # 格式化为 年 月 日 时 分 秒
+    return (datetime.datetime.now() - timedelta(days=days)).strftime(time_type)
 
 
 # @return: 当前的datetime时间戳

@@ -16,6 +16,7 @@ from xml.sax import saxutils
 import sys
 from Common.com_func import log
 from Config import config as cfg
+import requests
 
 
 class OutputRedirector(object):
@@ -208,10 +209,11 @@ function html_escape(s) {
 %(heading)s
 %(report)s
 %(ending)s
+%(script_request)s
 </body>
 </html>
 """
-    # variables: (title, generator, stylesheet, heading, report, ending)
+    # variables: (title, generator, stylesheet, heading, report, ending, script_request)
 
     # ------------------------------------------------------------------------
     # Stylesheet
@@ -358,11 +360,11 @@ table       { font-size: 100%; }
     </div>
     """
 
-    # 获取'图片' ( id、server_ip_port、img_id )
+    # 获取'图片' ( screen_shot_id ) src='data:image/png;base64,%(img_base64)s'
     GET_SCREENSHOT_TMPL = r"""
     <div>
     <br><HR align=center width=300color=#987cb9 SIZE=1><br>
-    <img id='screenshot_%(id)s' style='width:1200px; height:800px' src='http://%(server_ip_port)s/UI/get_img/%(img_id)s'>
+    <img id='img_%(screen_shot_id)s' style='width:1200px; height:800px' alt="'%(screen_shot_id)s'图片未显示">
     </div>
     """
 
@@ -378,6 +380,42 @@ table       { font-size: 100%; }
     <a href="#"><span class="glyphicon glyphicon-eject" style = "font-size:30px;" aria-hidden="true">
     </span></a></div>
     """
+
+    # 循环发送请求 获取图片base64码的脚本模板 ( api_url_base, img_id_list_str )
+    REQUEST_IMG_SCRIPT_TMPL = """
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+            var api_url_base = "%(api_url_base)s";
+            var img_id_list_str = "%(img_id_list_str)s";
+            var img_id_list = img_id_list_str.split(".");
+            console.log(img_id_list);
+            console.log(typeof(img_id_list));
+            <!-- 遍历 图片id列表 -->
+            $.each(img_id_list, function(index, img_id){
+                console.log(api_url_base + img_id)
+                console.log(img_id)
+                
+                $.ajax({
+                    type: "Get",
+                    url: api_url_base + img_id,
+                    dataType: "json",
+                    async: true,
+                    success: function (result) {
+                        console.log("'http'请求成功 ！！！");
+                        console.log(result)
+                    },
+                    error: function () {
+                        console.log("'http'请求失败.....");
+                    }
+                });
+                
+            });
+            
+        });
+    </script>
+    """
+
+
 
 # -------------------- The end of the Template class -------------------
 
@@ -518,6 +556,7 @@ class HTMLTestRunner(Template_mixin):
             self.tester = tester
 
         self.startTime = datetime.datetime.now()
+        self.img_id_list = []
 
     def run(self, suite):
         """ Run the given test case or test suite. """
@@ -584,6 +623,7 @@ class HTMLTestRunner(Template_mixin):
         heading = self._generate_heading(report_attrs)
         report = self._generate_report(result, screen_shot_id_dict)
         ending = self._generate_ending()
+        script_request = self._script_request()
         output = self.HTML_TMPL % dict(
             title=saxutils.escape(self.title),  # 将内容转义后替换入HTML（举例："<"/">"/"&" 对应"&lt;"/"&gt;"/"&amp;"）
             generator=generator,
@@ -591,6 +631,7 @@ class HTMLTestRunner(Template_mixin):
             heading=heading,
             report=report,
             ending=ending,
+            script_request=script_request
         )
         self.stream.write(output.encode('utf8'))
 
@@ -620,8 +661,12 @@ class HTMLTestRunner(Template_mixin):
         :param result:
         :param screen_shot_id_dict: 截图ID字典 -> { "测试类名.测试方法名":['aaa', 'bbb'], "测试类名.测试方法名":['ccc'] }
         :return:
-        【 截 图 ID 传 递 逻 辑 】
-         根据'测试类名'取出该类下的所有'测试方法'对应的'截图ID列表'的字典 -> { "测试方法名":['aaa', 'bbb'], "测试方法名":['ccc'] }
+        【 显 示 截 图 的 逻 辑 】
+         1.根据'测试类名'取出该类下的所有'测试方法'对应的'截图ID列表'的字典 -> { "测试方法名":['aaa', 'bbb'], "测试方法名":['ccc'] }
+         2.在有截图的'测试方法'下创建<img id='img_图片id'>的标签
+         3.获取所有截图id的列表 self.img_id_list = ['aaa', 'bbb', 'ccc']
+         4.在页面中嵌入<script>脚本循环调用接口获取图片的base64码，并赋值给对应的<img>标签的'src'属性中
+            eg：src='data:image/png;base64,%(img_base64)s'
         """
         rows = []
         sortedResult = self.sortResult(result.result)
@@ -708,9 +753,13 @@ class HTMLTestRunner(Template_mixin):
         show_img_div_tmpl = ""
         if screen_shot_list:
             get_screenshot_tmpl_list = ""
-            for id, screen_shot_id in enumerate(screen_shot_list):
-                get_screenshot_tmpl_list += self.GET_SCREENSHOT_TMPL % dict(id=id + 1, img_id=screen_shot_id,
-                                                                            server_ip_port=cfg.SERVER_IP_PORT)
+            for i, screen_shot_id in enumerate(screen_shot_list):
+                # 调用接口 获取 img_base64
+                # api_url = "http://" + cfg.API_ADDR + "/UI/get_img/" + screen_shot_id
+                # res_dict = requests.get(api_url).json()
+                # img_base64 = res_dict.get("result").get("img_base64")
+                self.img_id_list.append(screen_shot_id)  # 将截图id添加到总列表中
+                get_screenshot_tmpl_list += self.GET_SCREENSHOT_TMPL % dict(screen_shot_id=screen_shot_id)
             show_img_div_tmpl = self.SHOW_SCREENSHOT_DIV_TMPL % dict(tid=tid, get_screenshot_tmpl_list=get_screenshot_tmpl_list)
 
         # 获取测试方法中的 __doc__
@@ -762,5 +811,19 @@ class HTMLTestRunner(Template_mixin):
     def _generate_ending(self):
         return self.ENDING_TMPL
 
+    def _script_request(self):
+        script_request_tmpl = ""
+        if self.img_id_list:
+            api_url_base = "http://" + cfg.API_ADDR + "/UI/get_img/"
+            img_id_list_str = ".".join(self.img_id_list)
+            script_request_tmpl = self.REQUEST_IMG_SCRIPT_TMPL % dict(api_url_base=api_url_base,
+                                                                      img_id_list_str=img_id_list_str)
+        return script_request_tmpl
 
+
+if __name__ == "__main__":
+    api_url = "http://" + cfg.API_ADDR + "/UI/get_img/" + "5e609cdacd380a0cef68056f"
+    res_dict = requests.get(api_url).json()
+    img_base64 = res_dict.get("result").get("img_base64")
+    print(img_base64[2:-1])
 

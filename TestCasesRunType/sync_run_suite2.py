@@ -138,9 +138,6 @@ def sync_run_case2(browser_name, test_class_list, thread_num=2, remote=False):
       2.每个测试方法中将所有截屏ID都保存入'screen_shot_id_list' -> screen_shot_id_dict = ['aaa', 'bbb', 'ccc']
       3.实例对象'suite'在重写的'new_run'方法中 将'screen_shot_id_list'添加入'screen_shot_id_dict'
       4.screen_shot_id_dict = { "测试类名.测试方法名":['aaa', 'bbb'], "测试类名.测试方法名":['cccc'] }
-
-     {'TrainTest.test_01': [], 'TrainTest.test_02': [], 'TrainTest.test_baidu': ['5e5e501ab4fdad3efc0e3329'], 'TrainTest.test_page_load': [], 'DemoTest.test_demo_01': [], 'DemoTest.test_demo_02': ['5e5e5025b4fdad3efc0e3331'], 'TrainTest.test_ctrip': ['5e5e501fb4fdad3efc0e332c', '5e5e5028b4fdad3efc0e3334', '5e5e502db4fdad3efc0e333b']}
-
     """
 
     # 将'测试类'中的所有'测试方法'添加到 suite 对象中（每个'测试类'实例对象包含一个'测试方法'）

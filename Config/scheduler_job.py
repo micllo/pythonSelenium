@@ -29,6 +29,15 @@ class Config(object):
             'args': [60],
             'trigger': 'interval',
             'seconds': 60
+            # 测试使用
+        },
+        {
+            'id': 'clear_screen_shot',
+            'func': 'Api.api_services.api_calculate:clear_screen_shot',
+            'args': [5],
+            'trigger': 'interval',
+            'seconds': 10
+            # 测试使用
         }
     ]
 
@@ -39,6 +48,28 @@ class Config(object):
     #         'args': ("Chrome", 3, True),
     #         'trigger': 'interval',
     #         'seconds': 60
+    #         # 测试使用
+    #     },
+    #     {
+    #         'id': 'clear_reports_logs',
+    #         'func': 'Api.api_services.api_calculate:clear_reports_logs',
+    #         'args': [7],
+    #         'trigger': 'cron',
+    #         'day_of_week': '0',
+    #         'hour': 10,
+    #         'minute': '30',
+    #         'second': "10"
+    #         # 每周日10点30分10秒 -> 清理7天前的报告和日志（注意：正式使用时 要把 '-mmin' 改成 '-mtime'）
+    #     },
+    #     {
+    #         'id': 'clear_screen_shot',
+    #         'func': 'Api.api_services.api_calculate:clear_screen_shot',
+    #         'args': [7],
+    #         'trigger': 'cron',
+    #         'day_of_week': '1',
+    #         'hour': 10,
+    #         'minute': '30'
+    #         # 每周一10点30分 -> 清理7天前的截图
     #     }
     # ]
 

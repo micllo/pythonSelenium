@@ -16,4 +16,7 @@ Logs
 Reports
 vassals_local
 venv
-
+gulpfile.js
+package.json
+package-lock.json
+node_modules

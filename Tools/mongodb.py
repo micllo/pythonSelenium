@@ -8,7 +8,9 @@ from Config import config as cfg
 from gridfs import GridFS
 from bson.objectid import ObjectId
 from Common.com_func import log, send_DD
+from dateutil import parser
 import base64
+
 
 db_pool = {}
 
@@ -76,8 +78,9 @@ class MongoGridFS(object):
     """
 
     def __init__(self):
-        self.client = MongoClient("mongodb://" + cfg.MONGODB_IP_PORT)
+        self.client = MongoClient("mongodb://" + cfg.MONGODB_ADDR)
         self.img_db = self.client["image"]
+        self.fs = GridFS(database=self.img_db, collection="fs")
 
     def find_exception_send_DD(self, e, msg):
         """
@@ -86,8 +89,8 @@ class MongoGridFS(object):
         :param msg:
         :return:
         """
-        title = "[监控]'mongo'存取图片错误通知"
-        text = "#### UI自动化测试'mongo'存取图片错误\n\n****操作方式：" + msg + "****\n\n****错误原因：" + str(e) + "****"
+        title = "[监控]'mongo'图片操作通知"
+        text = "#### UI自动化测试'mongo'图片操作错误\n\n****操作方式：" + msg + "****\n\n****错误原因：" + str(e) + "****"
         send_DD(dd_group_id=cfg.DD_MONITOR_GROUP, title=title, text=text, at_phones=cfg.DD_AT_FXC, is_at_all=False)
 
     def upload_file(self, img_file_full):
@@ -101,38 +104,37 @@ class MongoGridFS(object):
         img_file = img_file_full.split("/")[-1]
         img_name = img_file.split(".")[0]
         img_tpye = img_file.split(".")[1]
-        gridfs_col = GridFS(self.img_db)
         files_id = None
         try:
             with open(img_file_full, 'rb') as file_r:
-                object_id = gridfs_col.put(data=file_r, content_type=img_tpye, filename=img_name)  # 上传到gridfs
+                object_id = self.fs.put(data=file_r, content_type=img_tpye, filename=img_name)
                 files_id = str(object_id)
         except Exception as e:
             self.find_exception_send_DD(e=e, msg="上传图片")
         finally:
             return files_id
 
-    def get_binary_by_id(self, files_id):
+    def get_base64_by_id(self, file_id):
         """
-        按文件'files_id'获取图片'二进制文件'
-        :param files_id:
+        按文件'file_id'获取图片'base64码'
+        :param file_id:
         :return:
             1.获取成功 -> 返回 图片二进制文件
             2.找不到该文件 -> 返回 no such file
             3.mongo连接不上 -> 返回 None
         """
-        gridfs_col = GridFS(self.img_db)
-        img_binary = None
+        img_base64 = None
         try:
-            gf = gridfs_col.get(file_id=ObjectId(files_id))
+            gf = self.fs.get(file_id=ObjectId(file_id))
             img_binary = gf.read()
+            img_base64 = base64.b64encode(img_binary)
         except Exception as e:
             self.find_exception_send_DD(e=e, msg="获取二进制图片")
             if "Connection refused" not in str(e):
-                img_binary = "no such file"
+                img_base64 = "no such file"
         finally:
-            # log.info("img_binary : " + str(img_binary))
-            return img_binary
+            # log.info("img_base64 : " + str(img_base64))
+            return str(img_base64)[2:-1]
 
     def download_file_by_name(self, file_name, out_name):
         """
@@ -141,13 +143,34 @@ class MongoGridFS(object):
         :param out_name:
         :return:
         """
-        gridfs_col = GridFS(self.img_db)
         try:
-            img_binary = gridfs_col.get_version(filename=file_name, version=1).read()
+            img_binary = self.fs.get_version(filename=file_name, version=1).read()
             with open(out_name, 'wb') as file_w:
                 file_w.write(img_binary)
         except Exception as e:
             self.find_exception_send_DD(e=e, msg="获取图片")
+
+    def del_file_by_date(self, date_str):
+        """
+        删除指定日期之前的所有图片
+        :param date_str: 必须是'ISODate'类型的字符串 -> 2020-03-02T15:51:05
+        :return:
+           {"uploadDate" : {"$lt": ISODate("2020-03-02T15:51:05")}}
+        """
+        try:
+            ISODate = parser.parse(date_str)
+            query_dict = {"uploadDate": {"$lt": ISODate}}
+            grid_outs = self.fs.find(query_dict)
+            file_id_list = []
+            for grid_out in grid_outs:
+                # print(grid_out.__dict__)
+                file_id_list.append(str(grid_out._file.get("_id")))
+            for file_id in file_id_list:
+                self.fs.delete(file_id=ObjectId(file_id))
+            return len(file_id_list)
+        except Exception as e:
+            self.find_exception_send_DD(e=e, msg="删除图片")
+            return None
 
 
 if __name__ == '__main__':
@@ -160,12 +183,5 @@ if __name__ == '__main__':
     img_file_full = cfg.SCREENSHOTS_PATH + "TrainTest/test_ctrip/search_train_1.png"
     mgf = MongoGridFS()
     # mgf.upload_file(img_file_full)
-    # mgf.get_binary_by_id("5e5cac9188121299450740b3")
+    mgf.get_base64_by_id("5e61152ff0dd77751382563f")
     # mgf.download_file_by_name("search_train_3", "/Users/micllo/Downloads/test2.png")
-
-    id = ObjectId('5e5e4996d1e04aa9de885ef9')
-    print(str(id))
-
-
-
-
