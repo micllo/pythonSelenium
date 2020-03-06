@@ -24,8 +24,8 @@ DD_AT_FXC = "13816439135"
 # 服务器地址
 SERVER_IP = "127.0.0.1"
 
-# 接口地址
-API_ADDR = SERVER_IP + ":8081"
+# 接口地址( uwsgi )
+API_ADDR = SERVER_IP + ":8070/api_local"
 
 # Selenium Grid Console
 # GRID_REMOTE_ADDR = "10.211.55.6:4444"  # win10虚拟机

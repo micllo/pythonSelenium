@@ -121,7 +121,7 @@ def new_run(self, result, debug=False):
     return result
 
 
-def sync_run_case2(browser_name, test_class_list, thread_num=2, remote=False):
+def sync_run_case(browser_name, test_class_list, thread_num=2, remote=False):
     """
     同时执行不同用例（ 通过动态修改'suite.py'文件中'TestSuite'类中的'run'方法，使得每个线程中的结果都可以记录到测试报告中 ）
     :param browser_name: 浏览器名称
@@ -166,7 +166,7 @@ def sync_run_case2(browser_name, test_class_list, thread_num=2, remote=False):
 
 if __name__ == "__main__":
 
-    sync_run_case2(browser_name="Chrome", test_class_list=[TrainTest, DemoTest], thread_num=3, remote=False)
+    sync_run_case(browser_name="Chrome", test_class_list=[TrainTest, DemoTest], thread_num=3, remote=False)
     # sync_run_case2(browser_name="Firefox", test_class_list=test_class_list,  thread_num=3, remote=True)
 
 

@@ -127,14 +127,14 @@ class MongoGridFS(object):
         try:
             gf = self.fs.get(file_id=ObjectId(file_id))
             img_binary = gf.read()
-            img_base64 = base64.b64encode(img_binary)
+            img_base64 = str(base64.b64encode(img_binary))[2:-1]
         except Exception as e:
             self.find_exception_send_DD(e=e, msg="获取二进制图片")
             if "Connection refused" not in str(e):
                 img_base64 = "no such file"
         finally:
             # log.info("img_base64 : " + str(img_base64))
-            return str(img_base64)[2:-1]
+            return img_base64
 
     def download_file_by_name(self, file_name, out_name):
         """

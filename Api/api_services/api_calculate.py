@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from TestCasesRunType.sync_run_suite2 import sync_run_case2
+from TestCasesRunType.sync_run_case import sync_run_case
 from concurrent.futures import ThreadPoolExecutor
 from TestCases.demo_test import DemoTest
 from TestCases.train_test import TrainTest
@@ -24,7 +24,7 @@ def sync_run_case_exec(browser_name, thread_num):
     :return:
     """
     pool = ThreadPoolExecutor(1)
-    pool.submit(sync_run_case2, browser_name=browser_name, test_class_list=[TrainTest, DemoTest],
+    pool.submit(sync_run_case, browser_name=browser_name, test_class_list=[TrainTest, DemoTest],
                 thread_num=thread_num, remote=True)
 
 

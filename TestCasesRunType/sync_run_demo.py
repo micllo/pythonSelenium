@@ -34,7 +34,7 @@ def run_result(res):
 
 def sync_run_case(browser_name, thread_num=2, remote=False):
     """
-    同时执行不同用例（ 由于每个线程中执行的用例会单独配置测试结果，所以测试结果只能打印在控制台 ）
+    同时执行不同用例（ 由于每个线程中执行的用例会单独配置测试结果，所以测试结果只能打印在控制台 < 无法调用生成报告的方法 >）
     :param browser_name: 浏览器名称
     :param thread_num: 线程数
     :param remote: 是否远程执行

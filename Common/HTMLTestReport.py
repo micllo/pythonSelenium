@@ -382,6 +382,7 @@ table       { font-size: 100%; }
     """
 
     # 循环发送请求 获取图片base64码的脚本模板 ( api_url_base, img_id_list_str )
+    # 获取后将base64码注入'img'标签的'src'属性中
     REQUEST_IMG_SCRIPT_TMPL = """
     <script language="javascript" type="text/javascript">
         $(document).ready(function () {
@@ -392,17 +393,17 @@ table       { font-size: 100%; }
             console.log(typeof(img_id_list));
             <!-- 遍历 图片id列表 -->
             $.each(img_id_list, function(index, img_id){
-                console.log(api_url_base + img_id)
-                console.log(img_id)
-                
                 $.ajax({
                     type: "Get",
                     url: api_url_base + img_id,
                     dataType: "json",
                     async: true,
-                    success: function (result) {
+                    success: function (response) {
                         console.log("'http'请求成功 ！！！");
-                        console.log(result)
+                        console.log(response)
+                        var file_id = response.result.file_id;
+                        var img_base64 = response.result.img_base64;
+                        $('#img_' + file_id).attr({"src": "data:image/png;base64," + img_base64});
                     },
                     error: function () {
                         console.log("'http'请求失败.....");
@@ -414,8 +415,6 @@ table       { font-size: 100%; }
         });
     </script>
     """
-
-
 
 # -------------------- The end of the Template class -------------------
 

@@ -15,10 +15,18 @@
 （3）在服务器中进行部署操作：停止nginx和uwsgi服务 -> 替换项目、uwsgi.ini配置文件 -> 替换config配置文件 -> 启动nginx和uwsgi服务
 （4）删除本地的临时文件夹
 
-5.访问地址：
-（1）接口 - > http://127.0.0.1:8081/api/
-             http://127.0.0.1:8081/api/UI/sync_run_case
-             http://127.0.0.1:8081/UI/get_img/5e5cac9188121299450740b3
+5.访问地址（ server.py 启动 ）：
+（1）接口地址 -> http://127.0.0.1:8082/
+               http://127.0.0.1:8082/UI/sync_run_case
+               http://127.0.0.1:8082/UI/get_img/5e5cac9188121299450740b3
+
+6.访问地址（ uwsgi 启动 ）：
+（1）测试报告 -> http://127.0.0.1:8070/test_report_local/report.html
+（2）接口地址 -> http://127.0.0.1:8070/api_local/
+               http://127.0.0.1:8070/api_local/UI/sync_run_case
+               http://127.0.0.1:8070/api_local/UI/get_img/5e5cac9188121299450740b3
+
+   （ 备注：uwgsi 启动 8081 端口、nginx 配置 8070 反向代理 8081 ）
 
 
 ##################################################################################3
@@ -59,17 +67,17 @@
 （6）清空临时文件
 
 
-8.访问地址（Docker内部）：
-（1）静态文件（测试报告）-> http://127.0.0.1:80/test_report/report.html
-（2）接口 - > http://127.0.0.1:80/api/
-             http://127.0.0.1:80/api/UI/sync_run_case
-    ( 备注：nginx 配置 80 反向代理 8081 )
+8.访问地址（ Docker 内部 ）：
+（1）测试报告 -> http://127.0.0.1:80/test_report/report.html
+（2）接口地址 -> http://127.0.0.1:80/api/
+               http://127.0.0.1:80/api/UI/sync_run_case
+    ( 备注：uwgsi 启动 8081 端口、nginx 配置 80 反向代理 8081 )
 
-9.访问地址（外部访问）：
-（1）静态文件（测试报告）-> http://127.0.0.1:1080/test_report/report.html
-（2）接口 - > http://127.0.0.1:1080/api/
-             http://127.0.0.1:1080/api/UI/sync_run_case
-             http://127.0.0.1:1080/api/UI/get_img/5e5cac9188121299450740b3
+9.访问地址（ 外部访问 ）：
+（1）测试报告 -> http://127.0.0.1:1080/test_report/report.html
+（2）接口地址 -> http://127.0.0.1:1080/api/
+               http://127.0.0.1:1080/api/UI/sync_run_case
+               http://127.0.0.1:1080/api/UI/get_img/5e5cac9188121299450740b3
     ( 备注：docker 配置 1080 映射 80 )
 
 
