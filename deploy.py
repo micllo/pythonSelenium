@@ -55,9 +55,10 @@ def local_action():
 # 服务器端操作
 def server_action():
     with settings(host_string="%s@%s:%s" % (user, host, port), password=passwd):
-        # 停止'nginx'和'uwsgi'服务
+        # 停止'nginx、uwsgi、mongo'服务
         run("sh /home/centos/stop_nginx.sh", warn_only=True)  # 忽略失败的命令,继续执行
         run("sh /home/centos/stop_uwsgi.sh", warn_only=True)
+        run("pgrep mongod | sudo xargs kill -9", warn_only=True)
         run("pwd")
         # 解压'部署文件'
         run("tar -xzvf " + remote_tmp_path + pro_name_tar + " -C " + remote_tmp_path, warn_only=True)
@@ -71,8 +72,9 @@ def server_action():
         with cd("/opt/project/" + pro_name + "/Config"):
             run("rm -r config.py && mv config_docker.py config.py", warn_only=True)
 
-        # 启动'nginx'和'uwsgi'服务
-        run("sh /home/centos/start_nginx.sh", warn_only=False)  # 不忽略失败的命令，不能继续执行
+        # 启动'mongo、nginx、uwsgi'服务
+        run("sudo mongod -f /tools/mongodb/bin/mongodb.conf", warn_only=False)  # 不忽略失败的命令，不能继续执行
+        run("sh /home/centos/start_nginx.sh", warn_only=False)
         run("sh /home/centos/start_uwsgi.sh", warn_only=False, pty=False)  # 参数pty：解决'fabric'执行'nohub'的问题
 
         # 清空临时文件夹

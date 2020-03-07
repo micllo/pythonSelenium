@@ -143,11 +143,11 @@ def sync_run_case(browser_name, test_class_list, thread_num=2, remote=False):
     # 将'测试类'中的所有'测试方法'添加到 suite 对象中（每个'测试类'实例对象包含一个'测试方法'）
     suite = ParaCase.parametrize(test_class_list=test_class_list, browser_name=browser_name, remote=remote)
 
-    # 为实例对象'suite'<TestSuite>动态添加一个属性'thread_num'（目的：控制多线程数量）
-    setattr(suite, "thread_num", thread_num)
-
     # 为实例对象'suite'<TestSuite>动态添加一个属性'screen_shot_id_dict'（目的：保存截图ID）
     setattr(suite, "screen_shot_id_dict", {})
+
+    # 为实例对象'suite'<TestSuite>动态添加一个属性'thread_num'（目的：控制多线程数量）
+    setattr(suite, "thread_num", thread_num)
 
     # 为实例对象'suite'<TestSuite>动态添加两个方法'run_test_custom'、'show_result_custom'（ 目的：供多线程中调用 ）
     suite.run_test_custom = MethodType(run_test_custom, suite)
@@ -167,6 +167,6 @@ def sync_run_case(browser_name, test_class_list, thread_num=2, remote=False):
 if __name__ == "__main__":
 
     sync_run_case(browser_name="Chrome", test_class_list=[TrainTest, DemoTest], thread_num=3, remote=False)
-    # sync_run_case2(browser_name="Firefox", test_class_list=test_class_list,  thread_num=3, remote=True)
+    # sync_run_case(browser_name="Firefox", test_class_list=[TrainTest, DemoTest],  thread_num=3, remote=False)
 
 
