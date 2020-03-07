@@ -44,7 +44,7 @@ class Config(object):
     # JOBS = [
     #     {
     #         'id': 'sync_run_case',
-    #         'func': 'TestCasesRunType.sync_run_case:sync_run_case',
+    #         'func': 'Common.sync_run_case:suite_sync_run_case',
     #         'args': ("Chrome", 3, True),
     #         'trigger': 'interval',
     #         'seconds': 60

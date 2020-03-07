@@ -21,3 +21,4 @@ package.json
 package-lock.json
 node_modules
 nohup.out
+tmp_uwsgi_pid.txt

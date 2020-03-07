@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
-from TestCasesRunType.sync_run_case import sync_run_case
+from Common.sync_run_case import suite_sync_run_case
 from concurrent.futures import ThreadPoolExecutor
 from TestCases.demo_test import DemoTest
 from TestCases.train_test import TrainTest
 from Config import config as cfg
 from Common.com_func import log, is_null
-import sys, os, time
+import sys, os
 from Tools.mongodb import MongoGridFS
 from Tools.date_helper import get_date_by_days
 
@@ -24,7 +24,7 @@ def sync_run_case_exec(browser_name, thread_num):
     :return:
     """
     pool = ThreadPoolExecutor(1)
-    pool.submit(sync_run_case, browser_name=browser_name, test_class_list=[TrainTest, DemoTest],
+    pool.submit(suite_sync_run_case, browser_name=browser_name, test_class_list=[TrainTest, DemoTest],
                 thread_num=thread_num, remote=True)
 
 
