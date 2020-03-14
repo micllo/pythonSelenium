@@ -2,9 +2,8 @@
 from Common.HTMLTestReport import HTMLTestRunner
 import time
 import os
-from Common.com_func import send_mail, mkdir, log
-
-from Tools.mongodb import *
+from Common.com_func import send_mail, mkdir, send_DD, log
+from Config import config as cfg
 
 
 def generate_report(suite, title, description, tester, verbosity=1):
@@ -101,8 +100,32 @@ def send_DD_after_test(error_type, report_name, is_at_all=False):
     send_DD(dd_group_id=cfg.DD_MONITOR_GROUP, title=title, text=text, at_phones=cfg.DD_AT_PHONES, is_at_all=is_at_all)
 
 
-if __name__ == "__main__":
-    send_DD_after_test("失败", "报告名称", False)
+def send_DD_for_FXC(title, text):
+    """
+    发 送 钉 钉 to FXC
+    :param title:
+    :param text:
+    :return:
 
+    """
+    title = "[监控]" + title
+    send_DD(dd_group_id=cfg.DD_MONITOR_GROUP, title=title, text=text, at_phones=cfg.DD_AT_FXC, is_at_all=False)
+
+
+def mongo_exception_send_DD(e, msg):
+    """
+    发现异常时钉钉通知
+    :param e:
+    :param msg:
+    :return:
+    """
+    title = "[监控]'mongo'操作通知"
+    text = "#### UI自动化测试'mongo'操作错误\n\n****操作方式：" + msg + "****\n\n****错误原因：" + str(e) + "****"
+    send_DD(dd_group_id=cfg.DD_MONITOR_GROUP, title=title, text=text, at_phones=cfg.DD_AT_FXC, is_at_all=False)
+
+
+if __name__ == "__main__":
+    # send_DD_after_test("失败", "报告名称", False)
+    pass
 
 

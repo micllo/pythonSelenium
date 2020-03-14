@@ -401,8 +401,8 @@ table       { font-size: 100%; }
                     success: function (response) {
                         console.log("'http'请求成功 ！！！");
                         console.log(response)
-                        var file_id = response.result.file_id;
-                        var img_base64 = response.result.img_base64;
+                        var file_id = response.data.file_id;
+                        var img_base64 = response.data.img_base64;
                         $('#img_' + file_id).attr({"src": "data:image/png;base64," + img_base64});
                     },
                     error: function () {
@@ -568,11 +568,11 @@ class HTMLTestRunner(Template_mixin):
 
     """
     【 将'result_list'测试结果列表中，按照'测试类'进行归类 】
-    举例：若有两种测试类<class 'TestCases.train_test.TrainTest'>、<class 'TestCases.demo_test.DemoTest'>
+    举例：若有两种测试类<class 'test_case.train_test.TrainTest'>、<class 'test_case.demo_test.DemoTest'>
     结果：[ (测试类1, [ (测试用例1结果), (测试用例2结果) ] ), ( 测试类2, [ (测试用例1结果) ] ) ]
-    [(<class 'TestCases.train_test.TrainTest'>, [(1,<TestCases.train_test.TrainTest testMethod=test_01>,'','失败信息'),
-                                                 (2,<TestCases.train_test.TrainTest testMethod=test_02>,'','错误信息')]),
-     (<class 'TestCases.demo_test.DemoTest'>, [(0,<TestCases.demo_test.DemoTest testMethod=test_demo_01>,'','成功无')])
+    [(<class 'test_case.train_test.TrainTest'>, [(1,<test_case.train_test.TrainTest testMethod=test_01>,'','失败信息'),
+                                                 (2,<test_case.train_test.TrainTest testMethod=test_02>,'','错误信息')]),
+     (<class 'test_case.demo_test.DemoTest'>, [(0,<test_case.demo_test.DemoTest testMethod=test_demo_01>,'','成功无')])
     ]
     """
     def sortResult(self, result_list):
@@ -681,7 +681,9 @@ class HTMLTestRunner(Template_mixin):
             if cls.__module__ == "__main__":
                 name = cls.__name__
             else:
-                name = "%s.%s" % (cls.__module__, cls.__name__)
+                name_long = "%s.%s" % (cls.__module__, cls.__name__)
+                name_long_list = name_long.split(".")
+                name = name_long_list[1] + "." + name_long_list[4]
             doc = cls.__doc__ and cls.__doc__.split("\n")[0] or ""
 
             # 获取测试用例类的__doc__备注信息（目的：注明该测试类的作用）
@@ -735,7 +737,7 @@ class HTMLTestRunner(Template_mixin):
         tid = (n == 0 and "p" or (n == 1 and "f" or "e")) + 't%s_%s' % (cid+1, tid+1)
 
         # t.id() 是unittest.TestCase中的实例方法，返回自定义测试类中的测试方法的全路径
-        # t.id() -> TestCases.train_test.TrainTest.test_01
+        # t.id() -> test_case.train_test.TrainTest.test_01
         # name -> test_01
         name = t.id().split('.')[-1]
 
@@ -753,10 +755,6 @@ class HTMLTestRunner(Template_mixin):
         if screen_shot_list:
             get_screenshot_tmpl_list = ""
             for i, screen_shot_id in enumerate(screen_shot_list):
-                # 调用接口 获取 img_base64
-                # api_url = "http://" + cfg.API_ADDR + "/UI/get_img/" + screen_shot_id
-                # res_dict = requests.get(api_url).json()
-                # img_base64 = res_dict.get("result").get("img_base64")
                 self.img_id_list.append(screen_shot_id)  # 将截图id添加到总列表中
                 get_screenshot_tmpl_list += self.GET_SCREENSHOT_TMPL % dict(screen_shot_id=screen_shot_id)
             show_img_div_tmpl = self.SHOW_SCREENSHOT_DIV_TMPL % dict(tid=tid, get_screenshot_tmpl_list=get_screenshot_tmpl_list)

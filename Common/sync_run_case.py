@@ -1,13 +1,9 @@
 # -*- coding:utf-8 -*-
-from TestCases.train_test import TrainTest
-from TestCases.demo_test import DemoTest
-from Base.test_case_unit import ParaCase
 from concurrent.futures import ThreadPoolExecutor
 from unittest.suite import _isnotsuite
 from types import MethodType
 from Common.com_func import log
-from Common.test_func import generate_report
-from Common.test_func import send_warning_after_test
+from Common.test_func import generate_report, send_DD_for_FXC, send_warning_after_test
 
 
 """
@@ -22,9 +18,9 @@ from Common.test_func import send_warning_after_test
 
  self ：
  -> 表示 suite 实例对象（包含了所有的测试用例实例，即继承了'unittest.TestCase'的子类的实例对象 test_instance ）
- <unittest.suite.TestSuite tests=[<TestCases.train_test.TrainTest testMethod=test_01>, 
-                                  <TestCases.train_test.TrainTest testMethod=test_02>, 
-                                  <TestCases.train_test.TrainTest testMethod=test_baidu>]>
+ <unittest.suite.TestSuite tests=[<test_case.train_test.TrainTest testMethod=test_01>, 
+                                  <test_case.train_test.TrainTest testMethod=test_02>, 
+                                  <test_case.train_test.TrainTest testMethod=test_baidu>]>
 
  result:
  -> 表示 result.py 文件中的 TestResult 类的 实例对象
@@ -121,11 +117,11 @@ def new_run(self, result, debug=False):
     return result
 
 
-def suite_sync_run_case(browser_name, test_class_list, thread_num=2, remote=False):
+def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
     """
     同时执行不同用例（ 通过动态修改'suite.py'文件中'TestSuite'类中的'run'方法，使得每个线程中的结果都可以记录到测试报告中 ）
+    :param pro_name: 项目名称
     :param browser_name: 浏览器名称
-    :param test_class_list: 需要执行的'测试类'列表
     :param thread_num: 线程数
     :param remote: 是否远程执行
        【 备 注 】
@@ -141,31 +137,35 @@ def suite_sync_run_case(browser_name, test_class_list, thread_num=2, remote=Fals
     """
 
     # 将'测试类'中的所有'测试方法'添加到 suite 对象中（每个'测试类'实例对象包含一个'测试方法'）
-    suite = ParaCase.parametrize(test_class_list=test_class_list, browser_name=browser_name, remote=remote)
+    from Base.test_case_unit import ParaCase
+    suite = ParaCase.parametrize(pro_name=pro_name, browser_name=browser_name, remote=remote)
 
-    # 为实例对象'suite'<TestSuite>动态添加一个属性'screen_shot_id_dict'（目的：保存截图ID）
-    setattr(suite, "screen_shot_id_dict", {})
+    if suite._tests:
+        # 为实例对象'suite'<TestSuite>动态添加一个属性'screen_shot_id_dict'（目的：保存截图ID）
+        setattr(suite, "screen_shot_id_dict", {})
 
-    # 为实例对象'suite'<TestSuite>动态添加一个属性'thread_num'（目的：控制多线程数量）
-    setattr(suite, "thread_num", thread_num)
+        # 为实例对象'suite'<TestSuite>动态添加一个属性'thread_num'（目的：控制多线程数量）
+        setattr(suite, "thread_num", thread_num)
 
-    # 为实例对象'suite'<TestSuite>动态添加两个方法'run_test_custom'、'show_result_custom'（ 目的：供多线程中调用 ）
-    suite.run_test_custom = MethodType(run_test_custom, suite)
-    suite.show_result_custom = MethodType(show_result_custom, suite)
+        # 为实例对象'suite'<TestSuite>动态添加两个方法'run_test_custom'、'show_result_custom'（ 目的：供多线程中调用 ）
+        suite.run_test_custom = MethodType(run_test_custom, suite)
+        suite.show_result_custom = MethodType(show_result_custom, suite)
 
-    # 为实例对象'suite'<TestSuite>动态修改实例方法'run'（ 目的：启用多线程来执行case ）
-    suite.run = MethodType(new_run, suite)
+        # 为实例对象'suite'<TestSuite>动态修改实例方法'run'（ 目的：启用多线程来执行case ）
+        suite.run = MethodType(new_run, suite)
 
-    # 生成测试报告
-    test_result, current_report_file = generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果',
-                                                       tester="自动化测试", verbosity=2)
+        # 生成测试报告
+        test_result, current_report_file = generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果',
+                                                           tester="自动化测试", verbosity=2)
 
-    # 测试后发送预警
-    send_warning_after_test(test_result, current_report_file)
+        # 测试后发送预警
+        # send_warning_after_test(test_result, current_report_file)
+    else:
+        send_DD_for_FXC(title="UI自动化测试", text="#### UI自动化测试 '" + pro_name + "'项目 当前没有上线的测试用例！！！")
 
 
 if __name__ == "__main__":
-    suite_sync_run_case(browser_name="Chrome", test_class_list=[TrainTest, DemoTest], thread_num=3, remote=False)
-    # sync_run_case(browser_name="Firefox", test_class_list=[TrainTest, DemoTest],  thread_num=3, remote=False)
+    suite_sync_run_case(pro_name="pro_demo_1", browser_name="Chrome", thread_num=3, remote=False)
+    # suite_sync_run_case(pro_name="pro_demo_1", browser_name="Firefox", thread_num=3, remote=False)
 
 

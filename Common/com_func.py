@@ -63,7 +63,7 @@ def get_current_function_name(class_instance):
 # 获取'config.ini'文件中的（ 获取 [test_url] 下的 baidu_rul 的值
 def get_config_ini(key, value):
     config = configparser.ConfigParser()
-    config.read(project_path() + "Config/config.ini")
+    config.read(project_path() + "Config/config_test_url.ini")
     return config.get(key, value)
 
 

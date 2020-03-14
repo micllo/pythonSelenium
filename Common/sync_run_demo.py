@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import unittest
 import time
-from TestCases.train_test import TrainTest
+from Project.pro_demo_1.test_case.train_test import TrainTest
 from Base.test_case_unit import ParaCase
 from concurrent.futures import ThreadPoolExecutor
 from Tools.log import FrameLog
@@ -10,7 +10,7 @@ from Tools.log import FrameLog
 def run_test(test_instence):
     """
     多线程中执行的内容
-    :param test_instence:  实例对象 ->  test_02 (TestCases.TrainTest.LoginTest)
+    :param test_instence:  实例对象 ->  test_02 (test_case.TrainTest.LoginTest)
     :param browser_name:   浏览器名称
     :return:
     """

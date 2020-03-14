@@ -1,9 +1,9 @@
 # -*- coding:utf-8 -*-
 import os, sys
 # 将项目根路径添加入path
-sys.path.append(os.path.split(os.getcwd())[0])
+# sys.path.append(os.path.split(os.getcwd())[0])
 import time
-from Common.com_func import get_config_ini, project_path
+from Common.com_func import get_config_ini
 from Base.test_case_unit import ParaCase
 from Base.browser_action import Base
 
@@ -28,4 +28,5 @@ class DemoTest(ParaCase):
         Base.screenshot(self, "test_demo_02.png", self)  # 类调用实例方法
         time.sleep(2)
         self.assertIn('test_demo_01', "2", "test_demo_02用例测试失败")
+
 

@@ -11,8 +11,8 @@ REPORTS_PATH = "/opt/project/reports/"
 SCREENSHOTS_PATH = "/opt/project/screenshots/"
 
 # 服务器地址
-# SERVER_IP_PORT = "192.168.3.102"
-SERVER_IP = "192.168.31.10"
+# SERVER_IP_PORT = "192.168.3.102"  #  MERCURY_1602
+SERVER_IP = "192.168.31.10"  # Demba Ba_5G
 
 # 测试报告地址
 TEST_REPORT_URL = "http://" + SERVER_IP + ":1080/test_report/report.html"

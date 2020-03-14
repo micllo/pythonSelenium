@@ -7,8 +7,10 @@ from pymongo.write_concern import WriteConcern
 from Config import config as cfg
 from gridfs import GridFS
 from bson.objectid import ObjectId
-from Common.com_func import log, send_DD
+from Common.com_func import log
+from Common.test_func import mongo_exception_send_DD
 from dateutil import parser
+
 import base64
 
 
@@ -82,17 +84,6 @@ class MongoGridFS(object):
         self.img_db = self.client["image"]
         self.fs = GridFS(database=self.img_db, collection="fs")
 
-    def find_exception_send_DD(self, e, msg):
-        """
-        发现异常时钉钉通知
-        :param e:
-        :param msg:
-        :return:
-        """
-        title = "[监控]'mongo'图片操作通知"
-        text = "#### UI自动化测试'mongo'图片操作错误\n\n****操作方式：" + msg + "****\n\n****错误原因：" + str(e) + "****"
-        send_DD(dd_group_id=cfg.DD_MONITOR_GROUP, title=title, text=text, at_phones=cfg.DD_AT_FXC, is_at_all=False)
-
     def upload_file(self, img_file_full):
         """
         上传图片
@@ -110,7 +101,7 @@ class MongoGridFS(object):
                 object_id = self.fs.put(data=file_r, content_type=img_tpye, filename=img_name)
                 files_id = str(object_id)
         except Exception as e:
-            self.find_exception_send_DD(e=e, msg="上传图片")
+            mongo_exception_send_DD(e=e, msg="上传图片")
         finally:
             return files_id
 
@@ -129,7 +120,7 @@ class MongoGridFS(object):
             img_binary = gf.read()
             img_base64 = str(base64.b64encode(img_binary))[2:-1]
         except Exception as e:
-            self.find_exception_send_DD(e=e, msg="获取二进制图片")
+            mongo_exception_send_DD(e=e, msg="获取二进制图片")
             if "Connection refused" not in str(e):
                 img_base64 = "no such file"
         finally:
@@ -148,7 +139,7 @@ class MongoGridFS(object):
             with open(out_name, 'wb') as file_w:
                 file_w.write(img_binary)
         except Exception as e:
-            self.find_exception_send_DD(e=e, msg="获取图片")
+            mongo_exception_send_DD(e=e, msg="获取图片")
 
     def del_file_by_date(self, date_str):
         """
@@ -169,7 +160,7 @@ class MongoGridFS(object):
                 self.fs.delete(file_id=ObjectId(file_id))
             return len(file_id_list)
         except Exception as e:
-            self.find_exception_send_DD(e=e, msg="删除图片")
+            mongo_exception_send_DD(e=e, msg="删除图片")
             return None
 
 

@@ -16,6 +16,7 @@ PENDING_TASK = u"数据计算中"
 
 # 500
 NO_SUCH_FILE = u"该文件不存在"
+NO_SUCH_PRO = u"该项目不存在"
 INTERNAL_SERVER_ERROR = u"内部错误:服务器正在维护中"
 REQUEST_FAILED = u"内部错误:请求失败"
 SEARCH_FAILED = u"查询数据失败"
@@ -69,6 +70,7 @@ def get_error_code(code_msg):
 
         # 500
         NO_SUCH_FILE: 31500,
+        NO_SUCH_PRO: 31500,
         INTERNAL_SERVER_ERROR: 31500,
         REQUEST_FAILED: 31500,
         SEARCH_FAILED: 31500,

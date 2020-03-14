@@ -16,7 +16,7 @@ def interface_template(msg, result_dict):
     :return:
     """
     # 初始化模板模板
-    res_dict = {"code": "", "msg": msg, "update_time": current_date(), "result": result_dict,
+    res_dict = {"code": "", "msg": msg, "update_time": current_date(), "data": result_dict,
                 "status": ""}
     # 查询错误码
     code = get_error_code(msg)

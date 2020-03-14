@@ -45,7 +45,7 @@ class Config(object):
     #     {
     #         'id': 'sync_run_case',
     #         'func': 'Common.sync_run_case:suite_sync_run_case',
-    #         'args': ("Chrome", 3, True),
+    #         'args': ("pro_demo_1", "Chrome", 3, True),
     #         'trigger': 'interval',
     #         'seconds': 60
     #         # 测试使用

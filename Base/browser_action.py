@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from selenium import webdriver
-from Common.com_func import project_path, get_config_ini, log, mkdir
+from Common.com_func import project_path, log, mkdir
 from selenium.webdriver import DesiredCapabilities
 from Config import config as cfg
 from selenium.common.exceptions import TimeoutException

@@ -3,10 +3,10 @@ import os, sys
 # 将项目根路径添加入path
 sys.path.append(os.path.split(os.getcwd())[0])
 import time
-from Common.com_func import get_config_ini, project_path, log
+from Common.com_func import get_config_ini, project_path
 from Tools.excel_data import read_excel
-from PageObject.search_page import SearchPage
-from PageObject.baidu_page import BaiduPage
+from Project.pro_demo_1.page_object.search_page import SearchPage
+from Project.pro_demo_1.page_object.baidu_page import BaiduPage
 from Base.test_case_unit import ParaCase
 from Base.browser_action import Base
 
