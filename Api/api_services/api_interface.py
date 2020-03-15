@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
-"""
-api 服务接口
-"""
-from Api import flask_app
+from Api import *
 import json
 from Config.error_mapping import *
 from Api.api_services.api_template import interface_template
-from Api.api_services.api_calculate import sync_run_pro_demo_1, case_import_mongo
+from Api.api_services.api_calculate import *
 from Common.com_func import is_null, log
-from flask import request
 from Tools.mongodb import MongoGridFS
+from Config import config as cfg
+
+
+"""
+api 服务接口
+"""
 
 
 @flask_app.route("/UI/sync_run_case/pro_demo_1", methods=["POST"])
@@ -89,6 +91,15 @@ def update_project_case(pro_name):
     log.info(re_dict)
     return json.dumps(re_dict, ensure_ascii=False)
 
+
+# http://127.0.0.1:8070/api_local/UI/get_test_case_list
+@flask_app.route("/UI/get_test_case_list/<pro_name>", methods=["GET"])
+def get_test_case_list(pro_name):
+    result_dict = dict()
+    result_dict["nginx_api_proxy"] = cfg.NGINX_API_PROXY
+    result_dict["pro_name"] = pro_name
+    result_dict["test_case_list"] = get_test_case(pro_name)
+    return render_template('case_status.html', tasks=result_dict)
 
 
 

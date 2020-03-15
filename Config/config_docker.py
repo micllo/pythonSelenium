@@ -10,6 +10,10 @@ LOGS_PATH = "/opt/project/logs/"
 REPORTS_PATH = "/opt/project/reports/"
 SCREENSHOTS_PATH = "/opt/project/screenshots/"
 
+# 构建的时候使用前端静态文件路径 ( Api/__init__.py文件的同级目录 )
+GULP_STATIC_PATH = 'static'
+GULP_TEMPLATE_PATH = 'templates'
+
 # 服务器地址
 # SERVER_IP_PORT = "192.168.3.102"  #  MERCURY_1602
 SERVER_IP = "192.168.31.10"  # Demba Ba_5G
@@ -17,8 +21,11 @@ SERVER_IP = "192.168.31.10"  # Demba Ba_5G
 # 测试报告地址
 TEST_REPORT_URL = "http://" + SERVER_IP + ":1080/test_report/report.html"
 
+# nginx中的接口方向代理名称
+NGINX_API_PROXY = "api"
+
 # 接口地址
-API_ADDR = SERVER_IP + ":1080/api"
+API_ADDR = SERVER_IP + ":1080/" + NGINX_API_PROXY
 
 # Selenium Grid Console
 # GRID_REMOTE_ADDR = "10.211.55.6:4444"  # win10虚拟机
@@ -26,6 +33,7 @@ GRID_REMOTE_ADDR = SERVER_IP + ":5555"  # docker
 
 # mongo 数据库
 MONGODB_ADDR = SERVER_IP + ":27027"
+MONGODB_DATABASE = "web_auto_test"
 
 # 报错邮箱地址
 MAIL_LIST = ["micllo@126.com"]

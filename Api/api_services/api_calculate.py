@@ -93,10 +93,10 @@ def case_import_mongo(pro_name):
                 test_case_dict["create_time"] = ISODate
                 insert_list.append(test_case_dict)
         # 将'测试用例'列表更新入对应项目的数据库中
-        with MongodbUtils(ip=cfg.MONGODB_ADDR, database="web_auto_test", collection=pro_name) as monitor_db:
+        with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
             try:
-                monitor_db.drop()
-                monitor_db.insert_many(insert_list)
+                pro_db.drop()
+                pro_db.insert_many(insert_list)
             except Exception as e:
                 mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "'项目测试用例数据")
                 return "mongo error"
@@ -105,7 +105,72 @@ def case_import_mongo(pro_name):
         return "no such pro"
 
 
+def update_case_status(pro_name, test_method_name):
+    """
+    更新'测试用例'在monog中的'状态'(上下线)
+    :param pro_name:
+    :param test_method_name:
+    :return:
+    """
+    with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
+        try:
+            query_dict = {"test_method_name": test_method_name}
+            result = pro_db.find_one(query_dict, {"_id": 0})
+            old_status = result.get("status")
+            new_status = bool(1 - old_status)  # 布尔值取反
+            update_dict = {"$set": {"status": new_status}}
+            pro_db.update_one(query_dict, update_dict)
+        except Exception as e:
+            mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "'项目测试用例状态(单个)")
+            return "mongo error"
+
+
+def update_case_status_all(pro_name, status=False):
+    """
+    更新'某项目'的所有测试用例'状态'(上下线)
+    :param pro_name:
+    :param status:
+    :return:
+    """
+    with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
+        try:
+            update_dict = {"$set": {"status": status}}
+            pro_db.update({}, update_dict, multi=True)
+        except Exception as e:
+            mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "'项目测试用例状态(批量)")
+            return "mongo error"
+
+
+def get_test_case(pro_name):
+    """
+    根据'项目名称'获取'测试用例'列表
+    :param pro_name:
+    :return:
+    """
+    test_case_list = []
+    with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
+        try:
+            results = pro_db.find({}, {"_id": 0})
+            for res in results:
+                test_case_dict = dict()
+                test_case_dict["status"] = res.get("status")
+                test_case_dict["test_case_name"] = res.get("test_case_name")
+                test_case_dict["test_class_name"] = res.get("test_class_name")
+                test_case_dict["test_method_name"] = res.get("test_method_name")
+                test_case_dict["create_time"] = res.get("create_time")
+                test_case_list.append(test_case_dict)
+
+        except Exception as e:
+            mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "'项目测试用例状态(单个)")
+            return "mongo error"
+        finally:
+            return test_case_list
+
+
 if __name__ == "__main__":
     pass
     # clear_screen_shot(4)
-    case_import_mongo("pro_demo_1")
+    # case_import_mongo("pro_demo_1")
+    # update_case_status("pro_demo_1", "test_02")
+    # update_case_status_all(pro_name="pro_demo_1", status=False)
+    print(get_test_case(pro_name="pro_demo_1"))

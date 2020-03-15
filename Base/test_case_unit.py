@@ -64,7 +64,7 @@ class ParaCase(unittest.TestCase):
         test_class_list = get_test_class_list_by_pro_name(pro_name)
         on_line_test_case = []
         for test_class in test_class_list:
-            with MongodbUtils(ip=cfg.MONGODB_ADDR, database="web_auto_test", collection=pro_name) as monitor_db:
+            with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as monitor_db:
                 try:
                     query_dict = {"test_class_name": test_class.__name__, "status": True}
                     results = monitor_db.find(query_dict, {"_id": 0})
