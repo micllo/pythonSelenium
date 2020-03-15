@@ -107,7 +107,7 @@ def case_import_mongo(pro_name):
 
 def update_case_status(pro_name, test_method_name):
     """
-    更新'测试用例'在monog中的'状态'(上下线)
+    更新某个'测试用例'的'状态'(上下线)
     :param pro_name:
     :param test_method_name:
     :return:
@@ -120,6 +120,7 @@ def update_case_status(pro_name, test_method_name):
             new_status = bool(1 - old_status)  # 布尔值取反
             update_dict = {"$set": {"status": new_status}}
             pro_db.update_one(query_dict, update_dict)
+            return new_status
         except Exception as e:
             mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "'项目测试用例状态(单个)")
             return "mongo error"
@@ -130,12 +131,17 @@ def update_case_status_all(pro_name, status=False):
     更新'某项目'的所有测试用例'状态'(上下线)
     :param pro_name:
     :param status:
-    :return:
+    :return: 返回 test_method_name_list 列表
     """
     with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
         try:
             update_dict = {"$set": {"status": status}}
             pro_db.update({}, update_dict, multi=True)
+            results = pro_db.find({}, {"_id": 0})
+            test_method_name_list = []
+            for res in results:
+                test_method_name_list.append(res.get("test_method_name"))
+            return test_method_name_list
         except Exception as e:
             mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "'项目测试用例状态(批量)")
             return "mongo error"
@@ -143,11 +149,13 @@ def update_case_status_all(pro_name, status=False):
 
 def get_test_case(pro_name):
     """
-    根据'项目名称'获取'测试用例'列表
+    根据'项目名称'获取'测试用例'列表（上线的排在前面）
     :param pro_name:
     :return:
     """
     test_case_list = []
+    on_line_list = []
+    off_line_list = []
     with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
         try:
             results = pro_db.find({}, {"_id": 0})
@@ -158,10 +166,13 @@ def get_test_case(pro_name):
                 test_case_dict["test_class_name"] = res.get("test_class_name")
                 test_case_dict["test_method_name"] = res.get("test_method_name")
                 test_case_dict["create_time"] = res.get("create_time")
-                test_case_list.append(test_case_dict)
-
+                if res.get("status"):
+                    on_line_list.append(test_case_dict)
+                else:
+                    off_line_list.append(test_case_dict)
+            test_case_list = on_line_list + off_line_list
         except Exception as e:
-            mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "'项目测试用例状态(单个)")
+            mongo_exception_send_DD(e=e, msg="获取'" + pro_name + "'项目测试用例列表")
             return "mongo error"
         finally:
             return test_case_list

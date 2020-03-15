@@ -43,7 +43,7 @@ def test_pro_demo_1():
     return json.dumps(re_dict, ensure_ascii=False)
 
 
-# http://127.0.0.1:8081/UI/get_img/5e61152ff0dd77751382563f
+# http://127.0.0.1:8070/api_local/UI/get_img/5e61152ff0dd77751382563f
 @flask_app.route("/UI/get_img/<file_id>", methods=["GET"])
 def get_screenshot_img(file_id):
     """
@@ -70,10 +70,11 @@ def get_screenshot_img(file_id):
     return json.dumps(re_dict, ensure_ascii=False)
 
 
+# http://127.0.0.1:8070/api_local/UI/update_project_case/pro_demo_1
 @flask_app.route("/UI/update_project_case/<pro_name>", methods=["GET"])
 def update_project_case(pro_name):
     """
-    更新指定项目的"测试用例"名称，默认状态为'下线'
+    更新指定项目的"测试用例"集合，默认状态为'下线'
     :param pro_name:
     :return:
     """
@@ -89,6 +90,54 @@ def update_project_case(pro_name):
             msg = REQUEST_SUCCESS
     re_dict = interface_template(msg, {"pro_name": pro_name})
     log.info(re_dict)
+    return json.dumps(re_dict, ensure_ascii=False)
+
+
+# http://127.0.0.1:8070/api_local/UI/set_case_status/pro_demo_1/test_02
+@flask_app.route("/UI/set_case_status/<pro_name>/<test_method_name>", methods=["GET"])
+def set_case_status(pro_name, test_method_name):
+    """
+    设置某个'测试用例'的'状态'(上下线)
+    :param pro_name:
+    :param test_method_name:
+    :return:
+    """
+    new_status = None
+    if is_null(pro_name) or is_null(test_method_name):
+        msg = PARAMS_NOT_NONE
+    else:
+        new_status = update_case_status(pro_name, test_method_name)
+        msg = new_status == "mongo error" and MONGO_CONNECT_FAIL or REQUEST_SUCCESS
+    re_dict = interface_template(msg, {"pro_name": pro_name, "test_method_name": test_method_name,
+                                       "new_status": new_status})
+    return json.dumps(re_dict, ensure_ascii=False)
+
+
+# http://127.0.0.1:8070/api_local/UI/set_case_status_all/pro_demo_1/false
+@flask_app.route("/UI/set_case_status_all/<pro_name>/<status>", methods=["GET"])
+def set_case_status_all(pro_name, status):
+    """
+    设置整个项目的'测试用例'的'状态'(上下线)
+    :param pro_name:
+    :param status:
+    :return:
+    """
+    test_method_name_list = []
+    if is_null(pro_name) or is_null(status):
+        msg = PARAMS_NOT_NONE
+    else:
+        if status in [True, False, "false", "FALSE", "TRUE", "true"]:
+            status = status in [True, "TRUE", "true"] and True or False
+            res = update_case_status_all(pro_name, status)
+            if res == "mongo error":
+                msg = MONGO_CONNECT_FAIL
+            else:
+                msg = REQUEST_SUCCESS
+                test_method_name_list = res
+        else:
+            msg = REQUEST_ARGS_WRONG
+    re_dict = interface_template(msg, {"pro_name": pro_name, "status": status,
+                                       "test_method_name_list": test_method_name_list})
     return json.dumps(re_dict, ensure_ascii=False)
 
 
