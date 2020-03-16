@@ -32,9 +32,10 @@ def run_result(res):
     FrameLog().log().info(result)
 
 
-def sync_run_case(browser_name, thread_num=2, remote=False):
+def sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
     """
     同时执行不同用例（ 由于每个线程中执行的用例会单独配置测试结果，所以测试结果只能打印在控制台 < 无法调用生成报告的方法 >）
+    :param pro_name: 项目名
     :param browser_name: 浏览器名称
     :param thread_num: 线程数
     :param remote: 是否远程执行
@@ -45,11 +46,8 @@ def sync_run_case(browser_name, thread_num=2, remote=False):
      关闭浏览器操作（每个用例执行一次）：在每个'测试类'的 tearDown 方法中执行 ( 继承 ParaCase 父类 )
     """
 
-    # 配置需要执行的'测试类'列表
-    test_class_list = [TrainTest]
-
     # 解析'测试类'列表
-    suite = ParaCase.parametrize(test_class_list=test_class_list, browser_name=browser_name, remote=remote)
+    suite = ParaCase.parametrize(pro_name=pro_name, browser_name=browser_name, remote=remote)
 
     # 获取'测试类的实例对象'列表
     test_instence_list = suite._tests
@@ -71,7 +69,7 @@ def sync_run_case(browser_name, thread_num=2, remote=False):
 if __name__ == "__main__":
 
     # "Firefox"、"Chrome"
-    sync_run_case(browser_name="Chrome", thread_num=2, remote=False)
+    sync_run_case(pro_name="pro_demo_1", browser_name="Chrome", thread_num=2, remote=False)
 
 
 

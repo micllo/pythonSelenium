@@ -811,7 +811,7 @@ class HTMLTestRunner(Template_mixin):
     def _script_request(self):
         script_request_tmpl = ""
         if self.img_id_list:
-            api_url_base = "http://" + cfg.API_ADDR + "/UI/get_img/"
+            api_url_base = "http://" + cfg.API_ADDR + "/WEB/get_img/"
             img_id_list_str = ".".join(self.img_id_list)
             script_request_tmpl = self.REQUEST_IMG_SCRIPT_TMPL % dict(api_url_base=api_url_base,
                                                                       img_id_list_str=img_id_list_str)
@@ -819,7 +819,7 @@ class HTMLTestRunner(Template_mixin):
 
 
 if __name__ == "__main__":
-    api_url = "http://" + cfg.API_ADDR + "/UI/get_img/" + "5e609cdacd380a0cef68056f"
+    api_url = "http://" + cfg.API_ADDR + "/WEB/get_img/" + "5e609cdacd380a0cef68056f"
     res_dict = requests.get(api_url).json()
     img_base64 = res_dict.get("result").get("img_base64")
     print(img_base64[2:-1])

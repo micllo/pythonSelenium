@@ -14,3 +14,15 @@ def get_test_class_list_by_pro_name(pro_name):
         test_class_list = None
     return test_class_list
 
+
+def pro_exist(pro_name):
+    """
+    判断项目名称是否存在
+    :param pro_name:
+    :return:
+    """
+    pro_name_list = ["pro_demo_1", "pro_demo_2"]
+    if pro_name in pro_name_list:
+        return True
+    else:
+        return False

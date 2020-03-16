@@ -46,6 +46,7 @@ function request_interface_url_v2(url, method, data="", async=false) {
         },
         error: function () {
             console.log("'http'请求失败.....")
+            response_text = "请求失败"
         }
     };
     if (method.toLowerCase() == "post" && data != ""){

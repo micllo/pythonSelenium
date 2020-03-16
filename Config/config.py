@@ -17,8 +17,13 @@ GULP_TEMPLATE_PATH = 'templates'
 # 服务器地址
 SERVER_IP = "127.0.0.1"
 
+# 是否启用远程浏览器
+REMOTE = False
+
 # 测试报告地址
-TEST_REPORT_URL = "http://" + SERVER_IP + ":8070/test_report_local/report.html"
+BASE_REPORT_PATH = "http://" + SERVER_IP + ":8070/test_report_local/"
+CURRENT_REPORT_URL = BASE_REPORT_PATH + "report.html"
+HISTORY_REPORT_PATH = BASE_REPORT_PATH + "history/"
 
 # nginx中的接口方向代理名称
 NGINX_API_PROXY = "api_local"

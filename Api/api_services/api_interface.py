@@ -7,44 +7,48 @@ from Api.api_services.api_calculate import *
 from Common.com_func import is_null, log
 from Tools.mongodb import MongoGridFS
 from Config import config as cfg
-
+from Config.pro_config import pro_exist
+from Config import global_var as gv
 
 """
 api 服务接口
 """
 
 
-@flask_app.route("/UI/sync_run_case/pro_demo_1", methods=["POST"])
-def test_pro_demo_1():
+@flask_app.route("/WEB/sync_run_case/<pro_name>", methods=["POST"])
+def run_case(pro_name):
     """
     同时执行不同的用例 (开启线程执行，直接返回接口结果)
+    :param pro_name:
+    :return:
+
     browser_name: Chrome、Firefox
     thread_num: 线程数
-    :return:
     """
     params = request.json
     browser_name = params.get("browser_name") if params.get("browser_name") else None
     thread_num = params.get("thread_num") if params.get("thread_num") else None
-    print(browser_name)
-    print(thread_num)
-    print(type(thread_num))
-
-    result_dict = {"browser_name": browser_name, "thread_num": thread_num}
-    if is_null(browser_name) or is_null(thread_num):
+    if not pro_exist(pro_name):
+        msg = PRO_NOT_EXIST
+    elif is_null(browser_name) or is_null(thread_num):
         msg = PARAMS_NOT_NONE
     elif browser_name not in ["Chrome", "Firefox"]:
         msg = BROWSER_NAME_ERROR
     elif thread_num not in range(1, 6):  # 线程数量范围要控制在1~5之间
         msg = THREAD_NUM_ERROR
     else:
-        sync_run_pro_demo_1(browser_name, thread_num)
-        msg = CASE_RUNING
+        if gv.RUN_FLAG:
+            msg = EXIST_RUNNING_CASE
+        else:
+            sync_run_case(pro_name, browser_name, thread_num)
+            msg = CASE_RUNING
+    result_dict = {"pro_name": pro_name, "browser_name": browser_name, "thread_num": thread_num}
     re_dict = interface_template(msg, result_dict)
     return json.dumps(re_dict, ensure_ascii=False)
 
 
-# http://127.0.0.1:8070/api_local/UI/get_img/5e61152ff0dd77751382563f
-@flask_app.route("/UI/get_img/<file_id>", methods=["GET"])
+# http://127.0.0.1:8070/api_local/WEB/get_img/5e61152ff0dd77751382563f
+@flask_app.route("/WEB/get_img/<file_id>", methods=["GET"])
 def get_screenshot_img(file_id):
     """
     获取截屏图片
@@ -70,8 +74,8 @@ def get_screenshot_img(file_id):
     return json.dumps(re_dict, ensure_ascii=False)
 
 
-# http://127.0.0.1:8070/api_local/UI/update_project_case/pro_demo_1
-@flask_app.route("/UI/update_project_case/<pro_name>", methods=["GET"])
+# http://127.0.0.1:8070/api_local/WEB/update_project_case/pro_demo_1
+@flask_app.route("/WEB/update_project_case/<pro_name>", methods=["GET"])
 def update_project_case(pro_name):
     """
     更新指定项目的"测试用例"集合，默认状态为'下线'
@@ -93,8 +97,8 @@ def update_project_case(pro_name):
     return json.dumps(re_dict, ensure_ascii=False)
 
 
-# http://127.0.0.1:8070/api_local/UI/set_case_status/pro_demo_1/test_02
-@flask_app.route("/UI/set_case_status/<pro_name>/<test_method_name>", methods=["GET"])
+# http://127.0.0.1:8070/api_local/WEB/set_case_status/pro_demo_1/test_02
+@flask_app.route("/WEB/set_case_status/<pro_name>/<test_method_name>", methods=["GET"])
 def set_case_status(pro_name, test_method_name):
     """
     设置某个'测试用例'的'状态'(上下线)
@@ -113,8 +117,8 @@ def set_case_status(pro_name, test_method_name):
     return json.dumps(re_dict, ensure_ascii=False)
 
 
-# http://127.0.0.1:8070/api_local/UI/set_case_status_all/pro_demo_1/false
-@flask_app.route("/UI/set_case_status_all/<pro_name>/<status>", methods=["GET"])
+# http://127.0.0.1:8070/api_local/WEB/set_case_status_all/pro_demo_1/false
+@flask_app.route("/WEB/set_case_status_all/<pro_name>/<status>", methods=["GET"])
 def set_case_status_all(pro_name, status):
     """
     设置整个项目的'测试用例'的'状态'(上下线)
@@ -141,13 +145,16 @@ def set_case_status_all(pro_name, status):
     return json.dumps(re_dict, ensure_ascii=False)
 
 
-# http://127.0.0.1:8070/api_local/UI/get_test_case_list
-@flask_app.route("/UI/get_test_case_list/<pro_name>", methods=["GET"])
+# http://127.0.0.1:8070/api_local/WEB/get_test_case_list
+@flask_app.route("/WEB/get_test_case_list/<pro_name>", methods=["GET"])
 def get_test_case_list(pro_name):
     result_dict = dict()
     result_dict["nginx_api_proxy"] = cfg.NGINX_API_PROXY
     result_dict["pro_name"] = pro_name
     result_dict["test_case_list"] = get_test_case(pro_name)
+    result_dict["current_report_url"] = cfg.CURRENT_REPORT_URL
+    result_dict["history_report_path"] = cfg.HISTORY_REPORT_PATH
+    result_dict["run_flag"] = gv.RUN_FLAG
     return render_template('case_status.html', tasks=result_dict)
 
 

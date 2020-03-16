@@ -12,14 +12,14 @@
 
 3.访问地址（ server.py 启动 ）：
 （1）接口地址 -> http://127.0.0.1:8082/
-               http://127.0.0.1:8082/UI/sync_run_case
-               http://127.0.0.1:8082/UI/get_img/5e5cac9188121299450740b3
+               http://127.0.0.1:8082/WEB/sync_run_case
+               http://127.0.0.1:8082/WEB/get_img/5e5cac9188121299450740b3
 
 4.访问地址（ uwsgi 启动 ）：
 （1）测试报告 -> http://127.0.0.1:8070/test_report_local/report.html
 （2）接口地址 -> http://127.0.0.1:8070/api_local/
-               http://127.0.0.1:8070/api_local/UI/sync_run_case
-               http://127.0.0.1:8070/api_local/UI/get_img/5e5cac9188121299450740b3
+               http://127.0.0.1:8070/api_local/WEB/sync_run_case
+               http://127.0.0.1:8070/api_local/WEB/get_img/5e5cac9188121299450740b3
    （ 备注：uwgsi 启动 8081 端口、nginx 配置 8070 反向代理 8081 ）
 
 5.本地相关服务的启动操作（ gulpfile.js 文件 ）
@@ -71,15 +71,15 @@ MAC本地安装的 nginx 相关路径
 6.访问地址（ Docker 内部 ）：
 （1）测试报告 -> http://127.0.0.1:80/test_report/report.html
 （2）接口地址 -> http://127.0.0.1:80/api/
-               http://127.0.0.1:80/api/UI/sync_run_case
-               http://127.0.0.1:80/api/UI/get_img/5e5cac9188121299450740b3
+               http://127.0.0.1:80/api/WEB/sync_run_case
+               http://127.0.0.1:80/api/WEB/get_img/5e5cac9188121299450740b3
     ( 备注：uwgsi 启动 8081 端口、nginx 配置 80 反向代理 8081 )
 
 7.访问地址（ 外部访问 ）：
 （1）测试报告 -> http://192.168.31.10:1080/test_report/report.html
 （2）接口地址 -> http://192.168.31.10:1080/api/
-               http://192.168.31.10:1080/api/UI/sync_run_case
-               http://192.168.31.10:1080/api/UI/get_img/5e5cac9188121299450740b3
+               http://192.168.31.10:1080/api/WEB/sync_run_case
+               http://192.168.31.10:1080/api/WEB/get_img/5e5cac9188121299450740b3
     ( 备注：docker 配置 1080 映射 80 )
 
 8.关于部署

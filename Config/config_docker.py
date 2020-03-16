@@ -18,8 +18,13 @@ GULP_TEMPLATE_PATH = 'templates'
 # SERVER_IP_PORT = "192.168.3.102"  #  MERCURY_1602
 SERVER_IP = "192.168.31.10"  # Demba Ba_5G
 
+# 是否启用远程浏览器
+REMOTE = True
+
 # 测试报告地址
-TEST_REPORT_URL = "http://" + SERVER_IP + ":1080/test_report/report.html"
+BASE_REPORT_PATH = "http://" + SERVER_IP + ":1080/test_report/"
+CURRENT_REPORT_URL = BASE_REPORT_PATH + "report.html"
+HISTORY_REPORT_PATH = BASE_REPORT_PATH + "history/"
 
 # nginx中的接口方向代理名称
 NGINX_API_PROXY = "api"

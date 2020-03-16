@@ -20,15 +20,17 @@ api 服务底层的业务逻辑
 """
 
 
-def sync_run_pro_demo_1(browser_name, thread_num):
+def sync_run_case(pro_name, browser_name, thread_num):
     """
     同时执行不同的用例
+    :param pro_name
     :param browser_name: Chrome、Firefox
     :param thread_num: 线程数
     :return:
     """
     pool = ThreadPoolExecutor(1)
-    pool.submit(suite_sync_run_case, pro_name="pro_demo_1", browser_name=browser_name, thread_num=thread_num, remote=True)
+    pool.submit(suite_sync_run_case, pro_name=pro_name, browser_name=browser_name,
+                thread_num=thread_num, remote=cfg.REMOTE)
 
 
 def clear_reports_logs(time):

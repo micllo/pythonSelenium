@@ -39,6 +39,8 @@ REQUEST_TIMEOUT = u"请求数据超时"
 CONNECT_DB_TIMEOUT = u"链接数据库超时"
 
 # 204
+EXIST_RUNNING_CASE = u'存在运行中的用例'
+PRO_NOT_EXIST = u"项目不存在"
 PARAMS_NOT_NONE = u"参数不能为空"
 BROWSER_NAME_ERROR = u"浏览器名错误"
 THREAD_NUM_ERROR = u"线程数量必须控制在1~5之间"
@@ -89,9 +91,11 @@ def get_error_code(code_msg):
         UPDATE_WRONG: 31400,
         SIN_ID_WRONG: 31400,
         PENDING_WRONG: 31400,
-        VERSION_WRONG:31400,
+        VERSION_WRONG: 31400,
 
         # 204
+        EXIST_RUNNING_CASE: 31200,
+        PRO_NOT_EXIST: 31204,
         PARAMS_NOT_NONE: 31204,
         BROWSER_NAME_ERROR: 31204,
         THREAD_NUM_ERROR: 31204,

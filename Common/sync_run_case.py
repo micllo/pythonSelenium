@@ -4,6 +4,7 @@ from unittest.suite import _isnotsuite
 from types import MethodType
 from Common.com_func import log
 from Common.test_func import generate_report, send_DD_for_FXC, send_warning_after_test
+from Config import global_var as gv
 
 
 """
@@ -135,33 +136,37 @@ def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
       3.实例对象'suite'在重写的'new_run'方法中 将'screen_shot_id_list'添加入'screen_shot_id_dict'
       4.screen_shot_id_dict = { "测试类名.测试方法名":['aaa', 'bbb'], "测试类名.测试方法名":['cccc'] }
     """
-
-    # 将'测试类'中的所有'测试方法'添加到 suite 对象中（每个'测试类'实例对象包含一个'测试方法'）
-    from Base.test_case_unit import ParaCase
-    suite = ParaCase.parametrize(pro_name=pro_name, browser_name=browser_name, remote=remote)
-
-    if suite._tests:
-        # 为实例对象'suite'<TestSuite>动态添加一个属性'screen_shot_id_dict'（目的：保存截图ID）
-        setattr(suite, "screen_shot_id_dict", {})
-
-        # 为实例对象'suite'<TestSuite>动态添加一个属性'thread_num'（目的：控制多线程数量）
-        setattr(suite, "thread_num", thread_num)
-
-        # 为实例对象'suite'<TestSuite>动态添加两个方法'run_test_custom'、'show_result_custom'（ 目的：供多线程中调用 ）
-        suite.run_test_custom = MethodType(run_test_custom, suite)
-        suite.show_result_custom = MethodType(show_result_custom, suite)
-
-        # 为实例对象'suite'<TestSuite>动态修改实例方法'run'（ 目的：启用多线程来执行case ）
-        suite.run = MethodType(new_run, suite)
-
-        # 生成测试报告
-        test_result, current_report_file = generate_report(suite=suite, title='UI自动化测试报告', description='详细测试用例结果',
-                                                           tester="自动化测试", verbosity=2)
-
-        # 测试后发送预警
-        # send_warning_after_test(test_result, current_report_file)
+    if gv.RUN_FLAG:
+        send_DD_for_FXC(title="WEB自动化测试", text="#### 可能在执行WEB自动化测试'定时任务'时 遇到'存在运行中的用例'而未执行当前测试")
     else:
-        send_DD_for_FXC(title="UI自动化测试", text="#### UI自动化测试 '" + pro_name + "'项目 当前没有上线的测试用例！！！")
+        gv.RUN_FLAG = True
+        # 将'测试类'中的所有'测试方法'添加到 suite 对象中（每个'测试类'实例对象包含一个'测试方法'）
+        from Base.test_case_unit import ParaCase
+        suite = ParaCase.parametrize(pro_name=pro_name, browser_name=browser_name, remote=remote)
+
+        if suite._tests:
+            # 为实例对象'suite'<TestSuite>动态添加一个属性'screen_shot_id_dict'（目的：保存截图ID）
+            setattr(suite, "screen_shot_id_dict", {})
+
+            # 为实例对象'suite'<TestSuite>动态添加一个属性'thread_num'（目的：控制多线程数量）
+            setattr(suite, "thread_num", thread_num)
+
+            # 为实例对象'suite'<TestSuite>动态添加两个方法'run_test_custom'、'show_result_custom'（ 目的：供多线程中调用 ）
+            suite.run_test_custom = MethodType(run_test_custom, suite)
+            suite.show_result_custom = MethodType(show_result_custom, suite)
+
+            # 为实例对象'suite'<TestSuite>动态修改实例方法'run'（ 目的：启用多线程来执行case ）
+            suite.run = MethodType(new_run, suite)
+
+            # 生成测试报告
+            test_result, current_report_file = generate_report(suite=suite, title='WEB自动化测试报告 - ' + pro_name,
+                                                               description='详细测试用例结果', tester="自动化测试", verbosity=2)
+
+            # 测试后发送预警
+            send_warning_after_test(test_result, current_report_file)
+        else:
+            send_DD_for_FXC(title="WEB自动化测试", text="#### WEB自动化测试 '" + pro_name + "'项目 当前没有上线的测试用例！！！")
+        gv.RUN_FLAG = False
 
 
 if __name__ == "__main__":
