@@ -103,17 +103,17 @@ MAC本地安装的 nginx 相关路径
 ########################################################################################################################
 
 【 框 架 工 具 】
- Python3 + Selenium3 + unittest + Flask + uWSGI + Nginx + MongoDB + Docker + Fabric + Gulp
+ Python3 + Selenium3 + unittest + Flask + uWSGI + Nginx + Bootstrap + MongoDB + Docker + Fabric + Gulp
 
 
 【 框 架 结 构 】（ 提高代码的：可读性、重用性、易扩展性 ）
- 1.Api层：       对外接口
+ 1.Api层：       对外接口、原静态文件
  2.Base层：      封装了浏览器驱动操作方法、提供'测试用例'父类第基础方法(继承’unittest.TestCase')
- 3.Common层：    通用方法、公共测试方法、测试报告生成、用例执行方式（同步执行多个用例）
- 4.Config层：    环境配置、错误码映射、全局变量、定时任务
- 5.Data层：      相关测试数据
- 6.PageObject层：页面操作方法、元素定位
- 7.TestCase层：  测试用例
+ 3.Build层：     编译后的静态文件
+ 4.Common层：    通用方法、公共测试方法、测试报告生成、同步执行用例方法
+ 5.Config层：    环境配置、错误码映射、全局变量、定时任务、项目配置
+ 6.Data层：      相关测试数据
+ 7.Project层：   区分不同项目、page_object(页面操作方法、元素定位)、test_case(测试用例)
  8.Tools层：     工具函数
  9.其他：
  （1）vassals/ -> 服务器的'uWSGI配置'
@@ -124,13 +124,14 @@ MAC本地安装的 nginx 相关路径
 
 【 功 能 点 】
 
-1.使用 Python3 + Selenium3 + unittest:
+1.使用 Python3 + Selenium3 + unittest + Bootstrap:
 （1）使用'unittest'作为测试用例框架
 （2）通过动态修改和添加'unittest.TestSuite'类中的方法和属性，实现启用多线程同时执行多条测试用例
 （3）通过修改'HTMLTestRunner'文件并结合'unittest'测试框架，优化了测试报告的展示方式，并提供了每个测试用例的截图显示
 （4）所有用例执行后，若有'失败'或'错误'的用例，则发送钉钉和邮件通知
 （5）提供日志记录功能：按照日期区分
 （6）提供定时任务：定时删除过期(一周前)的文件：日志、报告、截图文件(mongo数据)，定时执行测试用例
+（7）提供页面展示项目用例，实现用例上下线、批量执行用例、显示报告等功能
 
 2.使用 Flask ：
 （1）提供 执行用例的接口
@@ -158,4 +159,6 @@ MAC本地安装的 nginx 相关路径
 
 8.使用 NodeJS 的 Gulp 命令 ：
 （1）配置本地启动的相关服务，实现一键启动或停止
+（2）编译静态文件，防止浏览器缓存js问题
+（3）实时监听本地调试页面功能
 

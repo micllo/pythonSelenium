@@ -145,7 +145,7 @@ def set_case_status_all(pro_name, status):
     return json.dumps(re_dict, ensure_ascii=False)
 
 
-# http://127.0.0.1:8070/api_local/WEB/get_test_case_list
+# http://127.0.0.1:8070/api_local/WEB/get_test_case_list/pro_demo_1
 @flask_app.route("/WEB/get_test_case_list/<pro_name>", methods=["GET"])
 def get_test_case_list(pro_name):
     result_dict = dict()
@@ -156,6 +156,15 @@ def get_test_case_list(pro_name):
     result_dict["history_report_path"] = cfg.HISTORY_REPORT_PATH
     result_dict["run_flag"] = gv.RUN_FLAG
     return render_template('case_status.html', tasks=result_dict)
+
+
+# http://127.0.0.1:8070/api_local/WEB/index
+@flask_app.route("/WEB/index", methods=["GET"])
+def show_index():
+    result_dict = dict()
+    result_dict["nginx_api_proxy"] = cfg.NGINX_API_PROXY
+    result_dict["api_addr"] = cfg.API_ADDR
+    return render_template('index.html', tasks=result_dict)
 
 
 

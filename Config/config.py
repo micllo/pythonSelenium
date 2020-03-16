@@ -11,8 +11,10 @@ REPORTS_PATH = "/Users/micllo/Documents/works/GitHub/pythonSelenium/Reports/"
 SCREENSHOTS_PATH = "/Users/micllo/Documents/works/GitHub/pythonSelenium/Screenshots/"
 
 # 构建的时候使用前端静态文件路径 ( Api/__init__.py文件的同级目录 )
-GULP_STATIC_PATH = 'static'
-GULP_TEMPLATE_PATH = 'templates'
+# GULP_STATIC_PATH = 'static'
+# GULP_TEMPLATE_PATH = 'templates'
+GULP_STATIC_PATH = '../Build'
+GULP_TEMPLATE_PATH = '../Build/templates'
 
 # 服务器地址
 SERVER_IP = "127.0.0.1"

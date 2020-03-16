@@ -11,8 +11,8 @@ REPORTS_PATH = "/opt/project/reports/"
 SCREENSHOTS_PATH = "/opt/project/screenshots/"
 
 # 构建的时候使用前端静态文件路径 ( Api/__init__.py文件的同级目录 )
-GULP_STATIC_PATH = 'static'
-GULP_TEMPLATE_PATH = 'templates'
+GULP_STATIC_PATH = '../Build'
+GULP_TEMPLATE_PATH = '../Build/templates'
 
 # 服务器地址
 # SERVER_IP_PORT = "192.168.3.102"  #  MERCURY_1602
