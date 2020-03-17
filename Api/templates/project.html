@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WEB自动化测试用例</title>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        {% set pro_name = tasks['pro_name'] %}
+        {% set nginx_api_proxy = tasks['nginx_api_proxy'] %}
+        {% set test_case_list = tasks['test_case_list'] %}
+        {% set current_report_url = tasks['current_report_url'] %}
+        {% set history_report_path = tasks['history_report_path'] %}
+        {% set is_run = tasks['is_run'] %}
+        {# 注 释 语 句 #}
+        <link href="/{{nginx_api_proxy}}/static/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/{{nginx_api_proxy}}/static/css/sweetalert.min.css" rel="stylesheet" />
+
+    </head>
+
+    <body>
+        <div id="page-wrapper">
+            <div class="header" align="center">
+                <h1 class="page-header"> WEB&nbsp;自&nbsp;动&nbsp;化&nbsp;测&nbsp;试&nbsp;用&nbsp;例&nbsp;-&nbsp;{{pro_name}}&nbsp;项&nbsp;目 </h1>
+            </div>
+            <div id="page-inner">
+               <div class="row">
+                  <div class="col-lg-12">
+                      <div class="col-xs-12 col-md-3" style="margin-left:5%">
+                          <div class="panel panel-default">
+                             <div class="panel-heading" align="center" style="font-size:15px; color: #B8860B; font-weight: bold;">
+                                 设 &nbsp; 置 &nbsp; 所 &nbsp; 有 &nbsp; 用 &nbsp; 例 &nbsp; 的 &nbsp; 状 &nbsp; 态
+                             </div>
+                             <div class="panel-body">
+                                 <div class="col-sm-3" style="margin-left:15%">
+                                     <button id="on_line_all" type="button" class="btn btn-success"
+                                            onclick="update_case_status_all('{{pro_name}}','true','{{nginx_api_proxy}}')"> 上 线 </button>
+                                 </div>
+                                 <div class="col-sm-3" style="margin-left:15%">
+                                     <button id="off_line_all" type="button" class="btn btn-danger"
+                                            onclick="update_case_status_all('{{pro_name}}','false','{{nginx_api_proxy}}')"> 下 线 </button>
+                                 </div>
+                             </div>
+                          </div>
+                      </div>
+
+                      <div class="col-xs-12 col-md-3" style="margin-left:5%">
+                          <div class="panel panel-default">
+                             <div class="panel-heading" align="center" style="font-size:15px; color: #B8860B; font-weight: bold;">
+                                 同步测试用例列表、修改用例运行状态
+                             </div>
+                             <div class="panel-body">
+                                 {% if is_run %}
+                                 <div class="col-sm-3" style="margin-left:7%">
+                                    <button id="sync_case_list" type="button" class="btn btn-primary" disabled="disabled"
+                                            onclick="sync_case_list('{{pro_name}}','{{nginx_api_proxy}}')"> 同 步 用 例 </button>
+                                 </div>
+                                 {% else %}
+                                 <div class="col-sm-3" style="margin-left:7%">
+                                    <button id="sync_case_list" type="button" class="btn btn-primary"
+                                            onclick="sync_case_list('{{pro_name}}','{{nginx_api_proxy}}')"> 同 步 用 例 </button>
+                                 </div>
+                                 {% endif %}
+
+                                 <div class="col-sm-3" style="margin-left:20%">
+                                    <button id="stop_run_status" type="button" class="btn btn-primary"
+                                            onclick="stop_run_status('{{pro_name}}','{{nginx_api_proxy}}')"> 停 止 运 行 </button>
+                                 </div>
+
+                             </div>
+                          </div>
+                      </div>
+
+                      <div class="col-xs-12 col-md-3" style="margin-left:5%">
+                         <div class="panel panel-default">
+                             <div class="panel-heading" align="center" style="font-size:15px; color: #B8860B; font-weight: bold;">
+                                 查 &nbsp;&nbsp;&nbsp; 看 &nbsp;&nbsp;&nbsp; 报 &nbsp;&nbsp;&nbsp; 告
+                             </div>
+                             <div class="panel-body">
+                                 <div class="col-sm-3" style="margin-left:10%">
+                                    <button id="current_report_url" type="button" class="btn btn-primary"
+                                            onclick="window.open('{{current_report_url}}')"> 最新报告 </button>
+                                 </div>
+                                 <div class="col-sm-3" style="margin-left:20%">
+                                    <button id="history_report_path" type="button" class="btn btn-primary"
+                                            onclick="window.open('{{history_report_path}}')"> 历史报告 </button>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+
+                  </div>
+               </div>
+
+               <div class="row">
+                   <div class="col-lg-12">
+
+                       <div class="col-xs-12 col-md-3" style="margin-left:5%">
+                          <div class="panel panel-default">
+                              <div class="panel-heading" align="center" style="font-size:15px; color: #B8860B; font-weight: bold;">
+                                 批 &nbsp;&nbsp;&nbsp; 量 &nbsp;&nbsp;&nbsp; 执 &nbsp;&nbsp;&nbsp; 行
+                              </div>
+                              <div class="panel-body">
+                                 {% if is_run %}
+                                     <div class="col-sm-3" style="margin-left:5%">
+                                        <button id="run_case" type="button" class="btn btn-primary" disabled="disabled"
+                                                onclick="run_case('{{pro_name}}','{{nginx_api_proxy}}')"> 批 量 执 行 </button>
+                                     </div>
+                                     <div class="col-sm-6" align="center" style="line-height:35px; font-size:15px; margin-left:15%">
+                                         <span id="run_result" style="font-size:15px" class="label label-warning">存在运行中的用例</span>
+                                     </div>
+                                 {% else %}
+                                     <div class="col-sm-3" style="margin-left:5%">
+                                        <button id="run_case" type="button" class="btn btn-primary"
+                                                onclick="run_case('{{pro_name}}','{{nginx_api_proxy}}')"> 批 量 执 行 </button>
+                                     </div>
+                                     <div class="col-sm-6" align="center" style="line-height:35px; font-size:15px; margin-left:15%">
+                                         <span id="run_result" style="font-size:15px" class="label label-info">当前可执行测试</span>
+                                     </div>
+                                 {% endif %}
+                              </div>
+                          </div>
+                       </div>
+
+                       <div class="col-xs-12 col-md-6" style="margin-left:5%">
+                          <div class="panel panel-default">
+                             <div class="panel-heading" align="center" style="font-size:15px; color: #B8860B; font-weight: bold;">
+                                 用&nbsp;&nbsp;&nbsp;例&nbsp;&nbsp;&nbsp;运&nbsp;&nbsp;&nbsp;行&nbsp;&nbsp;&nbsp;进&nbsp;&nbsp;&nbsp;度
+                             </div>
+                             <div class="panel-body">
+                                 <div class="col-sm-8" style="margin-left:2%">
+                                     <div class="progress progress-striped" id="progress_bar_active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" id="progress_bar"
+                                             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
+                                        </div>
+                                    </div>
+                                 </div>
+                                 <div class="col-sm-3" style="margin-left:2%">
+                                     <font color="#B8860B"><label id="progress_label"> 100 % -- 999 / 1000 </label></font>
+                                 </div>
+                             </div>
+                          </div>
+                       </div>
+
+                   </div>
+               </div>
+
+            </div>
+        </div>
+
+
+
+        <table id='result_table' class="table table-condensed table-bordered table-hover">
+            <tr id='header_row' class="text-center btn-primary" style="font-weight: bold;font-size: 15px;">
+                <td width="150">用 例 状 态</td>
+                <td width="350">用 例 名 称</td>
+                <td width="150">类 名 称</td>
+                <td width="150">方 法 名 称</td>
+                <td width="150">运 行 状 态</td>
+                <td width="150">上次运行时间</td>
+                <td width="150">创 建 时 间</td>
+            </tr>
+            {% for test_case in test_case_list %}
+                {% set case_status = test_case.case_status %}
+                {% set run_status = test_case.run_status %}
+                {% set test_case_name = test_case.test_case_name %}
+                {% set test_class_name = test_case.test_class_name %}
+                {% set test_method_name = test_case.test_method_name %}
+                {% set last_run_time = test_case.last_run_time %}
+                {% set create_time = test_case.create_time %}
+                {% if case_status %}
+                    <tr id="on_line_{{test_method_name}}_tr" class='passClass success'>
+                        <td class="text-center" style="display:table-cell; vertical-align:middle">
+                            {% if is_run %}
+                            <button id="on_line_{{test_method_name}}" type="button" class="btn btn-success btn-sm" disabled="disabled"
+                                    onclick="update_case_status('{{pro_name}}','{{test_method_name}}','{{nginx_api_proxy}}')"> 上 线 </button>
+                            {% else %}
+                            <button id="on_line_{{test_method_name}}" type="button" class="btn btn-success btn-sm"
+                                    onclick="update_case_status('{{pro_name}}','{{test_method_name}}','{{nginx_api_proxy}}')"> 上 线 </button>
+                            {% endif %}
+                        </td>
+                {% else %}
+                    <tr id="off_line_{{test_method_name}}_tr" class='passClass danger'>
+                        <td class="text-center" style="display:table-cell; vertical-align:middle">
+                            {% if is_run %}
+                            <button id="off_line_{{test_method_name}}" type="button" class="btn btn-danger btn-sm" disabled="disabled"
+                                    onclick="update_case_status('{{pro_name}}','{{test_method_name}}','{{nginx_api_proxy}}')"> 下 线 </button>
+                            {% else %}
+                            <button id="off_line_{{test_method_name}}" type="button" class="btn btn-danger btn-sm"
+                                    onclick="update_case_status('{{pro_name}}','{{test_method_name}}','{{nginx_api_proxy}}')"> 下 线 </button>
+                            {% endif %}
+                        </td>
+                {% endif %}
+                        <td class="text-center" style="display:table-cell; vertical-align:middle">{{test_case_name}}</td>
+                        <td class="text-center" style="display:table-cell; vertical-align:middle">{{test_class_name}}</td>
+                        <td class="text-center" style="display:table-cell; vertical-align:middle">{{test_method_name}}</td>
+                {% if run_status %}
+                        <td class="text-center" style="display:table-cell; vertical-align:middle">
+                            <span class="label label-success success">运行中</span>
+                        </td>
+                {% else %}
+                        <td class="text-center" style="display:table-cell; vertical-align:middle">
+                            <span class="label label-danger danger">已停止</span>
+                        </td>
+                {% endif %}
+                        <td class="text-center" style="display:table-cell; vertical-align:middle">{{last_run_time}}</td>
+                        <td class="text-center" style="display:table-cell; vertical-align:middle">{{create_time}}</td>
+                    </tr>
+            {% endfor %}
+        </table>
+
+        <div id='ending'>&nbsp;</div>
+        <div style=" position:fixed;right:50px; bottom:30px; width:20px; height:20px;cursor:pointer">
+            <a href="#"><span class="glyphicon glyphicon-eject" style = "font-size:30px;" aria-hidden="true"></span></a>
+        </div>
+
+        <script src="/{{nginx_api_proxy}}/static/scripts/jquery.min.js" type="text/javascript"></script>
+        <script src="/{{nginx_api_proxy}}/static/scripts/bootstrap.min.js" type="text/javascript"></script>
+        <script src="/{{nginx_api_proxy}}/static/scripts/common.js" type="text/javascript"></script>
+        <script src="/{{nginx_api_proxy}}/static/scripts/project.js" type="text/javascript"></script>
+        <script src="/{{nginx_api_proxy}}/static/scripts/sweetalert.min.js" type="text/javascript"></script>
+
+    </body>
+</html>

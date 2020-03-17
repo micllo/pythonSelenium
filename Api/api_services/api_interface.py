@@ -5,6 +5,7 @@ from Config.error_mapping import *
 from Api.api_services.api_template import interface_template
 from Api.api_services.api_calculate import *
 from Common.com_func import is_null, log
+from Common.test_func import is_exist_running_case, is_exist_online_case
 from Tools.mongodb import MongoGridFS
 from Config import config as cfg
 from Config.pro_config import pro_exist
@@ -13,6 +14,28 @@ from Config import global_var as gv
 """
 api 服务接口
 """
+
+
+# http://127.0.0.1:8070/api_local/WEB/index
+@flask_app.route("/WEB/index", methods=["GET"])
+def show_index():
+    result_dict = dict()
+    result_dict["nginx_api_proxy"] = cfg.NGINX_API_PROXY
+    result_dict["api_addr"] = cfg.API_ADDR
+    return render_template('index.html', tasks=result_dict)
+
+
+# http://127.0.0.1:8070/api_local/WEB/get_test_case_list/pro_demo_1
+@flask_app.route("/WEB/get_test_case_list/<pro_name>", methods=["GET"])
+def get_test_case_list(pro_name):
+    result_dict = dict()
+    result_dict["nginx_api_proxy"] = cfg.NGINX_API_PROXY
+    result_dict["pro_name"] = pro_name
+    result_dict["test_case_list"] = get_test_case(pro_name)
+    result_dict["current_report_url"] = cfg.CURRENT_REPORT_URL
+    result_dict["history_report_path"] = cfg.HISTORY_REPORT_PATH
+    result_dict["is_run"] = is_exist_running_case(pro_name)
+    return render_template('project.html', tasks=result_dict)
 
 
 @flask_app.route("/WEB/sync_run_case/<pro_name>", methods=["POST"])
@@ -37,11 +60,17 @@ def run_case(pro_name):
     elif thread_num not in range(1, 6):  # 线程数量范围要控制在1~5之间
         msg = THREAD_NUM_ERROR
     else:
-        if gv.RUN_FLAG:
-            msg = EXIST_RUNNING_CASE
+        run_flag = is_exist_running_case(pro_name)
+        if run_flag == "mongo error":
+            msg = MONGO_CONNECT_FAIL
         else:
-            sync_run_case(pro_name, browser_name, thread_num)
-            msg = CASE_RUNING
+            if run_flag:
+                msg = EXIST_RUNNING_CASE
+            elif is_exist_online_case(pro_name):
+                sync_run_case(pro_name, browser_name, thread_num)
+                msg = CASE_RUNING
+            else:
+                msg = NO_ONLINE_CASE
     result_dict = {"pro_name": pro_name, "browser_name": browser_name, "thread_num": thread_num}
     re_dict = interface_template(msg, result_dict)
     return json.dumps(re_dict, ensure_ascii=False)
@@ -74,11 +103,11 @@ def get_screenshot_img(file_id):
     return json.dumps(re_dict, ensure_ascii=False)
 
 
-# http://127.0.0.1:8070/api_local/WEB/update_project_case/pro_demo_1
-@flask_app.route("/WEB/update_project_case/<pro_name>", methods=["GET"])
-def update_project_case(pro_name):
+# http://127.0.0.1:8070/api_local/WEB/sync_case_list/pro_demo_1
+@flask_app.route("/WEB/sync_case_list/<pro_name>", methods=["GET"])
+def sync_case_list(pro_name):
     """
-    更新指定项目的"测试用例"集合，默认状态为'下线'
+    将某项目的所有测试用例同步入mongo库中，默认状态为'下线'
     :param pro_name:
     :return:
     """
@@ -91,9 +120,8 @@ def update_project_case(pro_name):
         elif insert_result == "no such pro":
             msg = NO_SUCH_PRO
         else:
-            msg = REQUEST_SUCCESS
+            msg = SYNC_SUCCESS
     re_dict = interface_template(msg, {"pro_name": pro_name})
-    log.info(re_dict)
     return json.dumps(re_dict, ensure_ascii=False)
 
 
@@ -106,65 +134,63 @@ def set_case_status(pro_name, test_method_name):
     :param test_method_name:
     :return:
     """
-    new_status = None
+    new_case_status = None
     if is_null(pro_name) or is_null(test_method_name):
         msg = PARAMS_NOT_NONE
     else:
-        new_status = update_case_status(pro_name, test_method_name)
-        msg = new_status == "mongo error" and MONGO_CONNECT_FAIL or REQUEST_SUCCESS
+        new_case_status = update_case_status(pro_name, test_method_name)
+        msg = new_case_status == "mongo error" and MONGO_CONNECT_FAIL or UPDATE_SUCCESS
     re_dict = interface_template(msg, {"pro_name": pro_name, "test_method_name": test_method_name,
-                                       "new_status": new_status})
+                                       "new_case_status": new_case_status})
     return json.dumps(re_dict, ensure_ascii=False)
 
 
 # http://127.0.0.1:8070/api_local/WEB/set_case_status_all/pro_demo_1/false
-@flask_app.route("/WEB/set_case_status_all/<pro_name>/<status>", methods=["GET"])
-def set_case_status_all(pro_name, status):
+@flask_app.route("/WEB/set_case_status_all/<pro_name>/<case_status>", methods=["GET"])
+def set_case_status_all(pro_name, case_status):
     """
     设置整个项目的'测试用例'的'状态'(上下线)
     :param pro_name:
-    :param status:
+    :param case_status:
     :return:
     """
     test_method_name_list = []
-    if is_null(pro_name) or is_null(status):
+    if is_null(pro_name) or is_null(case_status):
         msg = PARAMS_NOT_NONE
     else:
-        if status in [True, False, "false", "FALSE", "TRUE", "true"]:
-            status = status in [True, "TRUE", "true"] and True or False
-            res = update_case_status_all(pro_name, status)
+        if case_status in [True, False, "false", "FALSE", "TRUE", "true"]:
+            case_status = case_status in [True, "TRUE", "true"] and True or False
+            res = update_case_status_all(pro_name, case_status)
             if res == "mongo error":
                 msg = MONGO_CONNECT_FAIL
             else:
-                msg = REQUEST_SUCCESS
+                msg = UPDATE_SUCCESS
                 test_method_name_list = res
         else:
             msg = REQUEST_ARGS_WRONG
-    re_dict = interface_template(msg, {"pro_name": pro_name, "status": status,
+    re_dict = interface_template(msg, {"pro_name": pro_name, "case_status": case_status,
                                        "test_method_name_list": test_method_name_list})
     return json.dumps(re_dict, ensure_ascii=False)
 
 
-# http://127.0.0.1:8070/api_local/WEB/get_test_case_list/pro_demo_1
-@flask_app.route("/WEB/get_test_case_list/<pro_name>", methods=["GET"])
-def get_test_case_list(pro_name):
-    result_dict = dict()
-    result_dict["nginx_api_proxy"] = cfg.NGINX_API_PROXY
-    result_dict["pro_name"] = pro_name
-    result_dict["test_case_list"] = get_test_case(pro_name)
-    result_dict["current_report_url"] = cfg.CURRENT_REPORT_URL
-    result_dict["history_report_path"] = cfg.HISTORY_REPORT_PATH
-    result_dict["run_flag"] = gv.RUN_FLAG
-    return render_template('case_status.html', tasks=result_dict)
-
-
-# http://127.0.0.1:8070/api_local/WEB/index
-@flask_app.route("/WEB/index", methods=["GET"])
-def show_index():
-    result_dict = dict()
-    result_dict["nginx_api_proxy"] = cfg.NGINX_API_PROXY
-    result_dict["api_addr"] = cfg.API_ADDR
-    return render_template('index.html', tasks=result_dict)
+# http://127.0.0.1:8070/api_local/WEB/stop_run_status/pro_demo_1
+@flask_app.route("/WEB/stop_run_status/<pro_name>", methods=["GET"])
+def stop_run_status(pro_name):
+    """
+    强行修改用例运行状态 -> 停止
+    :param pro_name:
+    :return:
+    """
+    if is_null(pro_name):
+        msg = PARAMS_NOT_NONE
+    else:
+        insert_result = stop_case_run_status(pro_name)
+        if insert_result == "mongo error":
+            msg = MONGO_CONNECT_FAIL
+        else:
+            msg = STOP_SUCCESS
+    re_dict = interface_template(msg, {"pro_name": pro_name})
+    return json.dumps(re_dict, ensure_ascii=False)
 
 
 

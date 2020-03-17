@@ -47,7 +47,7 @@ def sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
     """
 
     # 解析'测试类'列表
-    suite = ParaCase.parametrize(pro_name=pro_name, browser_name=browser_name, remote=remote)
+    suite = ParaCase.get_online_case_to_suite(pro_name=pro_name, browser_name=browser_name, remote=remote)
 
     # 获取'测试类的实例对象'列表
     test_instence_list = suite._tests

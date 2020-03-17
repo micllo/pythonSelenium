@@ -3,16 +3,12 @@
 错误码的映射表
 """
 # 200
+SYNC_SUCCESS = u'同步成功'
+STOP_SUCCESS = u'停止成功'
 CASE_RUNING = u"测试用例执行中"
-START_SUCCESS = u"开始运行"
-RERUN_SUCCESS = u"开始重跑"
 REQUEST_SUCCESS = u"请求成功"
-SEARCH_SUCCESS = u"查询数据成功"
-STATUS_SUCCESS = u"查询状态成功"
-CALCULATE_SUCCESS = u"计算数据成功"
 INSERT_SUCCESS = u"插入数据成功"
 UPDATE_SUCCESS = u"更新成功"
-PENDING_TASK = u"数据计算中"
 
 # 500
 NO_SUCH_FILE = u"该文件不存在"
@@ -39,6 +35,7 @@ REQUEST_TIMEOUT = u"请求数据超时"
 CONNECT_DB_TIMEOUT = u"链接数据库超时"
 
 # 204
+NO_ONLINE_CASE = u'没有上线的用例'
 EXIST_RUNNING_CASE = u'存在运行中的用例'
 PRO_NOT_EXIST = u"项目不存在"
 PARAMS_NOT_NONE = u"参数不能为空"
@@ -59,16 +56,12 @@ def get_error_code(code_msg):
 
     resp_map = {
         # 200
+        SYNC_SUCCESS: 31200,
+        STOP_SUCCESS: 31200,
         CASE_RUNING: 31200,
-        START_SUCCESS: 31200,
-        RERUN_SUCCESS: 31200,
         REQUEST_SUCCESS: 31200,
         UPDATE_SUCCESS: 31200,
         INSERT_SUCCESS: 31200,
-        SEARCH_SUCCESS: 31200,
-        STATUS_SUCCESS: 31200,
-        CALCULATE_SUCCESS: 31200,
-        PENDING_TASK: 31200,
 
         # 500
         NO_SUCH_FILE: 31500,
@@ -94,6 +87,7 @@ def get_error_code(code_msg):
         VERSION_WRONG: 31400,
 
         # 204
+        NO_ONLINE_CASE: 31200,
         EXIST_RUNNING_CASE: 31200,
         PRO_NOT_EXIST: 31204,
         PARAMS_NOT_NONE: 31204,

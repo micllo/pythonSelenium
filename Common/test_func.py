@@ -124,8 +124,46 @@ def mongo_exception_send_DD(e, msg):
     send_DD(dd_group_id=cfg.DD_MONITOR_GROUP, title=title, text=text, at_phones=cfg.DD_AT_FXC, is_at_all=False)
 
 
+def is_exist_running_case(pro_name):
+    """
+    判断项目是否存在 运行中的用例
+    :param pro_name:
+    :return:
+      备注：若返回'mongo error', 默认表示'存在'运行中的用例
+    """
+    from Tools.mongodb import MongodbUtils
+    with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
+        try:
+            results = pro_db.find({}, {"_id": 0})
+            run_status_list = [res.get("run_status") for res in results]
+        except Exception as e:
+            mongo_exception_send_DD(e=e, msg="获取'" + pro_name + "'项目测试用例列表")
+            return "mongo error"
+    return True in run_status_list and True or False
+
+
+def is_exist_online_case(pro_name):
+    """
+    判断项目是否存在 上线的用例
+    :param pro_name:
+    :return:
+    """
+    from Tools.mongodb import MongodbUtils
+    with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
+        try:
+            results = pro_db.find({}, {"_id": 0})
+            case_status_list = [res.get("case_status") for res in results]
+        except Exception as e:
+            mongo_exception_send_DD(e=e, msg="获取'" + pro_name + "'项目测试用例列表")
+            return "mongo error"
+    return True in case_status_list and True or False
+
+
+
 if __name__ == "__main__":
-    # send_DD_after_test("失败", "报告名称", False)
     pass
+    # send_DD_after_test("失败", "报告名称", False)
+    # print(get_test_case(pro_name="pro_demo_1"))
+    # print(is_exist_online_case(pro_name="pro_demo_1"))
 
 
