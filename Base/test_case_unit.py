@@ -12,8 +12,9 @@ import time
 
 class ParaCase(unittest.TestCase):
 
-    def __init__(self, test_method="test_", browser_name="Chrome", remote=False, driver=None):
+    def __init__(self, pro_name, test_method="test_", browser_name="Chrome", remote=False, driver=None):
         """
+        :param pro_name:
         :param test_method:
         :param browser_name:
         :param remote:
@@ -23,6 +24,7 @@ class ParaCase(unittest.TestCase):
         super(ParaCase, self).__init__(test_method)
         self.driver = driver
         self.log = log
+        self.pro_name = pro_name
         self.test_method = test_method
         self.browser_name = browser_name
         self.remote = remote
@@ -88,25 +90,25 @@ class ParaCase(unittest.TestCase):
             test_methods_name = test_loader.getTestCaseNames(test_class)
             for test_method_name in test_methods_name:
                 if test_method_name in on_line_test_method_name_list:  # 匹配'测试方法'名称
-                    test_instance = test_class(test_method=test_method_name, browser_name=browser_name,
-                                               remote=remote, driver=driver)
+                    test_instance = test_class(pro_name=pro_name, test_method=test_method_name,
+                                               browser_name=browser_name, remote=remote, driver=driver)
                     suite.addTest(test_instance)
         return suite, on_line_test_method_name_list
 
     @staticmethod
-    def stop_case_run_status(pro_name, test_method_name_list):
+    def stop_case_run_status(pro_name, test_method_name):
         """
         将用例的'运行状态'设置为'停止'
         :param pro_name:
-        :param test_method_name_list:
+        :param test_method_name:
         :return:
         """
         with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
             try:
-                for test_method_name in test_method_name_list:
-                    query_dict = {"test_method_name": test_method_name}
-                    update_dict = {"$set": {"run_status": False}}
-                    pro_db.update(query_dict, update_dict, multi=True)
+                query_dict = {"test_method_name": test_method_name}
+                update_dict = {"$set": {"run_status": False}}
+                pro_db.update(query_dict, update_dict, multi=True)
             except Exception as e:
-                mongo_exception_send_DD(e=e, msg="获取'" + pro_name + "'项目测试用例数据")
+                mongo_exception_send_DD(e=e, msg="停止'" + pro_name + "'项目中测试用例的运行状态")
                 return "mongo error"
+

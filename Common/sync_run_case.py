@@ -50,12 +50,14 @@ def run_test_custom(self, test, result, debug, index):
     else:
         test.debug()
 
-    """ 实例对象'suite'<TestSuite> 为每个执行完毕的'测试用例'实例 保存'截图ID列表' """
+    """ (self)实例对象'suite'<TestSuite> 为每个执行完毕的(test)'测试用例'实例 保存'截图ID列表' """
     self.screen_shot_id_dict[test.screen_shot_id_list_name] = test.screen_shot_id_list
 
     if self._cleanup:
         self._removeTestAtIndex(index)
-    return "\n" + str(test) + " ++++++++当前用例执行完毕+++++++\n"
+
+    """ 返回值<'tuple'>：返回测试用例实例对象的两个属性值（ 项目名称、测试方法名 ）供回调函数使用 """
+    return test.pro_name, test.test_method
 
 
 def show_result_custom(res):
@@ -67,8 +69,11 @@ def show_result_custom(res):
       1.需要为实例对象'suite'<TestSuite>动态添加该方法
       2.目的：供多线程中调用
     """
+
+    """ 用例执行完毕后，将其'运行状态'改成'停止' """
     result = res.result()
-    log.info(result)
+    from Base.test_case_unit import ParaCase
+    ParaCase.stop_case_run_status(pro_name=result[0], test_method_name=result[1])
 
 
 def new_run(self, result, debug=False):
@@ -162,9 +167,6 @@ def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
                 # 运行测试，并生成测试报告
                 test_result, current_report_file = generate_report(suite=suite, title='WEB自动化测试报告 - ' + pro_name,
                                                                    description='详细测试用例结果', tester="自动化测试", verbosity=2)
-
-                # 将用例的'运行状态'设置为'停止'
-                ParaCase.stop_case_run_status(pro_name=pro_name, test_method_name_list=on_line_test_method_name_list)
 
                 # 测试后发送预警
                 # send_warning_after_test(test_result, current_report_file)

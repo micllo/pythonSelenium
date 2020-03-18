@@ -82,7 +82,7 @@ def case_import_mongo(pro_name):
             test_methods_name = test_loader.getTestCaseNames(test_class)
             for test_method_name in test_methods_name:
                 # 生成'测试方法'的实例对象，并反射获取'测试方法'
-                test_instance = test_class(test_method=test_method_name)
+                test_instance = test_class(pro_name=pro_name, test_method=test_method_name)
                 testMethod = getattr(test_instance, test_method_name)
                 # 获取'测试方法'中的备注，作为'测试用例名称'
                 test_case_name = testMethod.__doc__.split("\n")[0].strip()
@@ -152,7 +152,19 @@ def get_test_case(pro_name):
     """
     根据'项目名称'获取'测试用例'列表（上线的排在前面）
     :param pro_name:
-    :return:
+    :return: 返回值
+
+     status_list : [ { test_method_name=测试方法名称，case_status=用例状态、run_status=运行状态 }, ]
+     # 获取用例的两个状态列表（用例状态、运行状态）
+            status_list = []
+            for test_case in test_case_list:
+                status_dict = dict()
+                status_dict['test_method_name'] = test_case.get("test_method_name")
+                status_dict['case_status'] = test_case.get("case_status")
+                status_dict['run_status'] = test_case.get("run_status")
+                status_list.append(status_dict)
+
+
     """
     test_case_list = []
     on_line_list = []
@@ -197,6 +209,36 @@ def stop_case_run_status(pro_name):
             return "mongo error"
 
 
+def get_progress_info(pro_name):
+    """
+    获取进度信息：总执行数(上线数)、已执行数(上线数中'已停止'的数量)、进度百分比
+    :param pro_name:
+    :return:
+    """
+    with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
+        try:
+            progress_info = dict()
+            results = pro_db.find({"case_status": True})
+            on_line_run_status_list = [res.get("run_status") for res in results]
+            run_num = len(on_line_run_status_list)
+            if run_num == 0:
+                progress_info["run_num"] = 0
+                progress_info["done_num"] = 0
+                progress_info["percent"] = 0
+            else:
+                progress_info["run_num"] = run_num
+                # 将 '上线的运行状态列表'中'run_status=False'的运行状态保存入列表
+                has_stop_run_status_list = [run_status for run_status in on_line_run_status_list if not run_status]
+                stop_num = len(has_stop_run_status_list)
+                progress_info["done_num"] = stop_num
+                # 计算百分比
+                percent = int(float(stop_num) / float(run_num) * 100)
+                progress_info["percent"] = percent
+            return progress_info
+        except Exception as e:
+            mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "项目 获取进度信息")
+            return "mongo error"
+
 
 if __name__ == "__main__":
     pass
@@ -204,3 +246,4 @@ if __name__ == "__main__":
     # case_import_mongo("pro_demo_1")
     # update_case_status("pro_demo_1", "test_02")
     # update_case_status_all(pro_name="pro_demo_1", status=False)
+    get_progress_info("pro_demo_1")

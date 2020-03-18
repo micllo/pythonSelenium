@@ -25,8 +25,8 @@ def show_index():
     return render_template('index.html', tasks=result_dict)
 
 
-# http://127.0.0.1:8070/api_local/WEB/get_test_case_list/pro_demo_1
-@flask_app.route("/WEB/get_test_case_list/<pro_name>", methods=["GET"])
+# http://127.0.0.1:8070/api_local/WEB/get_project_case_list/pro_demo_1
+@flask_app.route("/WEB/get_project_case_list/<pro_name>", methods=["GET"])
 def get_test_case_list(pro_name):
     result_dict = dict()
     result_dict["nginx_api_proxy"] = cfg.NGINX_API_PROXY
@@ -35,6 +35,7 @@ def get_test_case_list(pro_name):
     result_dict["current_report_url"] = cfg.CURRENT_REPORT_URL
     result_dict["history_report_path"] = cfg.HISTORY_REPORT_PATH
     result_dict["is_run"] = is_exist_running_case(pro_name)
+    result_dict["progress_info"] = get_progress_info(pro_name)
     return render_template('project.html', tasks=result_dict)
 
 
@@ -193,8 +194,24 @@ def stop_run_status(pro_name):
     return json.dumps(re_dict, ensure_ascii=False)
 
 
-
-
+# http://127.0.0.1:8070/api_local/WEB/refresh_run_progress/pro_demo_1
+@flask_app.route("/WEB/refresh_run_progress/<pro_name>", methods=["GET"])
+def refresh_run_progress(pro_name):
+    """
+    刷新执行用例进度
+    :param pro_name:
+    :return:
+    """
+    if is_null(pro_name):
+        msg = PARAMS_NOT_NONE
+    else:
+        progress_info = get_progress_info(pro_name)
+        if progress_info == "mongo error":
+            msg = MONGO_CONNECT_FAIL
+        else:
+            msg = REQUEST_SUCCESS
+    re_dict = interface_template(msg, {"pro_name": pro_name, "progress_info": progress_info})
+    return json.dumps(re_dict, ensure_ascii=False)
 
 
 
