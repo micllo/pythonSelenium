@@ -7,6 +7,7 @@ from selenium.common.exceptions import TimeoutException
 from Config import global_var as gv
 import time
 from Tools.mongodb import MongoGridFS
+from Common.test_func import send_DD_for_FXC
 
 
 # 获取 浏览器驱动函数（闭包）目的：延迟执行该函数

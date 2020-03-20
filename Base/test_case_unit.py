@@ -6,7 +6,6 @@ from Config import global_var as gv
 from Tools.mongodb import MongodbUtils
 from Config import config as cfg
 from Common.test_func import mongo_exception_send_DD
-from dateutil import parser
 import time
 
 
@@ -58,7 +57,7 @@ class ParaCase(unittest.TestCase):
         :return:
         【 添 加 步 骤 】
         1.从mongo中获取'上线'状态的'测试用例'列表
-        2.同时 记录上线用例的'最后执行时间'、设置上线用例'运行状态'为True
+        2.重置 上线用例的'运行状态：pending、开始时间：----、运行时间：----'
         3.通过'项目名称'获取'测试类'列表
         4.循环获取'测试类'列表中的所有'测试方法名称'
         5.将这些'测试方法名称'与mongo中'上线'的'测试方法名称'作比较
@@ -72,10 +71,8 @@ class ParaCase(unittest.TestCase):
                 query_dict = {"case_status": True}
                 results = pro_db.find(query_dict, {"_id": 0})
                 on_line_test_method_name_list = [result.get("test_method_name") for result in results]
-                # 记录上线用例的'最后执行时间'、设置上线用例'运行状态'为True
-                now_str = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(time.time()))
-                ISODate = parser.parse(now_str)
-                update_dict = {"$set": {"last_run_time": ISODate, "run_status": True}}
+                # 重置 上线用例的'运行状态：pending、开始时间：----、运行时间：----'
+                update_dict = {"$set": {"run_status": "pending", "start_time": "----", "run_time": "----"}}
                 pro_db.update(query_dict, update_dict, multi=True)
             except Exception as e:
                 on_line_test_method_name_list = []
@@ -94,21 +91,4 @@ class ParaCase(unittest.TestCase):
                                                browser_name=browser_name, remote=remote, driver=driver)
                     suite.addTest(test_instance)
         return suite, on_line_test_method_name_list
-
-    @staticmethod
-    def stop_case_run_status(pro_name, test_method_name):
-        """
-        将用例的'运行状态'设置为'停止'
-        :param pro_name:
-        :param test_method_name:
-        :return:
-        """
-        with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
-            try:
-                query_dict = {"test_method_name": test_method_name}
-                update_dict = {"$set": {"run_status": False}}
-                pro_db.update(query_dict, update_dict, multi=True)
-            except Exception as e:
-                mongo_exception_send_DD(e=e, msg="停止'" + pro_name + "'项目中测试用例的运行状态")
-                return "mongo error"
 

@@ -67,10 +67,13 @@ def clear_screen_shot(days):
 
 def case_import_mongo(pro_name):
     """
-    将某项目的所有测试用例同步入mongo库中，默认状态为'下线'
+    更新项目测试用例数据 同步入mongo库中，默认状态为'下线'
     :param pro_name:
     :return:
-    [{"pro_name":"", "test_class_name":"", "test_method_name": "" ,"test_case_name": "" , "status": "", "create_time": ""}, {}]
+    【 备 注 】
+    1.run_status ：运行状态 （ pending 待运行、runninng 运行中、stopping 已停止）
+    2.start_time ：运行开始时间
+    3.run_time ：运行时间
     """
     test_class_list = get_test_class_list_by_pro_name(pro_name)
     if test_class_list:
@@ -92,8 +95,9 @@ def case_import_mongo(pro_name):
                 test_case_dict["test_method_name"] = test_method_name
                 test_case_dict["test_case_name"] = test_case_name
                 test_case_dict["case_status"] = False
-                test_case_dict["run_status"] = False
-                test_case_dict["last_run_time"] = ISODate
+                test_case_dict["run_status"] = "stopping"
+                test_case_dict["start_time"] = "----"
+                test_case_dict["run_time"] = "----"
                 test_case_dict["create_time"] = ISODate
                 insert_list.append(test_case_dict)
         # 将'测试用例'列表更新入对应项目的数据库中
@@ -111,7 +115,7 @@ def case_import_mongo(pro_name):
 
 def update_case_status(pro_name, test_method_name):
     """
-    更新某个'测试用例'的'状态'(上下线)
+    更新项目测试用例状态
     :param pro_name:
     :param test_method_name:
     :return:
@@ -132,7 +136,7 @@ def update_case_status(pro_name, test_method_name):
 
 def update_case_status_all(pro_name, case_status=False):
     """
-    更新'某项目'的所有测试用例'状态'(上下线)
+    更新项目所有测试用例状态(上下线)
     :param pro_name:
     :param case_status:
     :return: 返回 test_method_name_list 列表
@@ -144,27 +148,15 @@ def update_case_status_all(pro_name, case_status=False):
             results = pro_db.find({}, {"_id": 0})
             return [res.get("test_method_name") for res in results]
         except Exception as e:
-            mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "'项目测试用例状态(批量)")
+            mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "'项目所有测试用例状态")
             return "mongo error"
 
 
 def get_test_case(pro_name):
     """
-    根据'项目名称'获取'测试用例'列表（上线的排在前面）
+    根据项目测试用例列表（上线的排在前面）
     :param pro_name:
     :return: 返回值
-
-     status_list : [ { test_method_name=测试方法名称，case_status=用例状态、run_status=运行状态 }, ]
-     # 获取用例的两个状态列表（用例状态、运行状态）
-            status_list = []
-            for test_case in test_case_list:
-                status_dict = dict()
-                status_dict['test_method_name'] = test_case.get("test_method_name")
-                status_dict['case_status'] = test_case.get("case_status")
-                status_dict['run_status'] = test_case.get("run_status")
-                status_list.append(status_dict)
-
-
     """
     test_case_list = []
     on_line_list = []
@@ -179,7 +171,8 @@ def get_test_case(pro_name):
                 test_case_dict["test_class_name"] = res.get("test_class_name")
                 test_case_dict["test_method_name"] = res.get("test_method_name")
                 test_case_dict["run_status"] = res.get("run_status")
-                test_case_dict["last_run_time"] = res.get("last_run_time")
+                test_case_dict["start_time"] = res.get("start_time")
+                test_case_dict["run_time"] = res.get("run_time")
                 test_case_dict["create_time"] = res.get("create_time")
                 if res.get("case_status"):
                     on_line_list.append(test_case_dict)
@@ -195,23 +188,46 @@ def get_test_case(pro_name):
 
 def stop_case_run_status(pro_name):
     """
-    强行修改用例运行状态 -> 停止
+    强行修改项目用例运行状态 -> 停止
     :param pro_name:
     :return:
     """
     with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
         try:
-            update_dict = {"$set": {"run_status": False}}
+            update_dict = {"$set": {"run_status": "stopping"}}
             pro_db.update({}, update_dict, multi=True)
             return True
         except Exception as e:
-            mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "'项目测试用例状态(批量)")
+            mongo_exception_send_DD(e=e, msg="强行修改'" + pro_name + "'项目用例运行状态")
+            return "mongo error"
+
+
+def get_case_run_status(pro_name):
+    """
+    获取项目用例的运行状态
+    :param pro_name:
+    :return:
+    """
+    case_run_status_list = []
+    with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
+        try:
+            results = pro_db.find({"case_status": True}, {"_id": 0})
+            for res in results:
+                test_case_dict = dict()
+                test_case_dict["test_method_name"] = res.get("test_method_name")
+                test_case_dict["run_status"] = res.get("run_status")
+                test_case_dict["start_time"] = str(res.get("start_time"))
+                test_case_dict["run_time"] = str(res.get("run_time"))
+                case_run_status_list.append(test_case_dict)
+            return case_run_status_list
+        except Exception as e:
+            mongo_exception_send_DD(e=e, msg="获取'" + pro_name + "'项目用例的运行状态")
             return "mongo error"
 
 
 def get_progress_info(pro_name):
     """
-    获取进度信息：总执行数(上线数)、已执行数(上线数中'已停止'的数量)、进度百分比
+    获取项目用例执行进度信息：总执行数(上线数)、已执行数(上线数中'已停止'的数量)、进度百分比
     :param pro_name:
     :return:
     """
@@ -227,8 +243,8 @@ def get_progress_info(pro_name):
                 progress_info["percent"] = 0
             else:
                 progress_info["run_num"] = run_num
-                # 将 '上线的运行状态列表'中'run_status=False'的运行状态保存入列表
-                has_stop_run_status_list = [run_status for run_status in on_line_run_status_list if not run_status]
+                # 将 '上线的运行状态列表'中'run_status=stopping'的运行状态保存入列表
+                has_stop_run_status_list = [run_status for run_status in on_line_run_status_list if run_status == "stopping"]
                 stop_num = len(has_stop_run_status_list)
                 progress_info["done_num"] = stop_num
                 # 计算百分比
@@ -236,7 +252,7 @@ def get_progress_info(pro_name):
                 progress_info["percent"] = percent
             return progress_info
         except Exception as e:
-            mongo_exception_send_DD(e=e, msg="更新'" + pro_name + "项目 获取进度信息")
+            mongo_exception_send_DD(e=e, msg="获取'" + pro_name + "项目用例执行进度信息")
             return "mongo error"
 
 
@@ -246,4 +262,5 @@ if __name__ == "__main__":
     # case_import_mongo("pro_demo_1")
     # update_case_status("pro_demo_1", "test_02")
     # update_case_status_all(pro_name="pro_demo_1", status=False)
-    get_progress_info("pro_demo_1")
+    # get_progress_info("pro_demo_1")
+    print(get_case_run_status("pro_demo_1"))

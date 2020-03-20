@@ -5,7 +5,7 @@ from Config.error_mapping import *
 from Api.api_services.api_template import interface_template
 from Api.api_services.api_calculate import *
 from Common.com_func import is_null, log
-from Common.test_func import is_exist_running_case, is_exist_online_case
+from Common.test_func import is_exist_start_case, is_exist_online_case
 from Tools.mongodb import MongoGridFS
 from Config import config as cfg
 from Config.pro_config import pro_exist
@@ -34,7 +34,7 @@ def get_test_case_list(pro_name):
     result_dict["test_case_list"] = get_test_case(pro_name)
     result_dict["current_report_url"] = cfg.CURRENT_REPORT_URL
     result_dict["history_report_path"] = cfg.HISTORY_REPORT_PATH
-    result_dict["is_run"] = is_exist_running_case(pro_name)
+    result_dict["is_run"] = is_exist_start_case(pro_name)
     result_dict["progress_info"] = get_progress_info(pro_name)
     return render_template('project.html', tasks=result_dict)
 
@@ -61,7 +61,7 @@ def run_case(pro_name):
     elif thread_num not in range(1, 6):  # 线程数量范围要控制在1~5之间
         msg = THREAD_NUM_ERROR
     else:
-        run_flag = is_exist_running_case(pro_name)
+        run_flag = is_exist_start_case(pro_name)
         if run_flag == "mongo error":
             msg = MONGO_CONNECT_FAIL
         else:
@@ -214,6 +214,22 @@ def refresh_run_progress(pro_name):
     return json.dumps(re_dict, ensure_ascii=False)
 
 
-
-
+# http://127.0.0.1:8070/api_local/WEB/refresh_case_run_status/pro_demo_1
+@flask_app.route("/WEB/refresh_case_run_status/<pro_name>", methods=["GET"])
+def refresh_case_run_status(pro_name):
+    """
+    刷新用例运行状态
+    :param pro_name:
+    :return:
+    """
+    if is_null(pro_name):
+        msg = PARAMS_NOT_NONE
+    else:
+        case_run_status_list = get_case_run_status(pro_name)
+        if case_run_status_list == "mongo error":
+            msg = MONGO_CONNECT_FAIL
+        else:
+            msg = REQUEST_SUCCESS
+    re_dict = interface_template(msg, {"pro_name": pro_name, "case_run_status_list": case_run_status_list})
+    return json.dumps(re_dict, ensure_ascii=False)
 

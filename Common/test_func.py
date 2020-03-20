@@ -4,6 +4,7 @@ import time
 import os
 from Common.com_func import send_mail, mkdir, send_DD, log
 from Config import config as cfg
+from dateutil import parser
 
 
 def generate_report(suite, title, description, tester, verbosity=1):
@@ -124,11 +125,12 @@ def mongo_exception_send_DD(e, msg):
     send_DD(dd_group_id=cfg.DD_MONITOR_GROUP, title=title, text=text, at_phones=cfg.DD_AT_FXC, is_at_all=False)
 
 
-def is_exist_running_case(pro_name):
+def is_exist_start_case(pro_name):
     """
-    判断项目是否存在 运行中的用例
+    判断项目是否存在 启动的用例（pending、running）
     :param pro_name:
     :return:
+      判断逻辑：若存在'pending'或'running',则表示存在启动的用例
       备注：若返回'mongo error', 默认表示'存在'运行中的用例
     """
     from Tools.mongodb import MongodbUtils
@@ -139,7 +141,7 @@ def is_exist_running_case(pro_name):
         except Exception as e:
             mongo_exception_send_DD(e=e, msg="获取'" + pro_name + "'项目测试用例列表")
             return "mongo error"
-    return True in run_status_list and True or False
+    return "pending" in run_status_list or "running" in run_status_list
 
 
 def is_exist_online_case(pro_name):
@@ -159,11 +161,57 @@ def is_exist_online_case(pro_name):
     return True in case_status_list and True or False
 
 
+def start_case_run_status(pro_name, test_method_name):
+    """
+    启动测试用例：设置用例的'运行状态=running'和'开始时间'
+    :param pro_name:
+    :param test_method_name:
+    :return:
+    """
+    from Tools.mongodb import MongodbUtils
+    with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
+        try:
+            now_str = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(time.time()))
+            ISODate = parser.parse(now_str)
+            query_dict = {"test_method_name": test_method_name}
+            update_dict = {"$set": {"run_status": "running", "start_time": ISODate}}
+            pro_db.update(query_dict, update_dict, multi=True)
+        except Exception as e:
+            mongo_exception_send_DD(e=e, msg="启动'" + pro_name + "'项目中的测试用例")
+            return "mongo error"
+
+
+def stop_case_run_status(pro_name, test_method_name):
+    """
+    停止测试用例：设置用例的'运行状态=stopping'和'运行时间'
+    :param pro_name:
+    :param test_method_name:
+    :return:
+    """
+    from Tools.mongodb import MongodbUtils
+    with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
+        try:
+            # 获取 开始时间
+            query_dict = {"test_method_name": test_method_name}
+            result = pro_db.find_one(query_dict, {"_id": 0})
+            start_time = result.get("start_time")
+            # 获取 当前时间
+            now_str = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(time.time()))
+            now_time = parser.parse(now_str)
+            # 更新数据
+            update_dict = {"$set": {"run_status": "stopping", "run_time": str(now_time - start_time)}}
+            print(update_dict)
+            pro_db.update(query_dict, update_dict)
+        except Exception as e:
+            mongo_exception_send_DD(e=e, msg="停止'" + pro_name + "'项目中的测试用例")
+            return "mongo error"
+
 
 if __name__ == "__main__":
     pass
     # send_DD_after_test("失败", "报告名称", False)
     # print(get_test_case(pro_name="pro_demo_1"))
     # print(is_exist_online_case(pro_name="pro_demo_1"))
+    stop_case_run_status("pro_demo_1", "test_demo_01")
 
 

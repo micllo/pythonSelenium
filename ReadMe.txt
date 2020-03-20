@@ -16,15 +16,17 @@
                http://127.0.0.1:8082/WEB/get_img/5e5cac9188121299450740b3
 
 4.访问地址（ uwsgi 启动 ）：
-（1）测试报告 -> http://127.0.0.1:8070/test_report_local/report.html
-（2）接口地址 -> http://127.0.0.1:8070/api_local/
+（1）用例页面 -> http://localhost:8900/api_local/WEB/index
+（2）测试报告 -> http://127.0.0.1:8070/test_report_local/report.html
+（3）接口地址 -> http://127.0.0.1:8070/api_local/
                http://127.0.0.1:8070/api_local/WEB/sync_run_case
                http://127.0.0.1:8070/api_local/WEB/get_img/5e5cac9188121299450740b3
    （ 备注：uwgsi 启动 8081 端口、nginx 配置 8070 反向代理 8081 ）
 
 5.本地相关服务的启动操作（ gulpfile.js 文件 ）
-（1）启动命令：gulp "start env"
-（2）停止命令：gulp "stop env"
+（1）启动服务并调试页面：gulp "html debug"
+（2）停止服务命令：gulp "stop env"
+（3）部署docker服务：gulp "deploy docker"
 
 
 【 备 注 】
@@ -76,20 +78,23 @@ MAC本地安装的 nginx 相关路径
     ( 备注：uwgsi 启动 8081 端口、nginx 配置 80 反向代理 8081 )
 
 7.访问地址（ 外部访问 ）：
-（1）测试报告 -> http://192.168.31.10:1080/test_report/report.html
-（2）接口地址 -> http://192.168.31.10:1080/api/
+（1）用例页面 -> http://192.168.31.10:1080/api/WEB/index
+（2）测试报告 -> http://192.168.31.10:1080/test_report/report.html
+（3）接口地址 -> http://192.168.31.10:1080/api/
                http://192.168.31.10:1080/api/WEB/sync_run_case
                http://192.168.31.10:1080/api/WEB/get_img/5e5cac9188121299450740b3
     ( 备注：docker 配置 1080 映射 80 )
 
 8.关于部署
   方式一：通过'shell'脚本命令进行部署
-            sh /Users/micllo/Documents/works/expect-deploy/docker_python/deploy.sh pythonSelenium 127.0.0.1 1022
+         sh /Users/micllo/Documents/works/expect-deploy/docker_python/deploy.sh pythonSelenium 127.0.0.1 1022
   方式二：通过'fabric'工具进行部署 -> deploy.py
     （1）将本地代码拷贝入临时文件夹，并删除不需要的文件目录
     （2）将临时文件夹中的该项目压缩打包，上传至服务器的临时文件夹中
     （3）在服务器中进行部署操作：停止nginx、mongo、uwsgi服务 -> 替换项目、uwsgi.ini配置文件 -> 替换config配置文件 -> 启动nginx、mongo、uwsgi服务
     （4）删除本地的临时文件夹
+  方式三：通过'gulp'命令 执行 deploy.py 文件 进行部署
+
 
 9.关于 Selenium Grid Console
 （1）Hub 界面地址
@@ -131,7 +136,7 @@ MAC本地安装的 nginx 相关路径
 （4）所有用例执行后，若有'失败'或'错误'的用例，则发送钉钉和邮件通知
 （5）提供日志记录功能：按照日期区分
 （6）提供定时任务：定时删除过期(一周前)的文件：日志、报告、截图文件(mongo数据)，定时执行测试用例
-（7）提供页面展示项目用例，实现用例上下线、批量执行用例、显示报告等功能
+（7）提供页面展示项目用例，实现用例上下线、批量执行用例、显示报告、用例运行进度等功能
 
 2.使用 Flask ：
 （1）提供 执行用例的接口

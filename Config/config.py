@@ -20,7 +20,7 @@ GULP_TEMPLATE_PATH = '../Build/templates'
 SERVER_IP = "127.0.0.1"
 
 # 是否启用远程浏览器
-REMOTE = False
+REMOTE = True
 
 # 测试报告地址
 BASE_REPORT_PATH = "http://" + SERVER_IP + ":8070/test_report_local/"

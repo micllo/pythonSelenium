@@ -3,7 +3,8 @@ from concurrent.futures import ThreadPoolExecutor
 from unittest.suite import _isnotsuite
 from types import MethodType
 from Common.com_func import log
-from Common.test_func import generate_report, send_DD_for_FXC, send_warning_after_test, is_exist_running_case
+from Common.test_func import generate_report, send_DD_for_FXC, send_warning_after_test, is_exist_start_case, \
+    stop_case_run_status, start_case_run_status
 
 
 """
@@ -45,18 +46,25 @@ def run_test_custom(self, test, result, debug, index):
        1.需要为实例对象'suite'<TestSuite>动态添加该方法
        2.目的：供多线程中调用
     """
+    # 启动测试用例：设置用例的'运行状态=running'和'开始时间'
+    start_case_run_status(pro_name=test.pro_name, test_method_name=test.test_method)
+
     if not debug:
         test(result)
     else:
         test.debug()
 
-    """ (self)实例对象'suite'<TestSuite> 为每个执行完毕的(test)'测试用例'实例 保存'截图ID列表' """
-    self.screen_shot_id_dict[test.screen_shot_id_list_name] = test.screen_shot_id_list
+    # (self)实例对象'suite'<TestSuite> 为每个执行完毕的(test)'测试用例'实例 保存'截图ID列表'
+    try:
+        self.screen_shot_id_dict[test.screen_shot_id_list_name] = test.screen_shot_id_list
+    except Exception as e:
+        send_DD_for_FXC(title="WEB自动化测试", text="#### 出现异常- 可能 远程浏览器监听未开启！！！")
+        log.error(str(e))
 
     if self._cleanup:
         self._removeTestAtIndex(index)
 
-    """ 返回值<'tuple'>：返回测试用例实例对象的两个属性值（ 项目名称、测试方法名 ）供回调函数使用 """
+    # 返回值<'tuple'>：返回测试用例实例对象的两个属性值（ 项目名称、测试方法名 ）供回调函数使用
     return test.pro_name, test.test_method
 
 
@@ -70,10 +78,9 @@ def show_result_custom(res):
       2.目的：供多线程中调用
     """
 
-    """ 用例执行完毕后，将其'运行状态'改成'停止' """
+    # 停止测试用例：设置用例的'运行状态=stopping'和'运行时间'
     result = res.result()
-    from Base.test_case_unit import ParaCase
-    ParaCase.stop_case_run_status(pro_name=result[0], test_method_name=result[1])
+    stop_case_run_status(pro_name=result[0], test_method_name=result[1])
 
 
 def new_run(self, result, debug=False):
@@ -113,7 +120,7 @@ def new_run(self, result, debug=False):
     """ 等待所有线程执行完毕 """
     pool.shutdown()
 
-    print("线程全部执行完毕")
+    log.info("线程全部执行完毕")
 
     if topLevel:
         self._tearDownPreviousClass(None, result)
@@ -140,7 +147,7 @@ def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
       3.实例对象'suite'在重写的'new_run'方法中 将'screen_shot_id_list'添加入'screen_shot_id_dict'
       4.screen_shot_id_dict = { "测试类名.测试方法名":['aaa', 'bbb'], "测试类名.测试方法名":['cccc'] }
     """
-    if is_exist_running_case(pro_name):
+    if is_exist_start_case(pro_name):
         send_DD_for_FXC(title="WEB自动化测试", text="#### 可能在执行WEB自动化测试'定时任务'时 遇到 '" + pro_name +
                                                "' 项目存在<运行中>的用例而未执行测试")
     else:

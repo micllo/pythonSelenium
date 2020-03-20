@@ -116,7 +116,7 @@
                                             onclick="run_case('{{pro_name}}','{{nginx_api_proxy}}')"> 批 量 执 行 </button>
                                  </div>
                                  <div class="col-sm-6" align="center" style="line-height:35px; font-size:15px; margin-left:15%">
-                                     <span id="run_result" style="font-size:15px" class="label label-warning">存在运行中的用例</span>
+                                     <span id="run_result" style="font-size:15px" class="label label-warning">测试运行中。。。</span>
                                  </div>
                                  {% else %}
                                  <div class="col-sm-3" style="margin-left:5%">
@@ -142,14 +142,23 @@
                                  用&nbsp;&nbsp;&nbsp;例&nbsp;&nbsp;&nbsp;运&nbsp;&nbsp;&nbsp;行&nbsp;&nbsp;&nbsp;进&nbsp;&nbsp;&nbsp;度
                              </div>
                              <div class="panel-body">
-                                 <div class="col-sm-9" style="margin-left:2%">
-                                     <div class="progress progress-striped" id="progress_bar_active">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" id="progress_bar"
-                                             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{progress_info.percent}}%;">
-                                        </div>
-                                    </div>
+                                 <div class="col-sm-9" style="margin-left:2%; margin-top:1%">
+                                     {% if progress_info.percent in range(0,60)  %}
+                                     <div id="progress_bar_active" class="progress progress-striped active">
+                                        <div id="progress_bar" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{progress_info.percent}}%;"></div>
+                                     </div>
+                                     {% elif progress_info.percent in range(60,100)  %}
+                                     <div id="progress_bar_active" class="progress progress-striped active">
+                                        <div id="progress_bar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{progress_info.percent}}%;"></div>
+                                     </div>
+                                     {% else %}
+                                     <!-- 在 class="progress progress-striped active" 中的 active 代表 进度条滚动效果 -->
+                                     <div id="progress_bar_active" class="progress progress-striped">
+                                        <div id="progress_bar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{progress_info.percent}}%;"></div>
+                                     </div>
+                                     {% endif %}
                                  </div>
-                                 <div align="center">
+                                 <div align="center" style="line-height:30px;">
                                      <font color="#B8860B"><label id="progress_label"> {{progress_info.percent}} % --（ {{progress_info.done_num}} / {{progress_info.run_num}} ） </label></font>
                                  </div>
                              </div>
@@ -171,16 +180,18 @@
                 <td width="150">类 名 称</td>
                 <td width="150">方 法 名 称</td>
                 <td width="150">运 行 状 态</td>
-                <td width="150">上次运行时间</td>
+                <td width="150">开 始 时 间</td>
+                <td width="150">运 行 时 间</td>
                 <td width="150">创 建 时 间</td>
             </tr>
             {% for test_case in test_case_list %}
                 {% set case_status = test_case.case_status %}
-                {% set run_status = test_case.run_status %}
                 {% set test_case_name = test_case.test_case_name %}
                 {% set test_class_name = test_case.test_class_name %}
                 {% set test_method_name = test_case.test_method_name %}
-                {% set last_run_time = test_case.last_run_time %}
+                {% set run_status = test_case.run_status %}
+                {% set start_time = test_case.start_time %}
+                {% set run_time = test_case.run_time %}
                 {% set create_time = test_case.create_time %}
                 {% if case_status %}
                 <tr id="on_line_{{test_method_name}}_tr" class='passClass success'>
@@ -208,7 +219,11 @@
                     <td class="text-center" style="display:table-cell; vertical-align:middle">{{test_case_name}}</td>
                     <td class="text-center" style="display:table-cell; vertical-align:middle">{{test_class_name}}</td>
                     <td class="text-center" style="display:table-cell; vertical-align:middle">{{test_method_name}}</td>
-                {% if run_status %}
+                {% if run_status == "pending" %}
+                    <td class="text-center" style="display:table-cell; vertical-align:middle">
+                        <span id="run_status_{{test_method_name}}" class="label label-warning warning">待运行</span>
+                    </td>
+                {% elif run_status == "running" %}
                     <td class="text-center" style="display:table-cell; vertical-align:middle">
                         <span id="run_status_{{test_method_name}}" class="label label-success success">运行中</span>
                     </td>
@@ -217,7 +232,8 @@
                         <span id="run_status_{{test_method_name}}" class="label label-danger danger">已停止</span>
                     </td>
                 {% endif %}
-                    <td class="text-center" style="display:table-cell; vertical-align:middle">{{last_run_time}}</td>
+                    <td id="start_time_{{test_method_name}}" class="text-center" style="display:table-cell; vertical-align:middle">{{start_time}}</td>
+                    <td id="run_time_{{test_method_name}}" class="text-center" style="display:table-cell; vertical-align:middle">{{run_time}}</td>
                     <td class="text-center" style="display:table-cell; vertical-align:middle">{{create_time}}</td>
                     </tr>
             {% endfor %}
@@ -234,5 +250,13 @@
         <script src="/{{nginx_api_proxy}}/static/scripts/project.js" type="text/javascript"></script>
         <script src="/{{nginx_api_proxy}}/static/scripts/sweetalert.min.js" type="text/javascript"></script>
 
+        <!--若当前有用例在运行，则实时更新进度信息-->
+        <script language="javascript" type="text/javascript">
+            $(document).ready(function () {
+                if('{{is_run}}' == 'True'){
+                    background_update_process('{{pro_name}}', '{{nginx_api_proxy}}');
+                }
+            });
+        </script>
     </body>
 </html>
