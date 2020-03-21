@@ -64,6 +64,9 @@ def run_test_custom(self, test, result, debug, index):
     if self._cleanup:
         self._removeTestAtIndex(index)
 
+    # 停止测试用例：设置用例的'运行状态=stopping'和'运行时间'
+    stop_case_run_status(pro_name=test.pro_name, test_method_name=test.test_method)
+
     # 返回值<'tuple'>：返回测试用例实例对象的两个属性值（ 项目名称、测试方法名 ）供回调函数使用
     return test.pro_name, test.test_method
 
