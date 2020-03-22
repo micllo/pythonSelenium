@@ -155,7 +155,7 @@ def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
                                                "' 项目存在<运行中>的用例而未执行测试")
     else:
         # 将'测试类'中的所有'测试方法'添加到 suite 对象中（每个'测试类'实例对象包含一个'测试方法'）
-        from Base.test_case_unit import ParaCase
+        from TestBase.test_case_unit import ParaCase
         suite, on_line_test_method_name_list = ParaCase.get_online_case_to_suite(pro_name=pro_name, browser_name=browser_name, remote=remote)
 
         if suite != "mongo error":

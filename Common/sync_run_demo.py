@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import unittest
 import time
-from Base.test_case_unit import ParaCase
+from TestBase.test_case_unit import ParaCase
 from concurrent.futures import ThreadPoolExecutor
 from Tools.log import FrameLog
 

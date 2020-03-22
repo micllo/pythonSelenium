@@ -3,7 +3,7 @@ from flask import Flask, render_template, request
 from Config.scheduler_job import Config
 from flask_apscheduler import APScheduler
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
-from Config import config as cfg
+from Config import env_config as cfg
 
 
 flask_app = Flask(__name__, static_folder=cfg.GULP_STATIC_PATH, template_folder=cfg.GULP_TEMPLATE_PATH)

@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from Base.browser_action import Base
+from TestBase.browser_action import Base
 from selenium.webdriver.common.by import By
 import time
 

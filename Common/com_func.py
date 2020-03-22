@@ -9,7 +9,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import smtplib
 import traceback
-from Config import config as cfg
+from Config import env_config as cfg
 from Config import global_var as gv
 import requests
 import json
@@ -34,22 +34,6 @@ def is_null(tgt):
     return isnull_res
 
 
-# 多线程重载 run 方法
-class MyThread(threading.Thread):
-
-    def __init__(self, func, driver, test_class_list):
-        super(MyThread, self).__init__()
-        # threading.Thread.__init__(self)
-        self.func = func
-        self.driver = driver
-        self.test_class_list = test_class_list
-
-    def run(self):
-        print("Starting " + self.name)
-        print("Exiting " + self.name)
-        self.func(self.driver, self.test_class_list)
-
-
 # 获取项目路径
 def project_path():
     return os.path.split(os.path.realpath(__file__))[0].split('C')[0]
@@ -63,7 +47,7 @@ def get_current_function_name(class_instance):
 # 获取'config.ini'文件中的（ 获取 [test_url] 下的 baidu_rul 的值
 def get_config_ini(key, value):
     config = configparser.ConfigParser()
-    config.read(project_path() + "Config/config_test_url.ini")
+    config.read(project_path() + "Config/test_url.ini")
     return config.get(key, value)
 
 
@@ -156,6 +140,21 @@ def send_DD(dd_group_id, title, text, at_phones, is_at_all=False):
         log.error("钉钉发送失败")
         log.error(e)
 
+
+# # 多线程重载 run 方法
+# class MyThread(threading.Thread):
+#
+#     def __init__(self, func, driver, test_class_list):
+#         super(MyThread, self).__init__()
+#         # threading.Thread.__init__(self)
+#         self.func = func
+#         self.driver = driver
+#         self.test_class_list = test_class_list
+#
+#     def run(self):
+#         print("Starting " + self.name)
+#         print("Exiting " + self.name)
+#         self.func(self.driver, self.test_class_list)
 
 
 if __name__ == "__main__":

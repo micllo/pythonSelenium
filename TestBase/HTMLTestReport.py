@@ -15,7 +15,7 @@ import unittest
 from xml.sax import saxutils
 import sys
 from Common.com_func import log
-from Config import config as cfg
+from Config import env_config as cfg
 import requests
 
 

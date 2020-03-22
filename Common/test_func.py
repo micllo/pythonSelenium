@@ -1,9 +1,9 @@
 # -*- coding:utf-8 -*-
-from Common.HTMLTestReport import HTMLTestRunner
+from TestBase.HTMLTestReport import HTMLTestRunner
 import time
 import os
 from Common.com_func import send_mail, mkdir, send_DD, log
-from Config import config as cfg
+from Config import env_config as cfg
 from dateutil import parser
 
 

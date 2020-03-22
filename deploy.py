@@ -71,7 +71,7 @@ def server_action():
             run("cp -r /opt/project/" + pro_name + "/vassals/*.ini /etc/uwsgi/vassals/", warn_only=True)
         # 替换config配置文件
         with cd("/opt/project/" + pro_name + "/Config"):
-            run("rm -r config.py && mv config_docker.py config.py", warn_only=True)
+            run("rm -r env_config.py && mv env_config_docker.py env_config.py", warn_only=True)
 
         # 启动'mongo、nginx、uwsgi'服务
         run("sudo mongod -f /tools/mongodb/bin/mongodb.conf", warn_only=False)  # 不忽略失败的命令，不能继续执行

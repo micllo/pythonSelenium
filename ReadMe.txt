@@ -1,3 +1,13 @@
+【 用 例 编 写 注 意 事 项 】
+1.在'Project'下创建'项目名称'目录：Project > pro_demo_1
+2.在'项目名称'目录下创建两个目录：page_object、test_case
+3.在'page_object'目录下提供：元素定位、页面操作方法
+4.在'case_test'目录下提供：测试用例
+5.在'Config > pro_config.py'文件中配置'项目'对应的'测试用例类'：get_test_class_list_by_pro_name、pro_exist
+
+
+########################################################################################################################
+
 
 【 本地 Mac 相关 】
 
@@ -58,7 +68,7 @@ MAC本地安装的 nginx 相关路径
 （1）从GitGub上拉取代码至临时目录
 （2）关闭nginx、mongo、uwsgi服务
 （3）替换项目、uwsgi.ini配置文件
-（4）替换config配置文件：删除'config.py'、将'config.py'重命名为'config.py'
+（4）替换env_config配置文件
 （5）启动nginx、mongo、uwsgi服务
 （6）清空临时文件
 
@@ -67,8 +77,8 @@ MAC本地安装的 nginx 相关路径
 （2）./pythonSelenium/vassals/app_uwsgi.ini -> /etc/uwsgi/vassals/app_uwsgi.ini
 
 5.部署时相关配置文件的替换操作：
-（1）将./Config/目录下的 config.py 删除
-（2）将./Config/目录下的 config_docker.py 重命名为 config.py
+（1）将./Config/目录下的 env_config.py 删除
+（2）将./Config/目录下的 env_config_docker.py 重命名为 env_config.py
 
 6.访问地址（ Docker 内部 ）：
 （1）测试报告 -> http://127.0.0.1:80/test_report/report.html
@@ -113,12 +123,12 @@ MAC本地安装的 nginx 相关路径
 
 【 框 架 结 构 】（ 提高代码的：可读性、重用性、易扩展性 ）
  1.Api层：       对外接口、原静态文件
- 2.Base层：      封装了浏览器驱动操作方法、提供'测试用例'父类第基础方法(继承’unittest.TestCase')
- 3.Build层：     编译后的静态文件
- 4.Common层：    通用方法、公共测试方法、测试报告生成、同步执行用例方法
- 5.Config层：    环境配置、错误码映射、全局变量、定时任务、项目配置
- 6.Data层：      相关测试数据
- 7.Project层：   区分不同项目、page_object(页面操作方法、元素定位)、test_case(测试用例)
+ 2.Build层：     编译后的静态文件
+ 3.Common层：    通用方法、测试方法
+ 4.Config层：    环境配置、错误码映射、全局变量、定时任务、项目配置、测试地址配置
+ 5.Data层：      相关测试数据
+ 6.Project层：   区分不同项目、page_object(页面操作方法、元素定位)、test_case(测试用例)
+ 7.TestBase层：  封装了浏览器驱动操作方法、提供'测试用例'父类第基础方法(继承’unittest.TestCase')、测试报告生成、同步执行用例方法
  8.Tools层：     工具函数
  9.其他：
  （1）vassals/ -> 服务器的'uWSGI配置'

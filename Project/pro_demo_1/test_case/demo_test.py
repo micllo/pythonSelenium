@@ -4,8 +4,8 @@ import os, sys
 # sys.path.append(os.path.split(os.getcwd())[0])
 import time
 from Common.com_func import get_config_ini
-from Base.test_case_unit import ParaCase
-from Base.browser_action import Base
+from TestBase.test_case_unit import ParaCase
+from TestBase.browser_action import Base
 
 
 class DemoTest(ParaCase):

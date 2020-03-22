@@ -7,8 +7,8 @@ from Common.com_func import get_config_ini, project_path
 from Tools.excel_data import read_excel
 from Project.pro_demo_1.page_object.search_page import SearchPage
 from Project.pro_demo_1.page_object.baidu_page import BaiduPage
-from Base.test_case_unit import ParaCase
-from Base.browser_action import Base
+from TestBase.test_case_unit import ParaCase
+from TestBase.browser_action import Base
 
 
 class TrainTest(ParaCase):

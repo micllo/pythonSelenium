@@ -7,7 +7,7 @@ from Api.api_services.api_calculate import *
 from Common.com_func import is_null, log
 from Common.test_func import is_exist_start_case, is_exist_online_case
 from Tools.mongodb import MongoGridFS
-from Config import config as cfg
+from Config import env_config as cfg
 from Config.pro_config import pro_exist
 from Config import global_var as gv
 

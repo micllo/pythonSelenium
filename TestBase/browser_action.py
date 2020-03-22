@@ -2,7 +2,7 @@
 from selenium import webdriver
 from Common.com_func import project_path, log, mkdir
 from selenium.webdriver import DesiredCapabilities
-from Config import config as cfg
+from Config import env_config as cfg
 from selenium.common.exceptions import TimeoutException
 from Config import global_var as gv
 import time

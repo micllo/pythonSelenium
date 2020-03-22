@@ -1,9 +1,9 @@
 # -*- coding:utf-8 -*-
 from concurrent.futures import ThreadPoolExecutor
-from Config import config as cfg
+from Config import env_config as cfg
 from Common.com_func import log, is_null
 from Common.test_func import mongo_exception_send_DD
-import sys, os, time
+import os, time
 from Tools.mongodb import MongoGridFS
 from Tools.date_helper import get_date_by_days
 from Tools.mongodb import MongodbUtils
@@ -28,7 +28,7 @@ def sync_run_case(pro_name, browser_name, thread_num):
     :return:
     """
     pool = ThreadPoolExecutor(1)
-    from Common.sync_run_case import suite_sync_run_case
+    from TestBase.sync_run_case import suite_sync_run_case
     pool.submit(suite_sync_run_case, pro_name=pro_name, browser_name=browser_name,
                 thread_num=thread_num, remote=cfg.REMOTE)
 
