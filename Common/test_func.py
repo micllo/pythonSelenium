@@ -5,6 +5,7 @@ import os
 from Common.com_func import send_mail, mkdir, send_DD, log
 from Config import env_config as cfg
 from dateutil import parser
+from Tools.date_helper import get_current_iso_date
 
 
 def generate_report(suite, title, description, tester, verbosity=1):
@@ -171,10 +172,8 @@ def start_case_run_status(pro_name, test_method_name):
     from Tools.mongodb import MongodbUtils
     with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:
         try:
-            now_str = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(time.time()))
-            ISODate = parser.parse(now_str)
             query_dict = {"test_method_name": test_method_name}
-            update_dict = {"$set": {"run_status": "running", "start_time": ISODate}}
+            update_dict = {"$set": {"run_status": "running", "start_time": get_current_iso_date()}}
             pro_db.update(query_dict, update_dict, multi=True)
         except Exception as e:
             mongo_exception_send_DD(e=e, msg="启动'" + pro_name + "'项目中的测试用例")

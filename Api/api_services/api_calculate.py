@@ -10,7 +10,7 @@ from Tools.mongodb import MongodbUtils
 from dateutil import parser
 import unittest
 from Config.pro_config import get_test_class_list_by_pro_name
-
+from Tools.date_helper import get_current_iso_date
 # sys.path.append("./")
 
 
@@ -78,8 +78,6 @@ def case_import_mongo(pro_name):
     test_class_list = get_test_class_list_by_pro_name(pro_name)
     if test_class_list:
         insert_list = []
-        now_str = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(time.time()))
-        ISODate = parser.parse(now_str)
         test_loader = unittest.TestLoader()
         for test_class in test_class_list:
             test_methods_name = test_loader.getTestCaseNames(test_class)
@@ -98,7 +96,7 @@ def case_import_mongo(pro_name):
                 test_case_dict["run_status"] = "stopping"
                 test_case_dict["start_time"] = "----"
                 test_case_dict["run_time"] = "----"
-                test_case_dict["create_time"] = ISODate
+                test_case_dict["create_time"] = get_current_iso_date()
                 insert_list.append(test_case_dict)
         # 将'测试用例'列表更新入对应项目的数据库中
         with MongodbUtils(ip=cfg.MONGODB_ADDR, database=cfg.MONGODB_DATABASE, collection=pro_name) as pro_db:

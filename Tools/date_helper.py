@@ -11,6 +11,7 @@ from dateutil.parser import parse
 from collections import OrderedDict
 from itertools import islice
 from datetime import timedelta
+from dateutil import parser
 tz = pytz.timezone(pytz.country_timezones('cn')[0])
 
 
@@ -25,6 +26,12 @@ def get_date_by_days(days=1, time_type="%Y-%m-%dT H:%M:%S"):
     # return (datetime.date.today() - timedelta(days=days)).strftime(time_type)
     # 格式化为 年 月 日 时 分 秒
     return (datetime.datetime.now() - timedelta(days=days)).strftime(time_type)
+
+
+def get_current_iso_date():
+    now_str = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(time.time()))
+    ISODate = parser.parse(now_str)
+    return ISODate
 
 
 # @return: 当前的datetime时间戳
