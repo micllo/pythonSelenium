@@ -97,7 +97,7 @@ def send_DD_after_test(error_type, report_name, is_at_all=False):
     :return:
 
     """
-    title = "[监控]WEB自动化"
+    title = "WEB自动化"
     text = "#### 在'" + report_name + "'测试报告中 存在'" + error_type + "'的用例\n\n ***测试报告地址***\n" + cfg.CURRENT_REPORT_URL
     send_DD(dd_group_id=cfg.DD_MONITOR_GROUP, title=title, text=text, at_phones=cfg.DD_AT_PHONES, is_at_all=is_at_all)
 
@@ -110,7 +110,6 @@ def send_DD_for_FXC(title, text):
     :return:
 
     """
-    title = "[监控]" + title
     send_DD(dd_group_id=cfg.DD_MONITOR_GROUP, title=title, text=text, at_phones=cfg.DD_AT_FXC, is_at_all=False)
 
 
@@ -121,7 +120,7 @@ def mongo_exception_send_DD(e, msg):
     :param msg:
     :return:
     """
-    title = "[监控]'mongo'操作通知"
+    title = "'mongo'操作通知"
     text = "#### WEB自动化测试'mongo'操作错误\n\n****操作方式：" + msg + "****\n\n****错误原因：" + str(e) + "****"
     send_DD(dd_group_id=cfg.DD_MONITOR_GROUP, title=title, text=text, at_phones=cfg.DD_AT_FXC, is_at_all=False)
 
