@@ -5,7 +5,7 @@ from types import MethodType
 from Common.com_func import log
 from Common.test_func import generate_report, send_DD_for_FXC, send_warning_after_test, is_exist_start_case, \
     stop_case_run_status, start_case_run_status
-
+from Tools.decorator_tools import async
 
 """
  [ 动态修改 suite.py 文件中 TestSuite 类中的 run 方法 ]
@@ -132,6 +132,7 @@ def new_run(self, result, debug=False):
     return result
 
 
+@async
 def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
     """
     同时执行不同用例（ 通过动态修改'suite.py'文件中'TestSuite'类中的'run'方法，使得每个线程中的结果都可以记录到测试报告中 ）

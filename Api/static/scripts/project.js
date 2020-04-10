@@ -231,7 +231,7 @@ function background_update_process(pro_name, nginx_api_proxy) {
 
 
 // // 将按钮禁灰不可点击
-// $("#stop_run_status").attr('disabled', 'true');
+// $("#stop_run_status").attr('disabled', true);
 //
 // // 改变当前结果状态
 // $("#stop_run_status_result").html(" 处 理 中 。。。");
@@ -244,3 +244,6 @@ function background_update_process(pro_name, nginx_api_proxy) {
 //
 // // 将按钮还原可点击
 // $("#stop_run_status").removeattr('disabled');
+// $("#stop_run_status").attr('disabled', false);
+
+// readonly

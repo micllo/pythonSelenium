@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-from concurrent.futures import ThreadPoolExecutor
 from Config import env_config as cfg
 from Common.com_func import log, is_null
 from Common.test_func import mongo_exception_send_DD
@@ -7,7 +6,6 @@ import os, time
 from Tools.mongodb import MongoGridFS
 from Tools.date_helper import get_date_by_days
 from Tools.mongodb import MongodbUtils
-from dateutil import parser
 import unittest
 from Config.pro_config import get_test_class_list_by_pro_name
 from Tools.date_helper import get_current_iso_date
@@ -27,10 +25,8 @@ def sync_run_case(pro_name, browser_name, thread_num):
     :param thread_num: 线程数
     :return:
     """
-    pool = ThreadPoolExecutor(1)
     from TestBase.sync_run_case import suite_sync_run_case
-    pool.submit(suite_sync_run_case, pro_name=pro_name, browser_name=browser_name,
-                thread_num=thread_num, remote=cfg.REMOTE)
+    suite_sync_run_case(pro_name=pro_name, browser_name=browser_name, thread_num=thread_num, remote=cfg.REMOTE)
 
 
 def clear_reports_logs(time):
@@ -152,7 +148,7 @@ def update_case_status_all(pro_name, case_status=False):
 
 def get_test_case(pro_name):
     """
-    根据项目测试用例列表（上线的排在前面）
+    根据项目获取测试用例列表（上线的排在前面）
     :param pro_name:
     :return: 返回值
     """
