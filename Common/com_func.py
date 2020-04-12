@@ -128,7 +128,7 @@ def send_DD(dd_group_id, title, text, at_phones, is_at_all=False):
             at_mobile_text += "@" + mobile + " "
         at_text += at_mobile_text
     data = {"msgtype": "markdown"}
-    data["markdown"] = {"title": "[监控]" + title, "text": text + at_text}
+    data["markdown"] = {"title": "[WEB监控] " + title, "text": text + at_text}
     data["at"] = {"atMobiles": at_mobiles, "isAtAll": at_all}
     dd_url = gv.DD_BASE_URL + dd_group_id
     log.info(data)

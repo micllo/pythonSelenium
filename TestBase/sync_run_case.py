@@ -58,7 +58,7 @@ def run_test_custom(self, test, result, debug, index):
     try:
         self.screen_shot_id_dict[test.screen_shot_id_list_name] = test.screen_shot_id_list
     except Exception as e:
-        send_DD_for_FXC(title="WEB自动化测试", text="#### 出现异常- 可能 远程浏览器监听未开启！！！")
+        send_DD_for_FXC(title=test.pro_name, text="#### 出现异常 - 可能 远程浏览器监听未开启！！！")
         log.error(str(e))
 
     if self._cleanup:
@@ -152,7 +152,7 @@ def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
       4.screen_shot_id_dict = { "测试类名.测试方法名":['aaa', 'bbb'], "测试类名.测试方法名":['cccc'] }
     """
     if is_exist_start_case(pro_name):
-        send_DD_for_FXC(title="WEB自动化测试", text="#### 可能在执行WEB自动化测试'定时任务'时 遇到 '" + pro_name +
+        send_DD_for_FXC(title=pro_name, text="#### 可能在执行WEB自动化测试'定时任务'时 遇到 '" + pro_name +
                                                "' 项目存在<运行中>的用例而未执行测试")
     else:
         # 将'测试类'中的所有'测试方法'添加到 suite 对象中（每个'测试类'实例对象包含一个'测试方法'）
@@ -182,7 +182,7 @@ def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
                 # 测试后发送预警
                 # send_warning_after_test(test_result, current_report_file)
             else:
-                send_DD_for_FXC(title="WEB自动化测试", text="#### 可能在执行WEB自动化测试'定时任务'时 遇到 '" + pro_name +
+                send_DD_for_FXC(title=pro_name, text="#### 可能在执行WEB自动化测试'定时任务'时 遇到 '" + pro_name +
                                                        "' 项目<没有上线>的用例而未执行测试")
 
 
