@@ -1,9 +1,9 @@
 # -*- coding:utf-8 -*-
 
 # 日志、报告、截图 等路径
-LOGS_PATH = "/opt/project/logs/"
-REPORTS_PATH = "/opt/project/reports/"
-SCREENSHOTS_PATH = "/opt/project/screenshots/"
+LOGS_DIR = "/opt/project/logs/"
+REPORTS_DIR = "/opt/project/reports/"
+SCREENSHOTS_DIR = "/opt/project/screenshots/"
 
 # 服务器地址
 # SERVER_IP_PORT = "192.168.3.102"  #  MERCURY_1602
@@ -31,8 +31,6 @@ GULP_TEMPLATE_PATH = '../Build/templates'
 
 # 测试报告地址
 BASE_REPORT_PATH = "http://" + SERVER_IP + ":" + NGINX_PORT + "/test_report/"
-CURRENT_REPORT_URL = BASE_REPORT_PATH + "report.html"
-HISTORY_REPORT_PATH = BASE_REPORT_PATH + "history/"
 
 # 接口地址
 API_ADDR = SERVER_IP + ":" + NGINX_PORT + "/" + NGINX_API_PROXY

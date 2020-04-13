@@ -26,7 +26,7 @@ class Config(object):
         {
             'id': 'clear_reports_logs',
             'func': 'Api.api_services.api_calculate:clear_reports_logs',
-            'args': [60],
+            'args': [10, "pro_demo_1"],
             'trigger': 'interval',
             'seconds': 60
             # 测试使用
@@ -53,7 +53,7 @@ class Config(object):
     #     {
     #         'id': 'clear_reports_logs',
     #         'func': 'Api.api_services.api_calculate:clear_reports_logs',
-    #         'args': [7],
+    #         'args': [7, "pro_demo_1"],
     #         'trigger': 'cron',
     #         'day_of_week': '0',
     #         'hour': 10,

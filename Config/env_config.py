@@ -1,9 +1,9 @@
 # -*- coding:utf-8 -*-
 
 # 日志、报告、截图 等路径
-LOGS_PATH = "/Users/micllo/Documents/works/GitHub/pythonSelenium/Logs/"
-REPORTS_PATH = "/Users/micllo/Documents/works/GitHub/pythonSelenium/Reports/"
-SCREENSHOTS_PATH = "/Users/micllo/Documents/works/GitHub/pythonSelenium/Screenshots/"
+LOGS_DIR = "/Users/micllo/Documents/works/GitHub/pythonSelenium/Logs/"
+REPORTS_DIR = "/Users/micllo/Documents/works/GitHub/pythonSelenium/Reports/"
+SCREENSHOTS_DIR = "/Users/micllo/Documents/works/GitHub/pythonSelenium/Screenshots/"
 
 # 服务器地址
 SERVER_IP = "127.0.0.1"
@@ -30,8 +30,6 @@ GULP_TEMPLATE_PATH = '../Build/templates'
 
 # 测试报告地址
 BASE_REPORT_PATH = "http://" + SERVER_IP + ":" + NGINX_PORT + "/test_report_local/"
-CURRENT_REPORT_URL = BASE_REPORT_PATH + "report.html"
-HISTORY_REPORT_PATH = BASE_REPORT_PATH + "history/"
 
 # 接口地址( uwsgi )
 API_ADDR = SERVER_IP + ":" + NGINX_PORT + "/" + NGINX_API_PROXY

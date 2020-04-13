@@ -4,7 +4,7 @@ import json
 from Config.error_mapping import *
 from Api.api_services.api_template import interface_template
 from Api.api_services.api_calculate import *
-from Common.com_func import is_null, log
+from Common.com_func import is_null
 from Common.test_func import is_exist_start_case, is_exist_online_case
 from Tools.mongodb import MongoGridFS
 from Config import env_config as cfg
@@ -32,8 +32,8 @@ def get_test_case_list(pro_name):
     result_dict["nginx_api_proxy"] = cfg.NGINX_API_PROXY
     result_dict["pro_name"] = pro_name
     result_dict["test_case_list"] = get_test_case(pro_name)
-    result_dict["current_report_url"] = cfg.CURRENT_REPORT_URL
-    result_dict["history_report_path"] = cfg.HISTORY_REPORT_PATH
+    result_dict["current_report_url"] = cfg.BASE_REPORT_PATH + pro_name + "/[WEB_report]" + pro_name + ".html"
+    result_dict["history_report_path"] = cfg.BASE_REPORT_PATH + pro_name + "/history/"
     result_dict["is_run"] = is_exist_start_case(pro_name)
     result_dict["progress_info"] = get_progress_info(pro_name)
     return render_template('project.html', tasks=result_dict)

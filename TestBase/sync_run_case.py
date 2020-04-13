@@ -176,7 +176,7 @@ def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
                 suite.run = MethodType(new_run, suite)
 
                 # 运行测试，并生成测试报告
-                test_result, current_report_file = generate_report(suite=suite, title='WEB自动化测试报告 - ' + pro_name,
+                test_result, current_report_file = generate_report(pro_name=pro_name, suite=suite, title='WEB自动化测试报告 - ' + pro_name,
                                                                    description='详细测试用例结果', tester="自动化测试", verbosity=2)
 
                 # 测试后发送预警

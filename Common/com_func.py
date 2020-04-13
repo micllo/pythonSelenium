@@ -159,7 +159,7 @@ def send_DD(dd_group_id, title, text, at_phones, is_at_all=False):
 
 if __name__ == "__main__":
     pass
-    # attach_file = cfg.REPORTS_PATH + "report.html"
+    # attach_file = cfg.REPORTS_DIR + "report.html"
     # send_mail(subject="测试发送", content="测试内容。。。。", to_list=cfg.MAIL_LIST, attach_file=attach_file)
 
     # print("项目路径：" + project_path())

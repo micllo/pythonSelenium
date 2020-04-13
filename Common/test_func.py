@@ -8,10 +8,11 @@ from dateutil import parser
 from Tools.date_helper import get_current_iso_date
 
 
-def generate_report(suite, title, description, tester, verbosity=1):
+def generate_report(pro_name, suite, title, description, tester, verbosity=1):
     """
     生 成 测 试 报 告
     备注：每次生成的报告都存放在../logs/history/中，同时替换../logs/下的report.html
+    :param pro_name:
     :param suite: suite 实例对象（包含了所有的测试用例实例，即继承了'unittest.TestCase'的子类的实例对象 test_instance ）
     :param title:
     :param description:
@@ -30,17 +31,18 @@ def generate_report(suite, title, description, tester, verbosity=1):
     print("+++++++++++++++++++++++++++++++++++")
 
     now = time.strftime("%Y-%m-%d_%H_%M_%S", time.localtime(time.time()))
-    current_report_name = now + ".html"
-    history_report_path = cfg.REPORTS_PATH + "history/"
+    current_report_name = "[WEB_report]" + pro_name + "[" + now + "].html"
+    pro_report_path = cfg.REPORTS_DIR + pro_name + "/"
+    history_report_path = pro_report_path + "/history/"
     mkdir(history_report_path)
     current_report_file = history_report_path + current_report_name
     with open(current_report_file, 'wb') as fp:
         runner = HTMLTestRunner(stream=fp, title=title, description=description, tester=tester, verbosity=verbosity)
         test_result = runner.run(suite)
 
-    # 将最新报告替换../logs/下的report.html
-    res = os.system("cp " + current_report_file + " " + cfg.REPORTS_PATH + " && "
-                    "mv " + cfg.REPORTS_PATH + current_report_name + " " + cfg.REPORTS_PATH + "report.html")
+    # 将最新报告替换../Reports/{{pro_name}}/下的[WEB_report]{{pro_name}}.html
+    res = os.system("cp " + current_report_file + " " + pro_report_path + " && "
+                    "mv " + pro_report_path + current_report_name + " " + pro_report_path + "[WEB_report]" + pro_name + ".html")
     if res != 0:
         log.error("测试报告替换操作有误！")
 

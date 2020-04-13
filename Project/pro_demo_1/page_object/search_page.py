@@ -12,15 +12,15 @@ class SearchPage(Base):
 
     # '出发城市'输入框
     def search_leave(self):
-        return self.find_ele(By.ID, "notice01")
+        return self.find_ele(By.ID, "departCityName")
 
     # '到达城市'输入框
     def search_arrive(self):
-        return self.find_ele(By.ID, "notice08")
+        return self.find_ele(By.ID, "arriveCityName")
 
     # '出发时间'控件
     def search_date(self):
-        return self.find_ele(By.ID, "dateObj")
+        return self.find_ele(By.ID, "departDate")
 
     # '单程'tab控件
     def search_current(self):
@@ -28,7 +28,7 @@ class SearchPage(Base):
 
     # '开始搜索'按钮
     def search_btn(self):
-        return self.find_ele(By.ID, "searchbtn3333")
+        return self.find_ele(By.ID, "searchbtn")
 
     # 通过js为'出发时间'控件赋值
     def search_js(self, value):

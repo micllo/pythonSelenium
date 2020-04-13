@@ -116,7 +116,7 @@ class Base(object):
         :param case_instance: 测试类实例对象
         :return:
         """
-        current_test_path = cfg.SCREENSHOTS_PATH + case_instance.class_method_path  # ../类名/方法名/
+        current_test_path = cfg.SCREENSHOTS_DIR + case_instance.pro_name + "/" + case_instance.class_method_path  # ../类名/方法名/
         mkdir(current_test_path)
         self.driver.save_screenshot(current_test_path + image_name)
         mgf = MongoGridFS()

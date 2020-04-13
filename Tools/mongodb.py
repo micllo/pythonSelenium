@@ -171,7 +171,7 @@ if __name__ == '__main__':
     #     print(res)
     #     print(monitor_db)
 
-    img_file_full = cfg.SCREENSHOTS_PATH + "TrainTest/test_ctrip/search_train_1.png"
+    img_file_full = cfg.SCREENSHOTS_DIR + "TrainTest/test_ctrip/search_train_1.png"
     mgf = MongoGridFS()
     # mgf.upload_file(img_file_full)
     mgf.get_base64_by_id("5e61152ff0dd77751382563f")

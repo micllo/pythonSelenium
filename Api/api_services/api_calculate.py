@@ -29,16 +29,17 @@ def sync_run_case(pro_name, browser_name, thread_num):
     suite_sync_run_case(pro_name=pro_name, browser_name=browser_name, thread_num=thread_num, remote=cfg.REMOTE)
 
 
-def clear_reports_logs(time):
+def clear_reports_logs(time, pro_name):
     """
     删除指定时间之前 生成的报告和日志
       -mmin +1 -> 表示1分钟前的
       -mtime +1 -> 表示1天前的
     :param time:
+    :param pro_name:
     :return:
     """
-    rm_log_cmd = "find '" + cfg.LOGS_PATH + "' -name '*.log' -mmin +" + str(time) + " -type f -exec rm -rf {} \\;"
-    rm_report_cmd = "find '" + cfg.REPORTS_PATH + "history' -name '*.html' -mmin +" + str(time) + \
+    rm_log_cmd = "find '" + cfg.LOGS_DIR + "' -name '*.log' -mmin +" + str(time) + " -type f -exec rm -rf {} \\;"
+    rm_report_cmd = "find '" + cfg.REPORTS_DIR + pro_name + "/history' -name '*.html' -mmin +" + str(time) + \
                     " -type f -exec rm -rf {} \\;"
     print(rm_log_cmd)
     print(rm_report_cmd)

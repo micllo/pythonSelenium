@@ -21,7 +21,7 @@ class FrameLog(object):
             # 指定日志 存放路径 和 名称
             # self.log_path = project_path() + "Logs/"
             self.log_time = time.strftime("%Y_%m_%d_")
-            self.log_name = cfg.LOGS_PATH + self.log_time + 'log.log'
+            self.log_name = cfg.LOGS_DIR + self.log_time + 'log.log'
             # print("日志路径：" + self.log_name)
 
             # 【 创建 handler <处理器>, 写入日志文件 <fh>、终端输出 <ch> 】
