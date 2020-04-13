@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 import logging,time
-from Config import env_config as cfg
+from Env import env_config as cfg
 
 
 class FrameLog(object):

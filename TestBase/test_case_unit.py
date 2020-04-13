@@ -4,9 +4,8 @@ from TestBase.browser_action import get_driver_func
 from Common.com_func import log
 from Config import global_var as gv
 from Tools.mongodb import MongodbUtils
-from Config import env_config as cfg
+from Env import env_config as cfg
 from Common.test_func import mongo_exception_send_DD
-import time
 
 
 class ParaCase(unittest.TestCase):

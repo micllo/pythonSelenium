@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 import os, configparser
-import threading
 from Tools.log import FrameLog
 import pandas as pd
 import numpy as np
@@ -9,7 +8,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import smtplib
 import traceback
-from Config import env_config as cfg
+from Env import env_config as cfg
 from Config import global_var as gv
 import requests
 import json

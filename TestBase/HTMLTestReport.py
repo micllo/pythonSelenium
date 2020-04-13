@@ -9,13 +9,10 @@ __version__ = "0.8.2.2"
 
 import datetime
 import io
-import sys
-import time
 import unittest
 from xml.sax import saxutils
 import sys
-from Common.com_func import log
-from Config import env_config as cfg
+from Env import env_config as cfg
 import requests
 
 

@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
-from Config import env_config as cfg
+from Env import env_config as cfg
 from Common.com_func import log, is_null
 from Common.test_func import mongo_exception_send_DD
-import os, time
+import os
 from Tools.mongodb import MongoGridFS
 from Tools.date_helper import get_date_by_days
 from Tools.mongodb import MongodbUtils

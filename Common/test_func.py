@@ -3,7 +3,7 @@ from TestBase.HTMLTestReport import HTMLTestRunner
 import time
 import os
 from Common.com_func import send_mail, mkdir, send_DD, log
-from Config import env_config as cfg
+from Env import env_config as cfg
 from dateutil import parser
 from Tools.date_helper import get_current_iso_date
 

@@ -69,8 +69,8 @@ def server_action():
             run("cp -r " + pro_name + " /opt/project/", warn_only=True)
             run("rm -r /etc/uwsgi/vassals/*.ini", warn_only=True)
             run("cp -r /opt/project/" + pro_name + "/vassals/*.ini /etc/uwsgi/vassals/", warn_only=True)
-        # 替换config配置文件
-        with cd("/opt/project/" + pro_name + "/Config"):
+        # 替换env环境配置文件
+        with cd("/opt/project/" + pro_name + "/Env"):
             run("rm -r env_config.py && mv env_config_docker.py env_config.py", warn_only=True)
 
         # 启动'mongo、nginx、uwsgi'服务

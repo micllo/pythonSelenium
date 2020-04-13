@@ -1,3 +1,4 @@
+
 【 用 例 编 写 注 意 事 项 】
 1.在'Project'下创建'项目名称'目录：Project > pro_demo_1
 2.在'项目名称'目录下创建两个目录：page_object、test_case
@@ -27,7 +28,7 @@
 
 4.访问地址（ uwsgi 启动 ）：
 （1）用例页面 -> http://localhost:8900/api_local/WEB/index
-（2）测试报告 -> http://127.0.0.1:8070/test_report_local/report.html
+（2）测试报告 -> http://127.0.0.1:8070/test_report_local/<pro_name>/[WEB_report]<pro_name>.html
 （3）接口地址 -> http://127.0.0.1:8070/api_local/
                http://127.0.0.1:8070/api_local/WEB/sync_run_case
                http://127.0.0.1:8070/api_local/WEB/get_img/5e5cac9188121299450740b3
@@ -77,11 +78,11 @@ MAC本地安装的 nginx 相关路径
 （2）./pythonSelenium/vassals/app_uwsgi.ini -> /etc/uwsgi/vassals/app_uwsgi.ini
 
 5.部署时相关配置文件的替换操作：
-（1）将./Config/目录下的 env_config.py 删除
-（2）将./Config/目录下的 env_config_docker.py 重命名为 env_config.py
+（1）将./Env/目录下的 env_config.py 删除
+（2）将./Env/目录下的 env_config_docker.py 重命名为 env_config.py
 
 6.访问地址（ Docker 内部 ）：
-（1）测试报告 -> http://127.0.0.1:80/test_report/report.html
+（1）测试报告 -> http://127.0.0.1:80/test_report/<pro_name>/[WEB_report]<pro_name>.html
 （2）接口地址 -> http://127.0.0.1:80/api/
                http://127.0.0.1:80/api/WEB/sync_run_case
                http://127.0.0.1:80/api/WEB/get_img/5e5cac9188121299450740b3
@@ -89,7 +90,7 @@ MAC本地安装的 nginx 相关路径
 
 7.访问地址（ 外部访问 ）：
 （1）用例页面 -> http://192.168.31.10:1080/api/WEB/index
-（2）测试报告 -> http://192.168.31.10:1080/test_report/report.html
+（2）测试报告 -> http://192.168.31.10:1080/test_report/<pro_name>/[WEB_report]<pro_name>.html
 （3）接口地址 -> http://192.168.31.10:1080/api/
                http://192.168.31.10:1080/api/WEB/sync_run_case
                http://192.168.31.10:1080/api/WEB/get_img/5e5cac9188121299450740b3
@@ -125,12 +126,13 @@ MAC本地安装的 nginx 相关路径
  1.Api层：       对外接口、原静态文件
  2.Build层：     编译后的静态文件
  3.Common层：    通用方法、测试方法
- 4.Config层：    环境配置、错误码映射、全局变量、定时任务、项目配置、测试地址配置
+ 4.Config层：    错误码映射、全局变量、定时任务、项目配置、测试地址配置
  5.Data层：      相关测试数据
- 6.Project层：   区分不同项目、page_object(页面操作方法、元素定位)、test_case(测试用例)
- 7.TestBase层：  封装了浏览器驱动操作方法、提供'测试用例'父类第基础方法(继承’unittest.TestCase')、测试报告生成、同步执行用例方法
- 8.Tools层：     工具函数
- 9.其他：
+ 6.Env层：       环境配置
+ 7.Project层：   区分不同项目、page_object(页面操作方法、元素定位)、test_case(测试用例)
+ 8.TestBase层：  封装了浏览器驱动操作方法、提供'测试用例'父类第基础方法(继承’unittest.TestCase')、测试报告生成、同步执行用例方法
+ 9.Tools层：     工具函数
+ 10.其他：
  （1）vassals/ -> 服务器的'uWSGI配置'
  （2）vassals_local/、venv/ -> 本地的'uWSGI配置、python3虚拟环境'
  （3）Logs/、Reports/、Screenshot/ -> 临时生产的 日志、报告、截图
