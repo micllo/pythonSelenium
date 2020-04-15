@@ -11,6 +11,9 @@ SERVER_IP = "127.0.0.1"
 # Nginx 端口
 NGINX_PORT = "8070"
 
+# Mongo 端口
+MONGO_PORT = "27017"
+
 # Nginx中的接口反向代理名称
 NGINX_API_PROXY = "api_local"
 
@@ -39,7 +42,7 @@ API_ADDR = SERVER_IP + ":" + NGINX_PORT + "/" + NGINX_API_PROXY
 GRID_REMOTE_ADDR = SERVER_IP + ":5555"  # docker
 
 # mongo 数据库
-MONGODB_ADDR = SERVER_IP + ":27017"
+MONGODB_ADDR = SERVER_IP + ":" + MONGO_PORT
 MONGODB_DATABASE = "web_auto_test"
 
 # 报错邮箱地址

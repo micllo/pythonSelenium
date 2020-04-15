@@ -27,7 +27,7 @@
                http://127.0.0.1:8082/WEB/get_img/5e5cac9188121299450740b3
 
 4.访问地址（ uwsgi 启动 ）：
-（1）用例页面 -> http://localhost:8900/api_local/WEB/index
+（1）用例页面 -> http://localhost:8070/api_local/WEB/index
 （2）测试报告 -> http://127.0.0.1:8070/test_report_local/<pro_name>/[WEB_report]<pro_name>.html
 （3）接口地址 -> http://127.0.0.1:8070/api_local/
                http://127.0.0.1:8070/api_local/WEB/sync_run_case

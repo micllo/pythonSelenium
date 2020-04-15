@@ -12,6 +12,9 @@ SERVER_IP = "192.168.31.10"  # Demba Ba_5G
 # Nginx 端口
 NGINX_PORT = "1080"
 
+# Mongo 端口
+MONGO_PORT = "27027"
+
 # Nginx中的接口反向代理名称
 NGINX_API_PROXY = "api"
 
@@ -40,7 +43,7 @@ API_ADDR = SERVER_IP + ":" + NGINX_PORT + "/" + NGINX_API_PROXY
 GRID_REMOTE_ADDR = SERVER_IP + ":5555"  # docker
 
 # mongo 数据库
-MONGODB_ADDR = SERVER_IP + ":27027"
+MONGODB_ADDR = SERVER_IP + ":" + MONGO_PORT
 MONGODB_DATABASE = "web_auto_test"
 
 # 报错邮箱地址
