@@ -3,7 +3,7 @@ import os, sys
 # 将项目根路径添加入path
 # sys.path.append(os.path.split(os.getcwd())[0])
 import time
-from Common.com_func import get_config_ini
+from Common.com_func import get_config_ini, log
 from TestBase.test_case_unit import ParaCase
 from TestBase.browser_action import Base
 
@@ -14,6 +14,9 @@ class DemoTest(ParaCase):
 
     def test_demo_01(self):
         """ demo 测 试 用 例 test_demo_01  """
+        log.info("user(test_demo_01): " + self.user)
+        log.info("passwd(test_demo_01): " + self.passwd)
+
         self.driver.get(get_config_ini("test_url", "baidu_url"))
         self.driver.find_element_by_id("kw").send_keys("test_demo_01")
         self.driver.find_element_by_id("su").click()
@@ -22,6 +25,9 @@ class DemoTest(ParaCase):
 
     def test_demo_02(self):
         """ demo 测 试 用 例 test_demo_02  """
+        log.info("user(test_demo_02): " + self.user)
+        log.info("passwd(test_demo_02): " + self.passwd)
+
         self.driver.get(get_config_ini("test_url", "baidu_url"))
         self.driver.find_element_by_id("kw").send_keys("test_demo_02")
         self.driver.find_element_by_id("su").click()

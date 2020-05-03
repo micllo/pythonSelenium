@@ -26,3 +26,23 @@ def pro_exist(pro_name):
         return True
     else:
         return False
+
+
+def get_login_accout(thread_name_index):
+    """
+    通过线程名的索引 获取登录账号
+    :param thread_name_index:
+    :return:
+    """
+    if thread_name_index == 1:
+        return "user_1", "passwd_1"
+    elif thread_name_index == 2:
+        return "user_2", "passwd_2"
+    elif thread_name_index == 3:
+        return "user_3", "passwd_3"
+    elif thread_name_index == 4:
+        return "user_4", "passwd_4"
+    elif thread_name_index == 5:
+        return "user_5", "passwd_5"
+    else:
+        return "user_6", "passwd_6"

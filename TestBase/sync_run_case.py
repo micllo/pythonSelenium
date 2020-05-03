@@ -6,6 +6,8 @@ from Common.com_func import log
 from Common.test_func import generate_report, send_DD_for_FXC, send_warning_after_test, is_exist_start_case, \
     stop_case_run_status, start_case_run_status
 from Tools.decorator_tools import async
+import threading
+
 
 """
  [ 动态修改 suite.py 文件中 TestSuite 类中的 run 方法 ]
@@ -48,6 +50,11 @@ def run_test_custom(self, test, result, debug, index):
     """
     # 启动测试用例：设置用例的'运行状态=running'和'开始时间'
     start_case_run_status(pro_name=test.pro_name, test_method_name=test.test_method)
+
+    # 获取当前线程名称 -> ThreadPoolExecutor-1_0
+    thread_name = threading.currentThread().getName()
+    # 获取当前线程名称索引+1，并赋值给实例对象的属性
+    test.thread_name_index = int(thread_name.split("_")[1]) + 1
 
     if not debug:
         test(result)

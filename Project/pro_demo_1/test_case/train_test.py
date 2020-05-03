@@ -3,7 +3,7 @@ import os, sys
 # 将项目根路径添加入path
 sys.path.append(os.path.split(os.getcwd())[0])
 import time
-from Common.com_func import get_config_ini, project_path
+from Common.com_func import get_config_ini, project_path, log
 from Tools.excel_data import read_excel
 from Project.pro_demo_1.page_object.search_page import SearchPage
 from Project.pro_demo_1.page_object.baidu_page import BaiduPage
@@ -31,6 +31,9 @@ class TrainTest(ParaCase):
 
     def test_01(self):
         """ 测 试 用 例 test_01  """
+        log.info("user(test_01): " + self.user)
+        log.info("passwd(test_01): " + self.passwd)
+
         self.driver.get(get_config_ini("test_url", "baidu_url"))
         self.driver.find_element_by_id("kw").send_keys("test_01")
         self.driver.find_element_by_id("su").click()
@@ -39,6 +42,9 @@ class TrainTest(ParaCase):
 
     def test_02(self):
         """ 测 试 用 例 test_02  """
+        log.info("user(test_02): " + self.user)
+        log.info("passwd(test_02): " + self.passwd)
+
         self.driver.get(get_config_ini("test_url", "baidu_url"))
         self.driver.find_element_by_id("kw").send_keys("test_01")
         self.driver.find_element_by_id("su").click()
@@ -47,10 +53,12 @@ class TrainTest(ParaCase):
 
     def test_ctrip(self):
         """ 携 程 订 票 测 试 用 例 test_ctrip  """
+        log.info("user(test_ctrip): " + self.user)
+        log.info("passwd(test_ctrip): " + self.passwd)
+
         # 根据不同用例特定自定义设置（也可以不设置）
         self.driver.set_window_size(width=2000, height=1300)
         self.driver.implicitly_wait(5)
-
         # 打开测试页面(设置浏览器大小)
         self.driver.get(get_config_ini("test_url", "ctrip_url"))
         search_page = SearchPage(self.driver)
@@ -58,6 +66,9 @@ class TrainTest(ParaCase):
 
     def test_baidu(self):
         """ 测 试 用 例 test_baidu  """
+        log.info("user(test_baidu): " + self.user)
+        log.info("passwd(test_baidu): " + self.passwd)
+
         self.driver.get(get_config_ini("test_url", "baidu_url"))
         baidu_page = BaiduPage(self.driver)
         res_url = baidu_page.search_func("selenium", self)
@@ -66,9 +77,11 @@ class TrainTest(ParaCase):
 
     def test_page_load(self):
         """  页 面 加 载 测 试  """
+        log.info("user(test_page_load): " + self.user)
+        log.info("passwd(test_page_load): " + self.passwd)
+
         test_url = "https://www.163.com/"
         Base.get_page_with_time_out(self, test_url, 2)
-
         self.driver.find_element_by_xpath("//*[@id='app_list']/li[1]/a").click()
         time.sleep(3)
         self.assertTrue(Base.content_is_exist(self, "网易新闻", 5), "test_page_load 页面内容没有找到！")

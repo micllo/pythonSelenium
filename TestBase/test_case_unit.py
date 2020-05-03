@@ -24,12 +24,11 @@ class ParaCase(unittest.TestCase):
         self.log = log
         self.pro_name = pro_name
         self.test_method = test_method
-        self.browser_name = browser_name
-        self.remote = remote
+        self.driver_func = get_driver_func(browser_name=browser_name, remote=remote)
+        self.thread_name_index = 0  # 记录当前线程名的索引（目的：不同线程使用不同的登录账号）
 
     def setUp(self):
-        driver_func = get_driver_func(browser_name=self.browser_name, remote=self.remote)
-        self.driver = driver_func()
+        self.driver = self.driver_func()
         self.driver.implicitly_wait(gv.IMPLICITY_WAIT)
         self.driver.set_page_load_timeout(gv.PAGE_LOAD_TIME)  # 页面加载超时
         # 截图ID列表
@@ -38,12 +37,20 @@ class ParaCase(unittest.TestCase):
         self.screen_shot_id_list_name = self.__class__.__name__ + "." + self.test_method
         # 获取当前的'类名/方法名/'(提供截屏路径)
         self.class_method_path = self.__class__.__name__ + "/" + self.test_method + "/"
+        # 通过线程名的索引 获取登录账号
+        from Config.pro_config import get_login_accout
+        self.user, self.passwd = get_login_accout(self.thread_name_index)
+
         # self.driver.maximize_window()
         # self.driver.set_window_size(width=2000, height=1300)
         # self.driver.set_script_timeout()  # 页面异步js执行超时
 
     def tearDown(self):
         self.driver.quit()
+
+
+
+
 
     @staticmethod
     def get_online_case_to_suite(pro_name, browser_name="Chrome", remote=False, driver=None):

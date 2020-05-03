@@ -127,7 +127,7 @@ function run_case(pro_name, nginx_api_proxy) {
         if (isConfirm) {
             // 调用ajax请求(同步)
             var request_url = "/" + nginx_api_proxy + "/WEB/sync_run_case/" + pro_name
-            var data_dict = {"browser_name": "Chrome", "thread_num": 2}
+            var data_dict = {"browser_name": "Chrome", "thread_num": 4}
             var response_info = request_interface_url_v2(url=request_url, method="POST", data=data_dict, async=false);
             if(response_info == "请求失败"){
                 swal({text: response_info, type: "error", confirmButtonText: "知道了"});
