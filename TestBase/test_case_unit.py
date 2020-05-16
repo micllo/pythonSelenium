@@ -24,19 +24,18 @@ class ParaCase(unittest.TestCase):
         self.log = log
         self.pro_name = pro_name
         self.test_method = test_method
-        self.driver_func = get_driver_func(browser_name=browser_name, remote=remote)
+        self.screen_shot_id_list = []  # 截图ID列表
+        self.screen_shot_id_list_name = self.__class__.__name__ + "." + test_method  # 截图ID列表名称
+        self.class_method_path = self.__class__.__name__ + "/" + test_method + "/"  # 获取当前的'类名/方法名/'(提供截屏路径)
+        self.driver_func = get_driver_func(pro_name=pro_name, browser_name=browser_name, remote=remote)  # 获取浏览器驱动方法
         self.thread_name_index = 0  # 记录当前线程名的索引（目的：不同线程使用不同的登录账号）
 
     def setUp(self):
+        # 启动浏览器驱动
         self.driver = self.driver_func()
         self.driver.implicitly_wait(gv.IMPLICITY_WAIT)
         self.driver.set_page_load_timeout(gv.PAGE_LOAD_TIME)  # 页面加载超时
-        # 截图ID列表
-        self.screen_shot_id_list = []
-        # 截图ID列表名称
-        self.screen_shot_id_list_name = self.__class__.__name__ + "." + self.test_method
-        # 获取当前的'类名/方法名/'(提供截屏路径)
-        self.class_method_path = self.__class__.__name__ + "/" + self.test_method + "/"
+
         # 通过线程名的索引 获取登录账号
         from Config.pro_config import get_login_accout
         self.user, self.passwd = get_login_accout(self.thread_name_index)
@@ -47,10 +46,6 @@ class ParaCase(unittest.TestCase):
 
     def tearDown(self):
         self.driver.quit()
-
-
-
-
 
     @staticmethod
     def get_online_case_to_suite(pro_name, browser_name="Chrome", remote=False, driver=None):

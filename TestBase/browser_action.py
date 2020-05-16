@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from selenium import webdriver
 from Common.com_func import project_path, log, mkdir
+from Common.test_func import send_DD_for_FXC
 from selenium.webdriver import DesiredCapabilities
 from Env import env_config as cfg
 from selenium.common.exceptions import TimeoutException
@@ -10,7 +11,7 @@ from Tools.mongodb import MongoGridFS
 
 
 # 获取 浏览器驱动函数（闭包）目的：延迟执行该函数
-def get_driver_func(browser_name, remote=False):
+def get_driver_func(pro_name, browser_name, remote=False):
     def browser_driver():
         try:
             if remote:
@@ -27,8 +28,14 @@ def get_driver_func(browser_name, remote=False):
                     return webdriver.Chrome()
         except Exception as e:
             log.error(("显示异常：" + str(e)))
-            log.error("远程浏览器监听未开启！！！")
-            raise Exception("远程浏览器监听未开启")
+            if "Failed to establish a new connection" in str(e):
+                send_DD_for_FXC(title=pro_name, text="#### Selenium Hub 服务未启动 ！")
+                raise Exception("Selenium Hub 服务未启动")
+            elif "Error forwarding the new session" in str(e):
+                send_DD_for_FXC(title=pro_name, text="#### Selenium Node 服务未启动 ！")
+                raise Exception("Selenium Node 服务未启动")
+            else:
+                raise Exception("Selenium 服务的其他异常")
     return browser_driver
 
 

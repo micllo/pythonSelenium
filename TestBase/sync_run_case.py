@@ -62,11 +62,7 @@ def run_test_custom(self, test, result, debug, index):
         test.debug()
 
     # (self)实例对象'suite'<TestSuite> 为每个执行完毕的(test)'测试用例'实例 保存'截图ID列表'
-    try:
-        self.screen_shot_id_dict[test.screen_shot_id_list_name] = test.screen_shot_id_list
-    except Exception as e:
-        send_DD_for_FXC(title=test.pro_name, text="#### 出现异常 - 可能 远程浏览器监听未开启！！！")
-        log.error(str(e))
+    self.screen_shot_id_dict[test.screen_shot_id_list_name] = test.screen_shot_id_list
 
     if self._cleanup:
         self._removeTestAtIndex(index)

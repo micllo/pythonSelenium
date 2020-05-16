@@ -50,6 +50,45 @@ MAC本地安装的 nginx 相关路径
 默认配置文件路径：/usr/local/etc/nginx/
 启动命令：sudo nginx
 
+【 python_selenium.conf 】
+
+upstream api_server_WEB{
+  server 127.0.0.1:8081 weight=1 max_fails=2 fail_timeout=30s;
+  ip_hash;
+}
+
+server {
+  listen 8070;
+  server_name localhost;
+
+  location /test_report_local/ {
+        sendfile off;
+        expires off;
+        gzip on;
+        gzip_min_length 1000;
+        gzip_buffers 4 8k;
+        gzip_types application/json application/javascript application/x-javascript text/css application/xml;
+        add_header Cache-Control no-cache;
+        add_header Cache-Control 'no-store';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header REMOTE-HOST $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        alias /Users/micllo/Documents/works/GitHub/pythonSelenium/Reports/;
+       }
+
+  location /api_local/ {
+         proxy_set_header Host $host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header REMOTE-HOST $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504 http_404;
+         proxy_pass http://api_server_WEB/;
+         #proxy_pass http://127.0.0.1:8081/;
+         proxy_redirect default;
+  }
+}
 
 ########################################################################################################################
 
@@ -182,4 +221,5 @@ MAC本地安装的 nginx 相关路径
 （1）配置本地启动的相关服务，实现一键启动或停止
 （2）编译静态文件，防止浏览器缓存js问题
 （3）实时监听本地调试页面功能
+
 
