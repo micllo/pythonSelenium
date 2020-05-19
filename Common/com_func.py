@@ -25,7 +25,7 @@ def is_null(tgt):
     :param tgt: 输入的string或者unicode
     :return: boolean
     """
-    if tgt not in NULL_LIST and not pd.isnull(tgt):
+    if tgt not in NULL_LIST:
         isnull_res = False
     else:
         isnull_res = True

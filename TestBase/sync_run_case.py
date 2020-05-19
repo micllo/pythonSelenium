@@ -2,7 +2,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from unittest.suite import _isnotsuite
 from types import MethodType
-from Common.com_func import log
+from Common.com_func import log, is_null
 from Common.test_func import generate_report, send_DD_for_FXC, send_warning_after_test, is_exist_start_case, \
     stop_case_run_status, start_case_run_status
 from Tools.decorator_tools import async
@@ -163,8 +163,9 @@ def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
     suite, on_line_test_method_name_list = ParaCase.get_online_case_to_suite(pro_name=pro_name, browser_name=browser_name, remote=remote)
 
     if suite != "mongo error":
-        if on_line_test_method_name_list:
-
+        if is_null(on_line_test_method_name_list):
+            send_DD_for_FXC(title=pro_name, text="#### '" + pro_name + "' 项目<没有上线>的用例而未执行测试（定时任务）")
+        else:
             # 为实例对象'suite'<TestSuite>动态添加一个属性'screen_shot_id_dict'（目的：保存截图ID）
             setattr(suite, "screen_shot_id_dict", {})
 
@@ -184,12 +185,9 @@ def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
 
             # 测试后发送预警
             # send_warning_after_test(test_result, current_report_file)
-        else:
-            send_DD_for_FXC(title=pro_name, text="#### '" + pro_name + "' 项目<没有上线>的用例而未执行测试（定时任务）")
 
 
 if __name__ == "__main__":
     suite_sync_run_case(pro_name="pro_demo_1", browser_name="Chrome", thread_num=3, remote=False)
     # suite_sync_run_case(pro_name="pro_demo_1", browser_name="Firefox", thread_num=3, remote=False)
-
 
