@@ -31,9 +31,8 @@ class ParaCase(unittest.TestCase):
         self.thread_name_index = 0  # 记录当前线程名的索引（目的：不同线程使用不同的登录账号）
 
     def setUp(self):
-        # 启动浏览器驱动
-        self.driver = self.driver_func()
-        self.driver.implicitly_wait(gv.IMPLICITY_WAIT)
+        self.driver = self.driver_func()  # 启动浏览器驱动
+        self.driver.implicitly_wait(gv.IMPLICITY_WAIT)  # 隐式等待时间
         self.driver.set_page_load_timeout(gv.PAGE_LOAD_TIME)  # 页面加载超时
 
         # 通过线程名的索引 获取登录账号
@@ -80,8 +79,8 @@ class ParaCase(unittest.TestCase):
                 mongo_exception_send_DD(e=e, msg="获取'" + pro_name + "'项目'上线'测试用例数据")
                 return "mongo error", on_line_test_method_name_list
 
-        from Config.pro_config import get_test_class_list_by_pro_name
-        test_class_list = get_test_class_list_by_pro_name(pro_name)
+        from Config.pro_config import get_test_class_list
+        test_class_list = get_test_class_list(pro_name)
         test_loader = unittest.TestLoader()
         suite = unittest.TestSuite()
         for test_class in test_class_list:

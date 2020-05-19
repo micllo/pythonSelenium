@@ -10,8 +10,14 @@ import time
 from Tools.mongodb import MongoGridFS
 
 
-# 获取 浏览器驱动函数（闭包）目的：延迟执行该函数
 def get_driver_func(pro_name, browser_name, remote=False):
+    """
+     获取 浏览器驱动函数（闭包）目的：延迟执行该函数
+    :param pro_name:
+    :param browser_name:
+    :param remote:
+    :return:
+    """
     def browser_driver():
         try:
             if remote:
@@ -29,13 +35,13 @@ def get_driver_func(pro_name, browser_name, remote=False):
         except Exception as e:
             log.error(("显示异常：" + str(e)))
             if "Failed to establish a new connection" in str(e):
-                send_DD_for_FXC(title=pro_name, text="#### Selenium Hub 服务未启动 ！")
-                raise Exception("Selenium Hub 服务未启动")
+                error_msg = "Selenium Hub 服务未启动"
             elif "Error forwarding the new session" in str(e):
-                send_DD_for_FXC(title=pro_name, text="#### Selenium Node 服务未启动 ！")
-                raise Exception("Selenium Node 服务未启动")
+                error_msg = "Selenium Node 服务未启动 ( " + browser_name + " )"
             else:
-                raise Exception("Selenium 服务的其他异常")
+                error_msg = "启动 Selenium 服务的其他异常情况"
+            send_DD_for_FXC(title=pro_name, text="#### " + error_msg + "")
+            raise Exception(error_msg)
     return browser_driver
 
 

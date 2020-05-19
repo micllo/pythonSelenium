@@ -7,7 +7,7 @@ from Tools.mongodb import MongoGridFS
 from Tools.date_helper import get_date_by_days
 from Tools.mongodb import MongodbUtils
 import unittest
-from Config.pro_config import get_test_class_list_by_pro_name
+from Config.pro_config import get_test_class_list
 from Tools.date_helper import get_current_iso_date
 # sys.path.append("./")
 
@@ -72,7 +72,7 @@ def case_import_mongo(pro_name):
     2.start_time ：运行开始时间
     3.run_time ：运行时间
     """
-    test_class_list = get_test_class_list_by_pro_name(pro_name)
+    test_class_list = get_test_class_list(pro_name)
     if test_class_list:
         insert_list = []
         test_loader = unittest.TestLoader()

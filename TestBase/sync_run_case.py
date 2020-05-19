@@ -155,38 +155,37 @@ def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
       4.screen_shot_id_dict = { "测试类名.测试方法名":['aaa', 'bbb'], "测试类名.测试方法名":['cccc'] }
     """
     if is_exist_start_case(pro_name):
-        send_DD_for_FXC(title=pro_name, text="#### 可能在执行WEB自动化测试'定时任务'时 遇到 '" + pro_name +
-                                               "' 项目存在<运行中>的用例而未执行测试")
-    else:
-        # 将'测试类'中的所有'测试方法'添加到 suite 对象中（每个'测试类'实例对象包含一个'测试方法'）
-        from TestBase.test_case_unit import ParaCase
-        suite, on_line_test_method_name_list = ParaCase.get_online_case_to_suite(pro_name=pro_name, browser_name=browser_name, remote=remote)
+        send_DD_for_FXC(title=pro_name, text="#### '" + pro_name + "' 项目存在<运行中>的用例而未执行测试（定时任务）")
+        return "Done"
 
-        if suite != "mongo error":
-            if on_line_test_method_name_list:
+    # 将'测试类'中的所有'测试方法'添加到 suite 对象中（每个'测试类'实例对象包含一个'测试方法'）
+    from TestBase.test_case_unit import ParaCase
+    suite, on_line_test_method_name_list = ParaCase.get_online_case_to_suite(pro_name=pro_name, browser_name=browser_name, remote=remote)
 
-                # 为实例对象'suite'<TestSuite>动态添加一个属性'screen_shot_id_dict'（目的：保存截图ID）
-                setattr(suite, "screen_shot_id_dict", {})
+    if suite != "mongo error":
+        if on_line_test_method_name_list:
 
-                # 为实例对象'suite'<TestSuite>动态添加一个属性'thread_num'（目的：控制多线程数量）
-                setattr(suite, "thread_num", thread_num)
+            # 为实例对象'suite'<TestSuite>动态添加一个属性'screen_shot_id_dict'（目的：保存截图ID）
+            setattr(suite, "screen_shot_id_dict", {})
 
-                # 为实例对象'suite'<TestSuite>动态添加两个方法'run_test_custom'、'show_result_custom'（ 目的：供多线程中调用 ）
-                suite.run_test_custom = MethodType(run_test_custom, suite)
-                suite.show_result_custom = MethodType(show_result_custom, suite)
+            # 为实例对象'suite'<TestSuite>动态添加一个属性'thread_num'（目的：控制多线程数量）
+            setattr(suite, "thread_num", thread_num)
 
-                # 为实例对象'suite'<TestSuite>动态修改实例方法'run'（ 目的：启用多线程来执行case ）
-                suite.run = MethodType(new_run, suite)
+            # 为实例对象'suite'<TestSuite>动态添加两个方法'run_test_custom'、'show_result_custom'（ 目的：供多线程中调用 ）
+            suite.run_test_custom = MethodType(run_test_custom, suite)
+            suite.show_result_custom = MethodType(show_result_custom, suite)
 
-                # 运行测试，并生成测试报告
-                test_result, current_report_file = generate_report(pro_name=pro_name, suite=suite, title='WEB自动化测试报告 - ' + pro_name,
-                                                                   description='详细测试用例结果', tester="自动化测试", verbosity=2)
+            # 为实例对象'suite'<TestSuite>动态修改实例方法'run'（ 目的：启用多线程来执行case ）
+            suite.run = MethodType(new_run, suite)
 
-                # 测试后发送预警
-                # send_warning_after_test(test_result, current_report_file)
-            else:
-                send_DD_for_FXC(title=pro_name, text="#### 可能在执行WEB自动化测试'定时任务'时 遇到 '" + pro_name +
-                                                       "' 项目<没有上线>的用例而未执行测试")
+            # 运行测试，并生成测试报告
+            test_result, current_report_file = generate_report(pro_name=pro_name, suite=suite, title='WEB自动化测试报告 - ' + pro_name,
+                                                               description='详细测试用例结果', tester="自动化测试", verbosity=2)
+
+            # 测试后发送预警
+            # send_warning_after_test(test_result, current_report_file)
+        else:
+            send_DD_for_FXC(title=pro_name, text="#### '" + pro_name + "' 项目<没有上线>的用例而未执行测试（定时任务）")
 
 
 if __name__ == "__main__":
