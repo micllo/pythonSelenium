@@ -31,7 +31,7 @@ class DemoTest(ParaCase):
         self.driver.get(get_config_ini("test_url", "baidu_url"))
         self.driver.find_element_by_id("kw").send_keys("test_demo_02")
         self.driver.find_element_by_id("su").click()
-        Base.screenshot(self, "test_demo_02.png", self)  # 类调用实例方法
+        Base.screenshot(self, "test_demo_02.png")  # 类调用实例方法
         time.sleep(2)
         self.assertIn('test_demo_01', "2", "test_demo_02用例测试失败")
 

@@ -21,11 +21,11 @@ class BaiduPage(Base):
         【 页 面 功 能 】
     """
 
-    def search_func(self, content, case_instance):
+    def search_func(self, content):
         self.search_field().clear()
         self.search_field().send_keys(content)
         time.sleep(2)
-        self.screenshot("test_baidu_1.png", case_instance)
+        self.screenshot("test_baidu_2.png")
         self.search_btn().click()
         time.sleep(2)
         return self.url()

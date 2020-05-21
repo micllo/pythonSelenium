@@ -47,8 +47,9 @@ def get_driver_func(pro_name, browser_name, remote=False):
 
 class Base(object):
 
-    def __init__(self, driver):
-        self.driver = driver
+    def __init__(self, case_instance):
+        self.case_instance = case_instance  # 测试用例的实例对象
+        self.driver = case_instance.driver
         self.log = log
 
     def high_light(self, ele):
@@ -121,27 +122,32 @@ class Base(object):
                 return False
         return True
 
-    def screenshot(self, image_name, case_instance):
+    def screenshot(self, image_name):
         """
          截 图、保 存 mongo、记录图片ID
         :param image_name: 图片名称
-        :param case_instance: 测试类实例对象
         :return:
+
+        【 使 用 case_instance 逻 辑 】
+        1.若'Base类的子类实例对象'调用该方法（在 object_page 中使用）：则使用该实例对象本身的 self.case_instance 属性（测试用例实例对象）
+        2.若'Base类'调用该方法（在 test_case 中使用）：则使用该 self 测试用例实例对象本身
+        3.由于'Base'类和'测试用例类'都含有'driver'属性，所以不影响self.driver的使用
         """
-        current_test_path = cfg.SCREENSHOTS_DIR + case_instance.pro_name + "/" + case_instance.class_method_path  # ../类名/方法名/
+        # 判断当前的'实例对象'是否是'Base'类型（考虑子类的继承关系）
+        case_instance = isinstance(self, Base) and self.case_instance or self
+        # 获取当前测试用例的路径 -> ../类名/方法名/
+        current_test_path = cfg.SCREENSHOTS_DIR + case_instance.pro_name + "/" + case_instance.class_method_path
         mkdir(current_test_path)
         self.driver.save_screenshot(current_test_path + image_name)
         mgf = MongoGridFS()
         files_id = mgf.upload_file(img_file_full=current_test_path + image_name)
         case_instance.screen_shot_id_list.append(files_id)
 
-    def assert_content_and_screenshot(self, image_name, case_instance, content, time_out, error_msg):
+    def assert_content_and_screenshot(self, image_name, content, error_msg):
         """
         断言内容是否存在、同时截屏
         :param image_name: 图片名称
-        :param case_instance: 测试类实例对象
         :param content: 需要轮询的内容
-        :param time_out: 轮询内容的超时时间
         :param error_msg: 断言失败后的 错误提示
         :return:
         """
@@ -151,11 +157,11 @@ class Base(object):
         while content not in self.driver.page_source:
             time.sleep(polling_interval)
             time_init = time_init + 1
-            if time_init >= time_out:
+            if time_init >= gv.POLLING_CONTENT_TIME_OUT:
                 is_exist = False
                 break
-        self.screenshot(image_name, case_instance)
-        case_instance.assertTrue(is_exist, error_msg)
+        self.screenshot(image_name)
+        self.case_instance.assertTrue(is_exist, error_msg)
 
 
 if __name__ == "__main__":

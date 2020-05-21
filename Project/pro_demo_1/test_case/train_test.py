@@ -61,8 +61,8 @@ class TrainTest(ParaCase):
         self.driver.implicitly_wait(5)
         # 打开测试页面(设置浏览器大小)
         self.driver.get(get_config_ini("test_url", "ctrip_url"))
-        search_page = SearchPage(self.driver)
-        search_page.search_train(self.data.get(1)[0], self.data.get(1)[1], self.data.get(1)[2], self)
+        search_page = SearchPage(self)
+        search_page.search_train(self.data.get(1)[0], self.data.get(1)[1], self.data.get(1)[2])
 
     def test_baidu(self):
         """ 测 试 用 例 test_baidu  """
@@ -70,8 +70,13 @@ class TrainTest(ParaCase):
         log.info("passwd(test_baidu): " + self.passwd)
 
         self.driver.get(get_config_ini("test_url", "baidu_url"))
-        baidu_page = BaiduPage(self.driver)
-        res_url = baidu_page.search_func("selenium", self)
+        time.sleep(1)
+
+        # 当前 通过类调用实例方法 ：self（测试用例实例对象）
+        Base.screenshot(self, "test_baidu_1.png")
+
+        baidu_page = BaiduPage(self)
+        res_url = baidu_page.search_func("selenium")
         time.sleep(2)
         self.assertIn("wd=selenium", res_url, "test_baidu用例测试失败")
 
@@ -85,3 +90,4 @@ class TrainTest(ParaCase):
         self.driver.find_element_by_xpath("//*[@id='app_list']/li[1]/a").click()
         time.sleep(3)
         self.assertTrue(Base.content_is_exist(self, "网易新闻", 5), "test_page_load 页面内容没有找到！")
+
