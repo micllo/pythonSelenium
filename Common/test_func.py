@@ -33,7 +33,7 @@ def generate_report(pro_name, suite, title, description, tester, verbosity=1):
     now = time.strftime("%Y-%m-%d_%H_%M_%S", time.localtime(time.time()))
     current_report_name = "[WEB_report]" + pro_name + "[" + now + "].html"
     pro_report_path = cfg.REPORTS_DIR + pro_name + "/"
-    history_report_path = pro_report_path + "/history/"
+    history_report_path = pro_report_path + "history/"
     mkdir(history_report_path)
     current_report_file = history_report_path + current_report_name
     with open(current_report_file, 'wb') as fp:

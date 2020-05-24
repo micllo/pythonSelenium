@@ -72,7 +72,7 @@ class TrainTest(ParaCase):
         self.driver.get(get_config_ini("test_url", "baidu_url"))
         time.sleep(1)
 
-        # 当前 通过类调用实例方法 ：self（测试用例实例对象）
+        # 通过Base类调用实例方法 ：self（测试用例实例对象）
         Base.screenshot(self, "test_baidu_1.png")
 
         baidu_page = BaiduPage(self)
