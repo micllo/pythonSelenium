@@ -28,15 +28,6 @@ REMOTE = False
 ############################################# 相 同 的 配 置 #############################################
 
 
-# 邮箱配置参数
-ERROR_MAIL_HOST = "smtp.163.com"
-ERROR_MAIL_ACCOUNT = "miclloo@163.com"
-ERROR_MAIL_PASSWD = "qweasd123"  # 客户端授权密码，非登录密码
-
-# 构建的时候使用前端静态文件路径 ( Api/__init__.py文件的同级目录 ) 'static'、'templates'
-GULP_STATIC_PATH = '../Build'
-GULP_TEMPLATE_PATH = '../Build/templates'
-
 # 接口地址( uwsgi )
 API_ADDR = SERVER_IP + ":" + NGINX_PORT + "/" + NGINX_API_PROXY
 
@@ -51,7 +42,16 @@ GRID_REMOTE_ADDR = SERVER_IP + ":5555"  # docker
 MONGODB_ADDR = SERVER_IP + ":" + MONGO_PORT
 MONGODB_DATABASE = "web_auto_test"
 
-# 报错邮箱地址
+# 构建的时候使用前端静态文件路径 ( Api/__init__.py文件的同级目录 ) 'static'、'templates'
+GULP_STATIC_PATH = '../Build'
+GULP_TEMPLATE_PATH = '../Build/templates'
+
+# 邮箱配置参数(发送者)
+ERROR_MAIL_HOST = "smtp.163.com"
+ERROR_MAIL_ACCOUNT = "miclloo@163.com"
+ERROR_MAIL_PASSWD = "qweasd123"  # 客户端授权密码，非登录密码
+
+# 报错邮箱地址(接收者)
 MAIL_LIST = ["micllo@126.com"]
 
 # 钉钉通知群
