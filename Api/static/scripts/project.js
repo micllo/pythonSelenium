@@ -163,6 +163,8 @@ function run_case(pro_name, nginx_api_proxy) {
  *  （3）更新 进度条样式
  */
 function background_update_process(pro_name, nginx_api_proxy) {
+    // 更新 标题显示：上次 -> 当前
+    $("#title_show").html("当&nbsp;&nbsp;&nbsp;前&nbsp;&nbsp;&nbsp;用&nbsp;&nbsp;&nbsp;例&nbsp;&nbsp;&nbsp;运&nbsp;&nbsp;&nbsp;行&nbsp;&nbsp;&nbsp;进&nbsp;&nbsp;&nbsp;度");
     // 进度条清零
     $("#progress_bar").css({"width": "0 %"});
     $("#progress_label").html("0 % -- 0 / 0");

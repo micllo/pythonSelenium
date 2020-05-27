@@ -132,11 +132,11 @@
 
                        <div class="col-xs-12 col-md-7" style="margin-left:5%">
                           <div class="panel panel-default">
-                             <div class="panel-heading" align="center" style="font-size:15px; color: #B8860B; font-weight: bold;">
+                             <div id="title_show" class="panel-heading" align="center" style="font-size:15px; color: #B8860B; font-weight: bold;">
                                  {% if progress_info.percent in [0, 100] %}
-                                 上&nbsp;&nbsp;&nbsp;次&nbsp;&nbsp;&nbsp;
-                                 {% else %}
                                  当&nbsp;&nbsp;&nbsp;前&nbsp;&nbsp;&nbsp;
+                                 {% else %}
+                                 上&nbsp;&nbsp;&nbsp;次&nbsp;&nbsp;&nbsp;
                                  {% endif %}
                                  用&nbsp;&nbsp;&nbsp;例&nbsp;&nbsp;&nbsp;运&nbsp;&nbsp;&nbsp;行&nbsp;&nbsp;&nbsp;进&nbsp;&nbsp;&nbsp;度
                              </div>
