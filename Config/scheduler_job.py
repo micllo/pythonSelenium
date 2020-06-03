@@ -22,30 +22,30 @@ class Config(object):
             'minute': '30-31',
             'second': "*/10"
             # 执行时间段：周一到周六，10点30-31分之间，每隔10秒 执行一次
-        },
-        {
-            'id': 'clear_reports_logs',
-            'func': 'Api.api_services.api_calculate:clear_reports_logs',
-            'args': [10, "pro_demo_1"],
-            'trigger': 'interval',
-            'seconds': 60
-            # 测试使用
-        },
-        {
-            'id': 'clear_screen_shot',
-            'func': 'Api.api_services.api_calculate:clear_screen_shot',
-            'args': [5],
-            'trigger': 'interval',
-            'seconds': 10
-            # 测试使用
         }
+        # {
+        #     'id': 'clear_reports_logs',
+        #     'func': 'Api.api_services.api_calculate:clear_reports_logs',
+        #     'args': [10, "pro_demo_1"],
+        #     'trigger': 'interval',
+        #     'seconds': 60
+        #     # 测试使用
+        # },
+        # {
+        #     'id': 'clear_screen_shot',
+        #     'func': 'Api.api_services.api_calculate:clear_screen_shot',
+        #     'args': [5],
+        #     'trigger': 'interval',
+        #     'seconds': 10
+        #     # 测试使用
+        # }
     ]
 
     # JOBS = [
     #     {
     #         'id': 'sync_run_case',
     #         'func': 'TestBase.sync_run_case:suite_sync_run_case',
-    #         'args': ("pro_demo_1", "Chrome", 3, True),
+    #         'args': ["pro_demo_1", "Chrome", 3, True],
     #         'trigger': 'interval',
     #         'seconds': 60
     #         # 测试使用

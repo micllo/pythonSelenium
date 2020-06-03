@@ -59,9 +59,10 @@ def generate_report(pro_name, suite, title, description, tester, verbosity=1):
     return test_result, current_report_file
 
 
-def send_warning_after_test(test_result, report_file):
+def send_warning_after_test(pro_name, test_result, report_file):
     """
        测 试 后 发 送 预 警 （ 邮件、钉钉 ）
+       :param pro_name:
        :param test_result:
        :param report_file:
        :return:
@@ -73,33 +74,34 @@ def send_warning_after_test(test_result, report_file):
     report_name = report_file.split("/")[-1]
     error_type = (test_result.failure_count > 0 and "失败" or (test_result.error_count > 0 and "错误" or None))
     if error_type:
-        send_mail_after_test(error_type=error_type, report_name=report_name, report_file=report_file)
-        send_DD_after_test(error_type=error_type, report_name=report_name, is_at_all=(error_type == "失败" and True or False))
+        send_mail_after_test(error_type=error_type, report_name=report_name, report_file=report_file, pro_name=pro_name)
+        send_DD_after_test(error_type=error_type, report_name=report_name, pro_name=pro_name, is_at_all=(error_type == "失败" and True or False))
 
 
-def send_mail_after_test(error_type, report_name, report_file):
+def send_mail_after_test(error_type, report_name, report_file, pro_name):
     """
     测 试 后 发 送 邮 件
     :param error_type: "失败"、"错误"
     :param report_name:
     :param report_file:
+    :param pro_name:
     :return:
     """
     subject = "WEB自动化测试'" + report_name.split(".")[-2] + "'存在'" + error_type + "'的用例"
-    content = "在'" + report_name + "'测试报告中 存在'" + error_type + "'的用例\n测试报告地址： " + cfg.CURRENT_REPORT_URL
+    content = "在'" + report_name + "'测试报告中 存在'" + error_type + "'的用例\n测试报告地址： " + cfg.BASE_REPORT_PATH + pro_name + "/history/" + report_name
     send_mail(subject=subject, content=content, to_list=cfg.MAIL_LIST, attach_file=report_file)
 
 
-def send_DD_after_test(error_type, report_name, is_at_all=False):
+def send_DD_after_test(error_type, report_name, pro_name, is_at_all=False):
     """
     测 试 后 发 送 钉 钉
     :param error_type: "失败"、"错误"
     :param report_name:
+    :param pro_name:
     :param is_at_all:
     :return:
-
     """
-    text = "#### 在'" + report_name + "'测试报告中 存在'" + error_type + "'的用例\n\n ***测试报告地址***\n" + cfg.CURRENT_REPORT_URL
+    text = "#### 在'" + report_name + "'测试报告中 存在'" + error_type + "'的用例\n\n ***测试报告地址***\n" + cfg.BASE_REPORT_PATH + pro_name + "/history/" + report_name
     send_DD(dd_group_id=cfg.DD_MONITOR_GROUP, title=report_name, text=text, at_phones=cfg.DD_AT_PHONES, is_at_all=is_at_all)
 
 

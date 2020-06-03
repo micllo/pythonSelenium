@@ -11,46 +11,23 @@
     < 注意：开启的线程数量，不能超过设置的账号数量 >
 
 
+
 ########################################################################################################################
 
 
-【 本地 Mac 相关 】
+【 本 地 配 置 项 目 开 发 环 境 】
 
-1.uWSGI配置文件：./vassals/mac_app_uwsgi.ini
-（1）启动 uWSGI 命令 在 ./start_uwsgi_local.sh 脚本
-（2）停止 uWSGI 命令 在 ./stop_uwsgi.sh 脚本
+1.配置本地 venv 虚拟环境
+（1）修改：requirements_init.txt
+（2）删除：原有 venv 目录
+（3）执行：sh -x venv_install.sh
 
-2.上传 GitHub 需要被忽略的文件
-（1）Logs、Reports、Screenshot -> 临时生产的 日志、报告、截图
-（2）vassals_local、venv -> 本地的 uWSGI配置、python3虚拟环境
-（3）node_modules、gulpfile.js、package.json、package-lock.json -> 供本地启动使用的gulp工具
+2.配置 gulpfile 依赖
+（1）修改：gulpfile_install.sh
+（2）删除：原有的 package.json 文件
+（3）执行：sh -x gulpfile_install.sh
 
-3.访问地址（ server.py 启动 ）：
-（1）接口地址 -> http://127.0.0.1:8082/
-               http://127.0.0.1:8082/WEB/sync_run_case
-               http://127.0.0.1:8082/WEB/get_img/5e5cac9188121299450740b3
-
-4.访问地址（ uwsgi 启动 ）：
-（1）用例页面 -> http://localhost:8070/api_local/WEB/index
-（2）测试报告 -> http://127.0.0.1:8070/test_report_local/<pro_name>/[WEB_report]<pro_name>.html
-（3）接口地址 -> http://127.0.0.1:8070/api_local/
-               http://127.0.0.1:8070/api_local/WEB/sync_run_case
-               http://127.0.0.1:8070/api_local/WEB/get_img/5e5cac9188121299450740b3
-   （ 备注：uwgsi 启动 8081 端口、nginx 配置 8070 反向代理 8081 ）
-
-5.本地相关服务的启动操作（ gulpfile.js 文件 ）
-（1）启动服务并调试页面：gulp "html debug"
-（2）停止服务命令：gulp "stop env"
-（3）部署docker服务：gulp "deploy docker"
-
-
-【 备 注 】
-MAC本地安装的 nginx 相关路径
-默认安装路径：/usr/local/Cellar/nginx/1.15.5/
-默认配置文件路径：/usr/local/etc/nginx/
-启动命令：sudo nginx
-
-【 python_selenium.conf 】
+3.配置 Nginx -> python_selenium.conf
 
 upstream api_server_WEB{
   server 127.0.0.1:8081 weight=1 max_fails=2 fail_timeout=30s;
@@ -89,6 +66,51 @@ server {
          proxy_redirect default;
   }
 }
+
+【 备 注 】
+MAC本地安装的 nginx 相关路径
+默认安装路径：/usr/local/Cellar/nginx/1.15.5/
+默认配置文件路径：/usr/local/etc/nginx/
+sudo nginx
+sudo nginx -t
+sudo nginx -s reload
+
+/Users/micllo/nginx_logs/access.log
+
+/Users/micllo/nginx_logs/error.log
+
+########################################################################################################################
+
+
+【 本地 Mac 相关 】
+
+1.uWSGI配置文件：./vassals/mac_app_uwsgi.ini
+（1）启动 uWSGI 命令 在 ./start_uwsgi_local.sh 脚本
+（2）停止 uWSGI 命令 在 ./stop_uwsgi.sh 脚本
+
+2.上传 GitHub 需要被忽略的文件
+（1）Logs、Reports、Screenshot -> 临时生产的 日志、报告、截图
+（2）vassals_local、venv -> 本地的 uWSGI配置、python3虚拟环境
+（3）node_modules、gulpfile.js、package.json、package-lock.json -> 供本地启动使用的gulp工具
+
+3.访问地址（ server.py 启动 ）：
+（1）接口地址 -> http://127.0.0.1:8082/
+               http://127.0.0.1:8082/WEB/sync_run_case
+               http://127.0.0.1:8082/WEB/get_img/5e5cac9188121299450740b3
+
+4.访问地址（ uwsgi 启动 ）：
+（1）用例页面 -> http://localhost:8070/api_local/WEB/index
+（2）测试报告 -> http://127.0.0.1:8070/test_report_local/<pro_name>/[WEB_report]<pro_name>.html
+（3）接口地址 -> http://127.0.0.1:8070/api_local/
+               http://127.0.0.1:8070/api_local/WEB/sync_run_case
+               http://127.0.0.1:8070/api_local/WEB/get_img/5e5cac9188121299450740b3
+   （ 备注：uwgsi 启动 8081 端口、nginx 配置 8070 反向代理 8081 ）
+
+5.本地相关服务的启动操作（ gulpfile.js 文件 ）
+（1）启动服务并调试页面：gulp "html debug"
+（2）停止服务命令：gulp "stop env"
+（3）部署docker服务：gulp "deploy docker"
+
 
 ########################################################################################################################
 

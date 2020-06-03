@@ -184,7 +184,7 @@ def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
                                                                description='详细测试用例结果', tester="自动化测试", verbosity=2)
 
             # 测试后发送预警
-            # send_warning_after_test(test_result, current_report_file)
+            send_warning_after_test(pro_name, test_result, current_report_file)
 
 
 if __name__ == "__main__":
