@@ -74,7 +74,7 @@ def send_warning_after_test(pro_name, test_result, report_file):
     report_name = report_file.split("/")[-1]
     error_type = (test_result.failure_count > 0 and "失败" or (test_result.error_count > 0 and "错误" or None))
     if error_type:
-        send_mail_after_test(error_type=error_type, report_name=report_name, report_file=report_file, pro_name=pro_name)
+        # send_mail_after_test(error_type=error_type, report_name=report_name, report_file=report_file, pro_name=pro_name)
         send_DD_after_test(error_type=error_type, report_name=report_name, pro_name=pro_name, is_at_all=(error_type == "失败" and True or False))
 
 

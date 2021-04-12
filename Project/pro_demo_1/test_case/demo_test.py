@@ -13,7 +13,7 @@ class DemoTest(ParaCase):
     """ Demo 用 例 集 """
 
     def test_demo_01(self):
-        """ demo 测 试 用 例 test_demo_01  """
+        """ demo用例01  """
         log.info("user(test_demo_01): " + self.user)
         log.info("passwd(test_demo_01): " + self.passwd)
 
@@ -24,7 +24,7 @@ class DemoTest(ParaCase):
         self.assertIn('1', "1", "test_demo_01用例测试失败")
 
     def test_demo_02(self):
-        """ demo 测 试 用 例 test_demo_02  """
+        """ demo用例02  """
         log.info("user(test_demo_02): " + self.user)
         log.info("passwd(test_demo_02): " + self.passwd)
 
@@ -33,6 +33,6 @@ class DemoTest(ParaCase):
         self.driver.find_element_by_id("su").click()
         Base.screenshot(self, "test_demo_02.png")  # 类调用实例方法
         time.sleep(2)
-        self.assertIn('test_demo_01', "2", "test_demo_02用例测试失败")
+        self.assertIn('33333333', "2", "test_demo_02用例测试失败")
 
 

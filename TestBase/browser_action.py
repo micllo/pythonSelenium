@@ -129,11 +129,11 @@ class Base(object):
         :return:
 
         【 使 用 case_instance 逻 辑 】
-        1.若'Base类的子类实例对象'调用该方法（在 object_page 中使用）：则使用该实例对象本身的 self.case_instance 属性（测试用例实例对象）
+        1.若'Base类的子类实例对象'调用该方法（在 page_object 中使用）：则使用该实例对象本身的 self.case_instance 属性（测试用例实例对象）
         2.若'Base类'调用该方法（在 test_case 中使用）：则使用该 self 测试用例实例对象本身
         3.由于'Base'类和'测试用例类'都含有'driver'属性，所以不影响self.driver的使用
         """
-        # 判断当前的'实例对象'是否是'Base'类型（考虑子类的继承关系）
+        # 判断当前的'实例对象'是否为'Base'类型（或其子类）
         case_instance = isinstance(self, Base) and self.case_instance or self
         # 获取当前测试用例的路径 -> ../类名/方法名/
         current_test_path = cfg.SCREENSHOTS_DIR + case_instance.pro_name + "/" + case_instance.class_method_path

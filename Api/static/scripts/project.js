@@ -186,7 +186,7 @@ function background_update_process(pro_name, nginx_api_proxy) {
     })
 
     // 轮询修改进度信息
-    var interval = setInterval(function () {  // 间隔指定的毫秒数不停地执行指定的代码，定时器
+    var interval = setInterval(function () {  // 间隔指定的毫秒数 不停地执行指定的代码，定时器
         // 更新 用例'运行状态、开始时间、运行时间'
         var request_url_1 = "/" + nginx_api_proxy + "/WEB/refresh_case_run_status/" + pro_name
         var response_info_1 = request_interface_url_v2(url=request_url_1, method="GET", async=false);

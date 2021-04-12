@@ -61,7 +61,7 @@ class ParaCase(unittest.TestCase):
         3.通过'项目名称'获取'测试类'列表
         4.循环获取'测试类'列表中的所有'测试方法名称'
         5.将这些'测试方法名称'与mongo中'上线'的'测试方法名称'作比较
-        6.匹配成功的，则实例化'测试类'时，并添加入'suite'实例对象中
+        6.匹配成功的，则实例化'测试用例'（一个实例对象仅包含一个测试类中的测试方法），并添加入'suite'实例对象中
         【 备 注 】
           实例化'测试类'时，必须带上该类中存在的以'test_'开头的方法名
         """
@@ -86,7 +86,9 @@ class ParaCase(unittest.TestCase):
         for test_class in test_class_list:
             test_methods_name = test_loader.getTestCaseNames(test_class)
             for test_method_name in test_methods_name:
-                if test_method_name in on_line_test_method_name_list:  # 匹配'测试方法'名称
+                # 匹配'测试方法'名称
+                if test_method_name in on_line_test_method_name_list:
+                    # 实例化测试用例对象（通过 self.driver_func 属性，将打开浏览器的操作进行了延迟处理）
                     test_instance = test_class(pro_name=pro_name, test_method=test_method_name,
                                                browser_name=browser_name, remote=remote, driver=driver)
                     suite.addTest(test_instance)

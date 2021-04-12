@@ -150,7 +150,7 @@ def suite_sync_run_case(pro_name, browser_name, thread_num=2, remote=False):
 
        【 保 存 截 屏 图 片 ID 的 逻 辑 】
       1.为实例对象'suite'<TestSuite>动态添加一个属性'screen_shot_id_dict' -> screen_shot_id_dict = {}
-      2.每个测试方法中将所有截屏ID都保存入'screen_shot_id_list' -> screen_shot_id_dict = ['aaa', 'bbb', 'ccc']
+      2.每个测试方法中将所有截屏ID都保存入'screen_shot_id_list' -> screen_shot_id_list = ['aaa', 'bbb', 'ccc']
       3.实例对象'suite'在重写的'new_run'方法中 将'screen_shot_id_list'添加入'screen_shot_id_dict'
       4.screen_shot_id_dict = { "测试类名.测试方法名":['aaa', 'bbb'], "测试类名.测试方法名":['cccc'] }
     """

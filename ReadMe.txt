@@ -84,9 +84,9 @@ sudo nginx -s reload
 
 【 本地 Mac 相关 】
 
-1.uWSGI配置文件：./vassals/mac_app_uwsgi.ini
+1.uWSGI配置文件：./vassals_local/app_uwsgi_local.ini
 （1）启动 uWSGI 命令 在 ./start_uwsgi_local.sh 脚本
-（2）停止 uWSGI 命令 在 ./stop_uwsgi.sh 脚本
+（2）停止 uWSGI 命令 在 ./stop_uwsgi_local.sh 脚本
 
 2.上传 GitHub 需要被忽略的文件
 （1）Logs、Reports、Screenshot -> 临时生产的 日志、报告、截图
@@ -110,6 +110,9 @@ sudo nginx -s reload
 （1）启动服务并调试页面：gulp "html debug"
 （2）停止服务命令：gulp "stop env"
 （3）部署docker服务：gulp "deploy docker"
+
+6.添加依赖：
+pip3 install -v flask==0.12 -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
 
 
 ########################################################################################################################
@@ -154,11 +157,11 @@ sudo nginx -s reload
     ( 备注：uwgsi 启动 8081 端口、nginx 配置 80 反向代理 8081 )
 
 7.访问地址（ 外部访问 ）：
-（1）用例页面 -> http://192.168.31.10:1080/api/WEB/index
-（2）测试报告 -> http://192.168.31.10:1080/test_report/<pro_name>/[WEB_report]<pro_name>.html
-（3）接口地址 -> http://192.168.31.10:1080/api/
-               http://192.168.31.10:1080/api/WEB/sync_run_case
-               http://192.168.31.10:1080/api/WEB/get_img/5e5cac9188121299450740b3
+（1）用例页面 -> http://192.168.31.9:1080/api/WEB/index
+（2）测试报告 -> http://192.168.31.9:1080/test_report/<pro_name>/[WEB_report]<pro_name>.html
+（3）接口地址 -> http://192.168.31.9:1080/api/
+               http://192.168.31.9:1080/api/WEB/sync_run_case
+               http://192.168.31.9:1080/api/WEB/get_img/5e5cac9188121299450740b3
     ( 备注：docker 配置 1080 映射 80 )
 
 8.关于部署
@@ -195,7 +198,7 @@ sudo nginx -s reload
  5.Data层：      相关测试数据
  6.Env层：       环境配置
  7.Project层：   区分不同项目、page_object(页面操作方法、元素定位)、test_case(测试用例)
- 8.TestBase层：  封装了浏览器驱动操作方法、提供'测试用例'父类第基础方法(继承’unittest.TestCase')、测试报告生成、同步执行用例方法
+ 8.TestBase层：  封装了浏览器驱动操作方法、提供'测试用例'父类的基础方法(继承’unittest.TestCase')、测试报告生成、同步执行用例方法
  9.Tools层：     工具函数
  10.其他：
  （1）vassals/ -> 服务器的'uWSGI配置'

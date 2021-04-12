@@ -18,8 +18,12 @@ def read_excel(filename, index):
 
 
 if __name__ == '__main__':
-    current_path = os.path.split(os.path.realpath(__file__))[0].split('C')[0]
-    data = read_excel(current_path + "Data/testdata.xlsx", 0)
+    # current_path = os.path.split(os.path.realpath(__file__))[0].split('C')[0]
+    # print(current_path)
+
+    # 获取当前文件的上级目录
+    data_dir = os.path.abspath(os.path.dirname(os.getcwd()))
+    data = read_excel(data_dir + "/Data/testdata.xlsx", 0)
     print(data)
     print(data.get(1)[2])
     print(type(data.get(1)[2]))

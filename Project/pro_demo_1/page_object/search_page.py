@@ -24,15 +24,20 @@ class SearchPage(Base):
 
     # '单程'tab控件
     def search_current(self):
-        return self.find_ele(By.CSS_SELECTOR, "#searchtype > li.current")
+        # return self.find_ele(By.CSS_SELECTOR, "#search_type > li.current")
+        return self.find_ele(By.XPATH, "//*[@id='searchBoxTemplete']/div/div[1]/div[2]/ul/li[1]")
 
     # '开始搜索'按钮
     def search_btn(self):
-        return self.find_ele(By.ID, "searchbtn")
+        return self.find_ele(By.CLASS_NAME, "searchbtn")
+
+    def get_gepart_date_ele_id(self):
+        return "departDate"
 
     # 通过js为'出发时间'控件赋值
-    def search_js(self, value):
-        js_value = "document.getElementById('dateObj').value='%s'" % (value)
+    def search_js(self, ele_id, value):
+        # js_value = "document.getElementById('dateObj').value='%s'" % (value)
+        js_value = "document.getElementById('" + ele_id + "').value='%s'" % (value)
         self.js(js_value)
 
     """
@@ -61,7 +66,8 @@ class SearchPage(Base):
         time.sleep(2)
 
         # 输入'出发时间'（ 通过js ）
-        self.search_js(leave_date)
+        self.search_js(self.get_gepart_date_ele_id(), leave_date)
+        time.sleep(3)
 
         # 点击'单程'tab
         self.search_current().click()

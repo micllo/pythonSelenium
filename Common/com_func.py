@@ -35,7 +35,7 @@ def is_null(tgt):
 
 # 获取项目路径
 def project_path():
-    return os.path.split(os.path.realpath(__file__))[0].split('C')[0]
+    return os.path.split(os.path.realpath(__file__))[0].split('C')[0]  # 将 Common 目录的第一个 C 作为分隔
 
 
 # 获取当前的'类名/方法名/'(提供截屏路径使用)

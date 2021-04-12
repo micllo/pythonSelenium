@@ -21,3 +21,6 @@ deactivate
 
 
 # pip3 install -v logzero==1.5.0
+
+# 获取依赖的最新版本
+# pip3 install -U get -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com

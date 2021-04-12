@@ -12,7 +12,7 @@ class OrderPage(Base):
 
     # '姓名'输入框
     def name_field(self):
-        return self.find_ele(By.CSS_SELECTOR, "#pasglistdiv > div > ul > li:nth-child(2) > input")
+        return self.find_ele(By.CSS_SELECTOR, "#inputPassengerVue > div.pasg-add > ul > li:nth-child(2) > input")
 
     """
         【 页 面 功 能 】
