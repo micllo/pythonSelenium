@@ -557,7 +557,7 @@ class HTMLTestRunner(Template_mixin):
     def run(self, suite):
         """ Run the given test case or test suite. """
         result = _TestResult(self.verbosity)  # 初始化'测试结果'变量
-        suite(result)  # 执行测试并记录测试结果
+        suite(result)  # 执行测试套件中的测试用例实例对象，并记录测试结果（ 下一步的快捷查看：TeseBase > sync_run_case > new_run ）
         self.stopTime = datetime.datetime.now()
         self.generateReport(suite, result)  # 通过测试结果生成测试报告
         print('\nTime Elapsed: %s' % (self.stopTime-self.startTime), file=sys.stderr)

@@ -168,5 +168,7 @@ if __name__ == "__main__":
     # print(os.path.split(os.path.realpath(__file__))[0])
     # print(os.path.split(os.path.realpath(__file__))[0].split('C'))
     # print(os.path.split(os.path.realpath(__file__))[0].split('C')[0])
-
+    pro_path = os.path.split(os.path.realpath(__file__))[0].split('C')[0]
+    test_case_path = pro_path + "Project/pro_demo_1/test_case/"
+    print(test_case_path)
 

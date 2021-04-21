@@ -1,5 +1,9 @@
 from Project.pro_demo_1.test_case.demo_test import DemoTest
 from Project.pro_demo_1.test_case.train_test import TrainTest
+import os
+
+# 配置 项目名称列表
+pro_name_list = ["pro_demo_1", "pro_demo_2"]
 
 
 def get_test_class_list(pro_name):
@@ -13,19 +17,6 @@ def get_test_class_list(pro_name):
     else:
         test_class_list = None
     return test_class_list
-
-
-def pro_exist(pro_name):
-    """
-    判断项目名称是否存在
-    :param pro_name:
-    :return:
-    """
-    pro_name_list = ["pro_demo_1", "pro_demo_2"]
-    if pro_name in pro_name_list:
-        return True
-    else:
-        return False
 
 
 def get_login_accout(thread_name_index):
@@ -46,4 +37,9 @@ def get_login_accout(thread_name_index):
         return "user_5", "passwd_5"
     else:
         return "user_6", "passwd_6"
+
+
+if __name__ == "__main__":
+    pro_path = os.path.split(os.path.realpath(__file__))[0].split('C')[0]
+    print(pro_path)
 
