@@ -77,8 +77,11 @@ class TrainTest(ParaCase):
         # 根据不同用例特定自定义设置（也可以不设置）
         self.driver.set_window_size(width=2000, height=1300)
         self.driver.implicitly_wait(5)
+
         # 打开测试页面(设置浏览器大小)
         self.driver.get(get_config_ini("test_url", "ctrip_url"))
+
+        # 在搜索页面中 执行查询功能
         search_page = SearchPage(self)
         search_page.search_train(self.data.get(1)[0], self.data.get(1)[1], self.data.get(1)[2])
 

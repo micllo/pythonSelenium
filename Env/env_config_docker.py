@@ -18,8 +18,8 @@ NGINX_API_PROXY = "api"
 # 测试报告路径
 REPORT_PATH = "/test_report/"
 
-# Mongo 端口（ docker 多项目需要映射不同的端口 ）
-MONGO_PORT = "27027"
+# Mongo 地址
+MONGODB_ADDR = "192.168.31.9:27077"
 
 # 是否启用远程浏览器
 REMOTE = True
@@ -39,7 +39,6 @@ BASE_REPORT_PATH = "http://" + SERVER_IP + ":" + NGINX_PORT + REPORT_PATH
 GRID_REMOTE_ADDR = SERVER_IP + ":5555"  # docker
 
 # mongo 数据库
-MONGODB_ADDR = SERVER_IP + ":" + MONGO_PORT
 MONGODB_DATABASE = "web_auto_test"
 
 # 构建的时候使用前端静态文件路径 ( Api/__init__.py文件的同级目录 ) 'static'、'templates'
