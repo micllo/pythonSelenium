@@ -29,9 +29,9 @@ def get_driver_func(pro_name, browser_name, remote=False):
                                             desired_capabilities=DesiredCapabilities.CHROME)
             else:
                 if browser_name == "Firefox":
-                    return webdriver.Firefox(service_log_path=None)
+                    return webdriver.Firefox(service_log_path=None, executable_path=cfg.FIREFOX_DRIVER_FILE)
                 if browser_name == "Chrome":
-                    return webdriver.Chrome()
+                    return webdriver.Chrome(executable_path=cfg.CHROME_DRIVER_FILE)
         except Exception as e:
             log.error(("显示异常：" + str(e)))
             if "Failed to establish a new connection" in str(e):

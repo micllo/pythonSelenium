@@ -27,6 +27,9 @@ REMOTE = True
 
 ############################################# 相 同 的 配 置 #############################################
 
+# 浏览器驱动路径
+CHROME_DRIVER_FILE = "./lib/chromedriver"
+FIREFOX_DRIVER_FILE = "./lib/geckodriver"
 
 # 接口地址( uwsgi )
 API_ADDR = SERVER_IP + ":" + NGINX_PORT + "/" + NGINX_API_PROXY
