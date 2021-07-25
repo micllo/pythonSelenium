@@ -1,5 +1,7 @@
 # -*- coding:utf-8 -*-
 from selenium import webdriver
+from selenium.webdriver.support.select import Select  # 下拉框
+from selenium.webdriver.common.action_chains import ActionChains  # 连续动作（拖动、鼠标操作、JS操作）
 from Common.com_func import project_path, log, mkdir
 from Common.test_func import send_DD_for_FXC
 from selenium.webdriver import DesiredCapabilities
@@ -29,7 +31,7 @@ def get_driver_func(pro_name, browser_name, remote=False):
                                             desired_capabilities=DesiredCapabilities.CHROME)
             else:
                 if browser_name == "Firefox":
-                    return webdriver.Firefox(service_log_path=None, executable_path=cfg.FIREFOX_DRIVER_FILE)
+                    return webdriver.Firefox(service_log_path=None, executable_path=cfg.FIREFOX_DRIVER_FILE).get()
                 if browser_name == "Chrome":
                     return webdriver.Chrome(executable_path=cfg.CHROME_DRIVER_FILE)
         except Exception as e:
@@ -50,6 +52,7 @@ class Base(object):
     def __init__(self, case_instance):
         self.case_instance = case_instance  # 测试用例的实例对象
         self.driver = case_instance.driver
+        self.action = ActionChains(self.driver)  # 动作链
         self.log = log
 
     def high_light(self, ele):
@@ -71,8 +74,8 @@ class Base(object):
     def send_key(self, *args, value):
         self.find_ele(*args).send_key(value)
 
-    def js(self, str):
-        self.driver.execute_script(str)
+    def js(self, js_str):
+        self.driver.execute_script(js_str)
 
     def url(self):
         return self.driver.current_url
@@ -90,6 +93,34 @@ class Base(object):
     # 关闭当前窗口
     def close(self):
         self.driver.close()
+
+    # 下拉框选择
+    def select(self, select_name, option_value):
+        """
+        :param select_name:  下拉框的name属性值
+        :param option_value: 选项的value属性值
+        """
+        select = Select(self.driver.find_element_by_name(select_name))
+        select.select_by_value(option_value)
+        time.sleep(2)
+
+    # 鼠标悬停
+    def move_to_ele(self, *args):
+        self.action.move_to_element(self.find_ele(*args))
+        self.action.perform()
+
+    # 双击
+    def double_click(self, *args):
+        self.action.double_click(self.find_ele(*args))
+        self.action.perform()
+
+    # 拖拽
+    def move(self, *args):
+        # self.action.click_and_hold(self.find_ele(args[0], args[1]))   # 鼠标按压
+        # self.action.move_to_element(self.find_ele(args[2], args[3]))  # 鼠标滑动
+        # self.action.release()  # 鼠标释放
+        self.action.drag_and_drop(source=self.find_ele(args[0], args[1]), target=self.find_ele(args[2], args[3]))  # 拖拽
+        self.action.perform()
 
     # 打开一个新窗口，并将句柄切到新窗口，返回原窗口句柄
     def open_new_window(self):
@@ -126,6 +157,12 @@ class Base(object):
         """
          截 图、保 存 mongo、记录图片ID
         :param image_name: 图片名称
+
+            < 截屏方法 >
+                save_screenshot()
+                get_screenshot_as_file()    保存的是文件图片
+                get_screenshot_as_base64()  保存的是base64编码，供报告页面展示
+                get_screenshot_as_png()     保存的是二进制数据，很少用
         :return:
 
         【 使 用 case_instance 逻 辑 】
