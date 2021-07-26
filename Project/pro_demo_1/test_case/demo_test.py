@@ -36,3 +36,4 @@ class DemoTest(ParaCase):
         self.assertIn('33333333', "2", "test_demo_02用例测试失败")
 
 
+

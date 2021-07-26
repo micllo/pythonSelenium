@@ -35,7 +35,7 @@ def is_null(tgt):
 
 # 获取项目路径
 def project_path():
-    return os.path.split(os.path.realpath(__file__))[0].split('C')[0]  # 将 Common 目录的第一个 C 作为分隔
+    return os.path.split(os.path.realpath(__file__))[0].split('C')[0]  # 将当前 Common 目录的第一个 C 作为分隔
 
 
 # 获取当前的'类名/方法名/'(提供截屏路径使用)
@@ -169,6 +169,6 @@ if __name__ == "__main__":
     # print(os.path.split(os.path.realpath(__file__))[0].split('C'))
     # print(os.path.split(os.path.realpath(__file__))[0].split('C')[0])
     pro_path = os.path.split(os.path.realpath(__file__))[0].split('C')[0]
-    test_case_path = pro_path + "Project/pro_demo_1/test_case/"
+    test_case_path = project_path() + "Api/templates/element_demo.html"
     print(test_case_path)
 

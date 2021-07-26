@@ -1,5 +1,6 @@
 from Project.pro_demo_1.test_case.demo_test import DemoTest
 from Project.pro_demo_1.test_case.train_test import TrainTest
+from Project.pro_demo_1.test_case.element_test import ElementTest
 import os
 
 # 配置 项目名称列表
@@ -13,7 +14,7 @@ def get_test_class_list(pro_name):
     :return:
     """
     if pro_name == "pro_demo_1":
-        test_class_list = [DemoTest, TrainTest]
+        test_class_list = [DemoTest, TrainTest, ElementTest]
     else:
         test_class_list = None
     return test_class_list

@@ -2,6 +2,7 @@
 from selenium import webdriver
 from selenium.webdriver.support.select import Select  # 下拉框
 from selenium.webdriver.common.action_chains import ActionChains  # 连续动作（拖动、鼠标操作、JS操作）
+from selenium.webdriver.common.keys import Keys  # 键盘操作
 from Common.com_func import project_path, log, mkdir
 from Common.test_func import send_DD_for_FXC
 from selenium.webdriver import DesiredCapabilities
@@ -52,27 +53,27 @@ class Base(object):
     def __init__(self, case_instance):
         self.case_instance = case_instance  # 测试用例的实例对象
         self.driver = case_instance.driver
-        self.action = ActionChains(self.driver)  # 动作链
         self.log = log
 
     def high_light(self, ele):
         self.driver.execute_script("arguments[0].setAttribute('style',arguments[1]);", ele, "border:2px solid red;")
 
-    def find_ele(self, *args):
+    def find_ele(self, by, value, hl=True):
         try:
-            self.log.info("通过" + args[0] + "定位，元素是 " + args[1])
-            ele = self.driver.find_element(*args)
-            # ele = WebDriverWait(self.driver, time_out).until(self.driver.find_element(*args))
-            self.high_light(ele)
+            self.log.info("通过" + by + "定位，元素是 " + value)
+            ele = self.driver.find_element(by, value)
+            # ele = WebDriverWait(self.driver, time_out).until(self.driver.find_element(by, value))
+            if hl:
+                self.high_light(ele)
             return ele
         except:
-            raise Exception(args[1] + " 元素定位失败！")
+            raise Exception(value + " 元素定位失败！")
 
-    def click(self, *args):
-        self.find_ele(*args).click()
+    def click(self, by, value):
+        self.find_ele(by, value).click()
 
-    def send_key(self, *args, value):
-        self.find_ele(*args).send_key(value)
+    def send_key(self, by, value, content):
+        self.find_ele(by, value).send_key(content)
 
     def js(self, js_str):
         self.driver.execute_script(js_str)
@@ -94,33 +95,43 @@ class Base(object):
     def close(self):
         self.driver.close()
 
-    # 下拉框选择
-    def select(self, select_name, option_value):
+    # 下拉框选择操作
+    def select_action(self, select_ele, option_value):
         """
-        :param select_name:  下拉框的name属性值
+        :param select_ele:  下拉框元素
         :param option_value: 选项的value属性值
         """
-        select = Select(self.driver.find_element_by_name(select_name))
-        select.select_by_value(option_value)
+        Select(select_ele).select_by_value(option_value)
         time.sleep(2)
 
+    # 动作链 生成器
+    def action_chains(self):
+        ac = ActionChains(self.driver)
+        yield ac
+        ac.perform()
+
     # 鼠标悬停
-    def move_to_ele(self, *args):
-        self.action.move_to_element(self.find_ele(*args))
-        self.action.perform()
+    def move_to_ele(self, ele):
+        for ac in self.action_chains():
+            ac.move_to_element(ele)
 
     # 双击
-    def double_click(self, *args):
-        self.action.double_click(self.find_ele(*args))
-        self.action.perform()
+    def double_click(self, ele):
+        for ac in self.action_chains():
+            ac.double_click(ele)
 
     # 拖拽
-    def move(self, *args):
-        # self.action.click_and_hold(self.find_ele(args[0], args[1]))   # 鼠标按压
-        # self.action.move_to_element(self.find_ele(args[2], args[3]))  # 鼠标滑动
-        # self.action.release()  # 鼠标释放
-        self.action.drag_and_drop(source=self.find_ele(args[0], args[1]), target=self.find_ele(args[2], args[3]))  # 拖拽
-        self.action.perform()
+    def drag_and_drop(self, source_ele, target_ele):
+        for ac in self.action_chains():
+            ac.drag_and_drop(source=source_ele, target=target_ele)  # 拖拽
+            # ac.click_and_hold(source_ele)   # 鼠标按压
+            # ac.move_to_element(target_ele)  # 鼠标滑动
+            # ac.release()  # 鼠标释放
+
+    # 键盘操作
+    def keyboard_action(self, key_action):
+        for ac in self.action_chains():
+            ac.send_keys(key_action)  # 发送某个键到当前焦点的元素
 
     # 打开一个新窗口，并将句柄切到新窗口，返回原窗口句柄
     def open_new_window(self):
@@ -203,4 +214,5 @@ class Base(object):
 
 if __name__ == "__main__":
     print(project_path())
+
 

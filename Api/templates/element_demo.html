@@ -1,0 +1,203 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>UI Automation Testing</title>
+	<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
+  	<script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.12.1/jquery.js"></script>
+  	<script src="https://cdn.bootcdn.net/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+</head>
+<style type="text/css">
+	table{font-size:20px;text-align:center;width:80%;border-collapse:collapse;margin:auto}
+	table th{background: #ccc}
+	.display{color:red}
+	.widgetStyle{text-align:left;padding-left:100px}	
+</style>
+
+<script>
+function display_alert(){
+  alert("I am an alert box!!")
+}
+function display_prompt(){
+  prompt("欢迎？","请在此输入您的姓名:")
+}
+function display_confirm(){
+  confirm("单击“确定”继续。单击“取消”停止")
+}
+function display_order() {
+    setTimeout('alert("20180101151010")', 3000);
+}
+function show_div(){   
+	setTimeout("create_div()", 3000);   
+}      
+function create_div(){   
+	d = document.createElement('div'); 	
+	d.className = "red";  
+	d.style.color='red';
+	d.innerHTML="wait for display";
+	document.getElementById("display").appendChild(d);   
+}   
+function mouseOver(){
+	document.getElementById("over").innerHTML="<div class='display'>Hello World!</div>";
+}
+function mouseOut(){
+	document.getElementById("over").innerHTML="";
+}
+function doubleClick(){
+	document.getElementById("over").innerHTML="<div class='display'>Good!</div>";
+}
+
+$( function() {
+    $( "#slider" ).slider();
+    $( "#slider" ).append("<span id='slider_confirm' style=\"margin-left:230px\">Confirm</span>");
+} );
+
+</script>
+<body>
+<div>
+	<div class="text" style="font-size:36;text-align:center"><b>UI Automation Testing</b></div>
+	<br/>
+	<table cellpadding="10" cellspacing="0" border="1">
+		<thead>
+			<tr>
+				<th width=20% class="widgetleft">Widget Name</th>
+				<th width=80% class="widgetStyle">Widget Operate</th>				
+			</tr>
+		</thead>
+				<tbody>
+					<tr>
+						<td>Text</td>
+						<td class="widgetStyle"><div><p name='info'>自动化测试练习小站</p></div></td>
+					</tr>
+					<tr>
+						<td>Input</td>
+						<td class="widgetStyle"><div id='input'><input type="text" id="user"/></div></td>											
+					</tr>
+					<tr>
+						<td>TextArea</td>
+						<td class="widgetStyle"><div id='textarea'><textarea cols ="50" rows = "3"></textarea></div></td>					
+					</tr>
+
+					<tr>
+						<td>Link</td>
+						<td class="widgetStyle"><div id='link'><a href="http://www.baidu.com" class='baidu'>baidu</a> <a href="http://www.jd.com" class='jd'>jd</a></div></td>
+					</tr>
+					
+					<tr>
+						<td>Image</td>
+						<td class='widgetStyle'><div id='image'><img id='img_good' src="http://pic.baike.soso.com/p/20100111/bki-20100111105911-1154680401.jpg"/></div></td>
+						<!-- style="display:none;" -->
+					</tr>
+
+					<tr>
+						<td>Select</td>
+						<td class="widgetStyle"><div id='select'>
+								<select name='select'>
+								  <option value ="1">Volvo</option>
+								  <option value ="2">Benz</option>
+								  <option value="3">BMW</option>
+								  <option value="4">Audi</option>
+								</select>
+							</div>
+						</td>						
+					</tr>
+					<tr>
+						<td>RadioBox</td>
+						<td class="widgetStyle">
+							<div id='radio'>
+								<input type='radio' name="identity" class='Volvo'/><label>Volvo</label></br>
+								<input type='radio' name="identity" class='Benz'/><label>Benz</label></br>
+								<input type='radio' name="identity" class='BMW'/><label>BMW</label></br>
+								<input type='radio' name="identity" class='Audi'/><label>Audi</label>
+							</div>
+						
+						</td>						
+					</tr>
+					<tr>
+						<td>CheckBox</td>
+						<td class="widgetStyle">
+							<div id='checkbox'>
+								<input type="checkbox" name="checkbox1"/><label>Volvo</label></br>
+								<input type="checkbox" name="checkbox2"/><label>Benz</label></br>
+								<input type="checkbox" name="checkbox3"/><label>BMW</label></br>
+								<input type="checkbox" name="checkbox4"/><label>Audi</label> 
+							</div>
+						</td>						
+					</tr>
+					<tr>
+						<td>Button</td>
+						<td class="widgetStyle"><div><input id='button' type='submit' class='button' value='Submit' disabled="disabled" onclick='display_alert()'/></div></td>						
+					</tr>
+					<tr>
+						<td>Alert</td>
+						<td class="widgetStyle">
+							<div id='alert'>
+								<input type='button' class='alert' value='Alert' onclick='display_alert()'>
+								<input type='button' class='confirm' value='Confirm' onclick='display_confirm()'>
+								<input type='button' class='prompt' value='Prompt' onclick='display_prompt()'>
+								<input type='button' class='order_confirm' value='下单' onclick='display_order()'>
+							</div>
+						</td>						
+					</tr>
+					<tr>
+						<td>Upload</td>
+						<td class="widgetStyle"><div id='upload'><input type='file' id='load'/></div></td>						
+					</tr>
+					<tr>
+						<td>Download</td>
+						<td class="widgetStyle"><div id='download'><a href="file:///D:/log.rar" target="_self">download</a></div></td>						
+					</tr>
+					<tr>
+						<td>Open New Window</td>
+						<td class="widgetStyle">
+							<div id='open'>
+								<a href="http://www.baidu.com" class='open' target="_blank">Open baidu</a>
+								<a href="http://www.huicewang.com" class='open' target="_blank">Open huice</a>
+							</div>
+					</td>						
+					</tr>
+					<tr>
+						<td>Action</td>
+						<td class="widgetStyle">
+							<div id='action' style="white-space:nowrap;">
+								<input type='button' class='over' value='Focused' onmouseover="mouseOver()" onmouseout="mouseOut()">
+								<input type='button' class='double' value='DoubleClick' ondblclick="doubleClick()">
+								<div id='over'/>
+							</div>
+						</td>						
+					</tr>
+
+					<tr>
+						<td>Slider</td>
+						<td class="widgetStyle">
+							<div>
+								<div style="width:200px;height:18px" id='slider'></div>
+							</div>
+						</td>						
+					</tr>
+
+					<tr>
+						<td>Wait</td>
+						<td class="widgetStyle">
+							<div id='wait'><input type='button' class='wait' value='Wait' onclick = "show_div()"/></div>
+							<div id='display'></div>
+						</td>						
+					</tr>
+					<tr>
+						<td>Text</td>
+						<td class="widgetStyle"><div><input type="text" id="text" readOnly="true" value="好好学习,天天向上"/></div></td>					
+					</tr>
+					<tr>
+						<td>Iframe</td>
+						<td class="widgetStyle" id='frame_td'>
+							<iframe width=800 height=330 name=aa frameborder=0 src="http://8.141.52.231/shop/"></iframe>
+						</td>						
+					</tr>
+
+				</tbody>
+			
+		
+	</table>
+	<br/>
+</div>
+</body>
+</html>
