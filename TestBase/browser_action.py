@@ -1,5 +1,7 @@
 # -*- coding:utf-8 -*-
 from selenium import webdriver
+from selenium.webdriver.support.wait import WebDriverWait    # 智能等待
+import selenium.webdriver.support.expected_conditions as ec  # 等待期望的条件（配合 智能等待）
 from selenium.webdriver.support.select import Select  # 下拉框
 from selenium.webdriver.common.action_chains import ActionChains  # 连续动作（拖动、鼠标操作、JS操作）
 from selenium.webdriver.common.keys import Keys  # 键盘操作
@@ -58,16 +60,31 @@ class Base(object):
     def high_light(self, ele):
         self.driver.execute_script("arguments[0].setAttribute('style',arguments[1]);", ele, "border:2px solid red;")
 
+    # 自定义条件等待（ 非找元素的等待，不同与 implicitly_wait ）
+    def condition_wait(self, condition, timeout):
+        try:
+            WebDriverWait(self.driver, timeout).until(condition)
+        except TimeoutException:
+            raise TimeoutException("自定义条件等待超时！")
+
+    # 单元素定位
     def find_ele(self, by, value, hl=True):
         try:
             self.log.info("通过" + by + "定位，元素是 " + value)
             ele = self.driver.find_element(by, value)
-            # ele = WebDriverWait(self.driver, time_out).until(self.driver.find_element(by, value))
             if hl:
                 self.high_light(ele)
             return ele
         except:
-            raise Exception(value + " 元素定位失败！")
+            raise Exception(value + " 单元素定位失败！")
+
+    # 多元素定位
+    def find_eles(self, by, value):
+        ele_list = self.driver.find_elements(by, value)
+        if ele_list:
+            return ele_list
+        else:
+            raise Exception("多元素定位失败！")
 
     def click(self, by, value):
         self.find_ele(by, value).click()
@@ -104,6 +121,38 @@ class Base(object):
         Select(select_ele).select_by_value(option_value)
         time.sleep(2)
 
+    """ ####################### 使用 switch_to 跳转 ####################### """
+
+    # 操作 alert 弹框
+    def action_alert(self, action):
+        """
+        :param action: 确定、取消
+        """
+        alert = self.driver.switch_to.alert
+        time.sleep(2)
+        if action == "accept":
+            alert.accept()
+        else:
+            alert.dismiss()
+
+    # 打开一个新窗口，并将句柄切到新窗口，返回原窗口句柄
+    def open_new_window(self):
+        old_handle = self.driver.current_window_handle
+        self.driver.execute_script('window.open("https://www.baidu.com");')
+        self.driver.switch_to.window(self.driver.window_handles[:-1])
+        # for handle in self.driver.window_handles:
+        #     if handle != old_handle:
+        #         self.driver.switch_to.window(handle)
+        return old_handle
+
+    # 跳转 frame 框
+    def action_frame(self):
+        self.driver.switch_to.frame()            # 跳转至下一级frame
+        self.driver.switch_to.default_content()  # 跳回原始页面
+        self.driver.switch_to.parent_frame()     # 跳回上一级frame
+
+    """ ####################### 使用 ActionChains 动作链 ####################### """
+
     # 动作链 生成器
     def action_chains(self):
         ac = ActionChains(self.driver)
@@ -133,14 +182,7 @@ class Base(object):
         for ac in self.action_chains():
             ac.send_keys(key_action)  # 发送某个键到当前焦点的元素
 
-    # 打开一个新窗口，并将句柄切到新窗口，返回原窗口句柄
-    def open_new_window(self):
-        old_handle = self.driver.current_window_handle
-        self.driver.execute_script('window.open("https://www.baidu.com");')
-        for handle in self.driver.window_handles:
-            if handle != old_handle:
-                self.driver.switch_to.window(handle)
-        return old_handle
+    """ ######################################################################## """
 
     # 当页面加载超时后，停止加载（为了可以继续后续driver操作）
     def get_page_with_time_out(self, url, time_out):

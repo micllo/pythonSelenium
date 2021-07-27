@@ -2,7 +2,7 @@
 # 全局变量
 PAGE_LOAD_TIME = 30  # 页面加载超时
 
-IMPLICITY_WAIT = 10  # 隐式等待时间
+IMPLICITY_WAIT = 10  # 隐式等待时间（找元素时的等待）
 
 POLLING_CONTENT_TIME_OUT = 30  # 轮询内容的超时时间
 

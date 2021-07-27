@@ -2,6 +2,7 @@
 from TestBase.browser_action import Base
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys  # 键盘操作
+import selenium.webdriver.support.expected_conditions as ec  # 等待期望的条件（配合 智能等待）
 import time
 
 
@@ -36,6 +37,17 @@ class ElementPage(Base):
     def move_target_ele(self):
         return self.find_ele(by=By.ID, value="slider_confirm", hl=False)
 
+    # alert 弹框
+    @property
+    def alert_ele(self):
+        return self.find_ele(by=By.CLASS_NAME, value="prompt")
+
+    # 下单 按钮
+    @property
+    def order_btn(self):
+        return self.find_ele(by=By.CLASS_NAME, value="order_confirm")
+
+
     """
         【 页 面 功 能 】
     """
@@ -64,10 +76,24 @@ class ElementPage(Base):
 
     # 键盘 连续按 Tab 键
     def keyboard_tab(self):
-        self.keyboard_action(Keys.TAB)
-        time.sleep(2)
-        self.keyboard_action(Keys.TAB)
-        time.sleep(2)
-        self.keyboard_action(Keys.TAB)
-        time.sleep(2)
+        for i in range(3):
+            self.keyboard_action(Keys.TAB)
+            time.sleep(2)
+
+    # 点击 alert 弹框 中的确定
+    def prompt_alert_confirm(self):
+        self.alert_ele.click()
+        self.action_alert("accept")
+
+    # 点击 下单 按钮，等待5秒后alert弹框出现，捕获其中的内容
+    def click_order_btn(self):
+        self.order_btn.click()
+        self.condition_wait(ec.alert_is_present(), 3)
+        alter = self.driver.switch_to.alert
+        order_id = alter.text
+        alter.accept()
+        return order_id
+
+
+
 

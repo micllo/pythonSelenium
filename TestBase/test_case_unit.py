@@ -39,6 +39,9 @@ class ParaCase(unittest.TestCase):
         from Config.pro_config import get_login_accout
         self.user, self.passwd = get_login_accout(self.thread_name_index)
 
+        # 通过 cookie 进行登录
+        # self.driver.add_cookie({"name": "xxxxx", "value": "xxxxxxx"})
+
         # self.driver.maximize_window()
         # self.driver.set_window_size(width=2000, height=1300)
         # self.driver.set_script_timeout()  # 页面异步js执行超时
