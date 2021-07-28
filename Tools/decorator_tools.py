@@ -51,3 +51,14 @@ def thread_save(func):
         log.info(u"%s: DONE %s" % (func.__name__, (et-st)))
         return res
     return processed_res
+
+
+def get_action_chains(func):
+    """
+        获取 ActionChains() 实例
+        备注：self.action_chains_yield(): 动作链 生成器 < browser_action.py >
+    """
+    def warp(self, *args, **kwargs):
+        for action_chains in self.action_chains_yield():
+            func(self=self, action_chains=action_chains, *args, **kwargs)
+    return warp

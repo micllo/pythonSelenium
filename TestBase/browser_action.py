@@ -13,6 +13,7 @@ from selenium.common.exceptions import TimeoutException
 from Config import global_var as gv
 import time
 from Tools.mongodb import MongoGridFS
+from Tools.decorator_tools import get_action_chains
 
 
 def get_driver_func(pro_name, browser_name, remote=False):
@@ -153,34 +154,39 @@ class Base(object):
 
     """ ####################### 使用 ActionChains 动作链 ####################### """
 
-    # 动作链 生成器
-    def action_chains(self):
-        ac = ActionChains(self.driver)
-        yield ac
-        ac.perform()
+    def action_chains_yield(self):
+        """
+            动 作 链 生成器
+            目的：每次使用动作链时，都需要新建动作链对象
+            原因：若只使用一个动作链对象，每次perform()运行时都会将之前保存的动作都重新执行一遍
+                 除非能保证一个用例中只使用一次动作链，且动作链中不能有其他操作步骤
+        """
+        action_chains = ActionChains(self.driver)
+        yield action_chains
+        action_chains.perform()
 
     # 鼠标悬停
-    def move_to_ele(self, ele):
-        for ac in self.action_chains():
-            ac.move_to_element(ele)
+    @get_action_chains  # move_to_ele = get_ac(move_to_ele)
+    def move_to_ele(self, action_chains=None, ele=None):
+        action_chains.move_to_element(ele)
 
     # 双击
-    def double_click(self, ele):
-        for ac in self.action_chains():
-            ac.double_click(ele)
+    @get_action_chains
+    def double_click(self, action_chains=None, ele=None):
+        action_chains.double_click(ele)
 
     # 拖拽
-    def drag_and_drop(self, source_ele, target_ele):
-        for ac in self.action_chains():
-            ac.drag_and_drop(source=source_ele, target=target_ele)  # 拖拽
-            # ac.click_and_hold(source_ele)   # 鼠标按压
-            # ac.move_to_element(target_ele)  # 鼠标滑动
-            # ac.release()  # 鼠标释放
+    @get_action_chains
+    def drag_and_drop(self, action_chains=None, s_ele=None, t_ele=None):
+        action_chains.drag_and_drop(source=s_ele, target=t_ele)  # 拖拽
+        # action_chains.click_and_hold(source_ele)   # 鼠标按压
+        # action_chains.move_to_element(target_ele)  # 鼠标滑动
+        # action_chains.release()  # 鼠标释放
 
     # 键盘操作
-    def keyboard_action(self, key_action):
-        for ac in self.action_chains():
-            ac.send_keys(key_action)  # 发送某个键到当前焦点的元素
+    @get_action_chains
+    def keyboard_action(self, action_chains=None, key_action=None):
+        action_chains.send_keys(key_action)  # 发送某个键到当前焦点的元素
 
     """ ######################################################################## """
 

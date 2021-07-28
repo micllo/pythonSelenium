@@ -61,23 +61,23 @@ class ElementPage(Base):
 
     # 鼠标悬停
     def mouse_hover(self):
-        self.move_to_ele(self.hover_ele)
+        self.move_to_ele(ele=self.hover_ele)
         time.sleep(3)
 
     # 鼠标双击
     def mouse_double_click(self):
-        self.double_click(self.double_click_ele)
+        self.double_click(ele=self.double_click_ele)
         time.sleep(3)
 
     # 鼠标拖拽
     def mouse_drag_and_drop(self):
-        self.drag_and_drop(self.move_source_ele, self.move_target_ele)
+        self.drag_and_drop(s_ele=self.move_source_ele, t_ele=self.move_target_ele)
         time.sleep(3)
 
     # 键盘 连续按 Tab 键
     def keyboard_tab(self):
         for i in range(3):
-            self.keyboard_action(Keys.TAB)
+            self.keyboard_action(key_action=Keys.TAB)
             time.sleep(2)
 
     # 点击 alert 弹框 中的确定
@@ -88,7 +88,7 @@ class ElementPage(Base):
     # 点击 下单 按钮，等待5秒后alert弹框出现，捕获其中的内容
     def click_order_btn(self):
         self.order_btn.click()
-        self.condition_wait(ec.alert_is_present(), 3)
+        self.condition_wait(condition=ec.alert_is_present(), timeout=6)
         alter = self.driver.switch_to.alert
         order_id = alter.text
         alter.accept()
