@@ -8,6 +8,7 @@ from Tools.date_helper import current_timestamp
 from threading import Thread
 import threading
 from functools import wraps
+from selenium.webdriver.common.action_chains import ActionChains
 
 save_mutex = threading.Lock()
 log = FrameLog().log()

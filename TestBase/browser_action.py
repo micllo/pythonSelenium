@@ -165,6 +165,10 @@ class Base(object):
         yield action_chains
         action_chains.perform()
 
+    # 鼠标悬停（不使用装饰器）
+    def move_to_ele_demo(self, ele=None):
+        ActionChains(self.driver).move_to_element(ele).perform()
+
     # 鼠标悬停
     @get_action_chains  # move_to_ele = get_ac(move_to_ele)
     def move_to_ele(self, action_chains=None, ele=None):
