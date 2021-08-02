@@ -1,10 +1,8 @@
 # -*- coding:utf-8 -*-
 from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait    # 智能等待
-import selenium.webdriver.support.expected_conditions as ec  # 等待期望的条件（配合 智能等待）
 from selenium.webdriver.support.select import Select  # 下拉框
 from selenium.webdriver.common.action_chains import ActionChains  # 连续动作（拖动、鼠标操作、JS操作）
-from selenium.webdriver.common.keys import Keys  # 键盘操作
 from Common.com_func import project_path, log, mkdir
 from Common.test_func import send_DD_for_FXC
 from selenium.webdriver import DesiredCapabilities

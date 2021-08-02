@@ -1,9 +1,6 @@
 # -*- coding:utf-8 -*-
 from TestBase.browser_action import Base
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys  # 键盘操作
-import selenium.webdriver.support.expected_conditions as ec  # 等待期望的条件（配合 智能等待）
-import time
+from TestBase.webdriver_package import *
 
 
 class ElementPage(Base):
@@ -88,7 +85,7 @@ class ElementPage(Base):
     # 点击 下单 按钮，等待5秒后alert弹框出现，捕获其中的内容
     def click_order_btn(self):
         self.order_btn.click()
-        self.condition_wait(condition=ec.alert_is_present(), timeout=6)
+        self.condition_wait(condition=expected_conditions.alert_is_present(), timeout=6)
         alter = self.driver.switch_to.alert
         order_id = alter.text
         alter.accept()

@@ -57,7 +57,7 @@ def run_test_custom(self, test, result, debug, index):
     test.thread_name_index = int(thread_name.split("_")[1]) + 1
 
     if not debug:
-        test(result)  #（ 下一步的快捷查看：unittest > TestCase(case.py) > run (Line 570) ）
+        test(result)  # （ 下一步的快捷查看：unittest > TestCase(case.py) > run (Line 570) ）
     else:
         test.debug()
 

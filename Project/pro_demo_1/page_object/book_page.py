@@ -1,8 +1,6 @@
 # -*- coding:utf-8 -*-
 from TestBase.browser_action import Base
-from selenium.webdriver.common.by import By
-import time
-
+from TestBase.webdriver_package import *
 
 class BookPage(Base):
 
